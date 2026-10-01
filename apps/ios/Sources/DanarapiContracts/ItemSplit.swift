@@ -341,9 +341,15 @@ public enum ReceiptTextParser {
 }
 
 public enum ItemSplitCalculator {
+    private static func isValidRate(_ rate: Double) -> Bool {
+        guard rate.isFinite, (0...100).contains(rate) else { return false }
+        let basisPoints = rate * 100
+        return abs(basisPoints - basisPoints.rounded()) < 0.00000001
+    }
+
     public static func receipt(_ draft: ItemSplit, memberIDs: [String]) throws -> ReceiptCalculation {
         guard let settings = draft.settings, (1...20).contains(memberIDs.count), Set(memberIDs).count == memberIDs.count,
-              [settings.serviceRate, settings.taxRate].allSatisfy({ $0.isFinite && $0 >= 0 && $0 <= 100 && abs($0 * 100 - ($0 * 100).rounded()) < 0.00000001 }) else { throw ContractError.validation }
+              [settings.serviceRate, settings.taxRate].allSatisfy(isValidRate) else { throw ContractError.validation }
         let denominator = Decimal(232792560)
         var bases = memberIDs.map { _ in Decimal(0) }
         var unassigned: [String] = []

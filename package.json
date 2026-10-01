@@ -18,7 +18,7 @@
     "web:typecheck": "npm run typecheck --prefix apps/web",
     "web:build": "npm run build --prefix apps/web",
     "web:test": "npm run test --prefix apps/web",
-    "web:e2e": "npm run test:e2e --prefix apps/web",
+    "web:e2e": "npm run test:e2e --prefix apps/web --",
     "test:edge": "deno test --allow-env supabase/tests/web_transport_test.ts supabase/tests/retention_test.ts supabase/tests/cloud_test.ts",
     "cloud:check": "node --experimental-strip-types scripts/check-cloud.mjs",
     "cloud:plan": "sh scripts/deploy-supabase.sh plan",

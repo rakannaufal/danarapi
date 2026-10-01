@@ -1,0 +1,7 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Known Supabase publishable client key; not a service-role or secret key"
+regexTarget = "secret"
+regexes = ['''^sb_publishable_HFNe0r92MxPPmck_SxfvdA_dwVecyjx$''']

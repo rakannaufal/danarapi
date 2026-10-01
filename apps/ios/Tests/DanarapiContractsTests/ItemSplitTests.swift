@@ -153,6 +153,22 @@ final class ItemSplitTests: XCTestCase {
         XCTAssertEqual(try ItemSplitCalculator.receipt(shared, memberIDs: ids).unassigned, ["Bersama"])
         XCTAssertThrowsError(try ItemSplitCalculator.calculate(shared, memberIDs: ids))
     }
+    func testReceiptRateValidation() throws {
+        let item = ReceiptLine(name: "Menu", quantity: 1, unitPrice: "10000", allocations: [ItemAllocation(memberID: "self", quantity: 1)])
+        for rate in [-0.01, 100.01, 1.001, Double.nan, Double.infinity, -Double.infinity] {
+            for settings in [ReceiptSettings(serviceRate: rate), ReceiptSettings(taxRate: rate)] {
+                let draft = ItemSplit(items: [item], settings: settings)
+                XCTAssertThrowsError(try ItemSplitCalculator.receipt(draft, memberIDs: ["self"])) { error in
+                    XCTAssertEqual(error as? ContractError, .validation)
+                }
+            }
+        }
+        for rate in [0.0, 0.01, 12.34, 100.0] {
+            let draft = ItemSplit(items: [item], settings: ReceiptSettings(serviceRate: rate, taxRate: rate))
+            XCTAssertEqual(try ItemSplitCalculator.receipt(draft, memberIDs: ["self"]).rows.count, 1)
+        }
+    }
+
     struct Fixture: Decodable {
         struct Example: Decodable { let name: String; let draft: ItemSplit; let memberIDs: [String]; let expected: ItemSplitResult }
         let cases: [Example]

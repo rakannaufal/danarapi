@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(10);
+select plan(11);
 
 select has_function('public', 'api_update_transfer', array['uuid','uuid','integer','uuid','uuid','text','timestamptz','text'], 'transfer update RPC exists');
 select has_function('public', 'api_confirm_review_item', array['uuid','uuid','text','text','uuid','uuid','timestamptz','text','text'], 'review confirmation RPC exists');
@@ -16,7 +16,7 @@ select is((select count(*)::integer from public.accounts where user_id = '150000
 select throws_ok($sql$
   update public.accounts set archived_at = now()
   where user_id = '15000000-0000-4000-8000-000000000001' and name = 'Tunai'
-$sql$, 'P0001', 'last active account cannot be archived');
+$sql$, 'P0001', null, 'last active account cannot be archived');
 
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"15000000-0000-4000-8000-000000000001","role":"authenticated"}', true);
@@ -31,7 +31,13 @@ $sql$, 'transaction can be created on onboarding account');
 select throws_ok($sql$
   update public.accounts set opening_balance = 5000
   where user_id = '15000000-0000-4000-8000-000000000001' and name = 'Tunai'
-$sql$, 'P0001', 'opening balance is locked after activity');
+$sql$, '42501', null, 'authenticated client cannot directly change opening balance');
+
+reset role;
+select throws_ok($sql$
+  update public.accounts set opening_balance = 5000
+  where user_id = '15000000-0000-4000-8000-000000000001' and name = 'Tunai'
+$sql$, 'P0001', null, 'opening balance is locked after activity even for privileged writes');
 
 select * from finish();
 rollback;

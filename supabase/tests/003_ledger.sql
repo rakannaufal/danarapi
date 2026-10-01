@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(24);
+select plan(25);
 
 insert into auth.users(instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at)
 values ('00000000-0000-0000-0000-000000000000', '12000000-0000-4000-8000-000000000001', 'authenticated', 'authenticated', 'ledger@danarapi.invalid', '', now(), '{}', '{}', now(), now());
@@ -33,7 +33,7 @@ select is((select count(*)::integer from public.transactions), 1, 'retry creates
 select is((select balance::text from public.account_balances where account_id = '22000000-0000-4000-8000-000000000001'), '175000', 'transaction updates account projection once');
 select throws_ok(
   $$select public.api_create_transaction('50000000-0000-4000-8000-000000000001', 'expense', '26000', '22000000-0000-4000-8000-000000000001', '32000000-0000-4000-8000-000000000001', '2026-09-01T00:00:00Z', null, null, 'manual')$$,
-  'P0001', 'changed retry is rejected'
+  'P0001', null, 'changed retry is rejected'
 );
 select lives_ok($sql$
   select public.api_delete_transaction(
@@ -81,7 +81,7 @@ select throws_ok($sql$
     '62000000-0000-4000-8000-000000000002', '22000000-0000-4000-8000-000000000001',
     '25001', '2026-09-03T01:00:00Z', null
   )
-$sql$, 'P0001', 'overpay by one rupiah is rejected');
+$sql$, 'P0001', null, 'overpay by one rupiah is rejected');
 
 select lives_ok($sql$
   select public.api_record_split_resolution(

@@ -4,7 +4,11 @@ import AxeBuilder from '@axe-core/playwright';
 
 test('Google-only login retains its official logo and readable pill on mobile and desktop', async ({ page, browserName }) => {
   await page.goto('/');
-  await page.evaluate(() => document.fonts.ready);
+  await expect(page.getByRole('button', { name: 'Lanjutkan dengan Google' })).toBeVisible();
+  await page.evaluate(async () => {
+    await document.fonts.load('500 14px "Google Sans Sign In"');
+    await document.fonts.ready;
+  });
   for (const theme of ['light', 'dark']) {
     await page.evaluate(value => { document.documentElement.dataset.theme = value; }, theme);
     for (const width of [320, 375, 1280]) {

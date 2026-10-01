@@ -81,6 +81,7 @@ input[type=checkbox],input[type=radio]{min-height:0;accent-color:var(--primary)}
 .settings-tabs{margin-bottom:20px}.settings-tabs button{font-size:13px}.settings-profile{background:var(--surface)}
 .detail-summary h2{font-size:2rem;font-weight:600}.detail-summary dl{font-size:14px}.fine-print{font-size:12px;line-height:1.6}
 .report-toolbar{gap:12px;margin-bottom:20px}.report-toolbar label{font-size:13px}.report-breakdown .section-heading>div>p{font-size:12px}
+.report-breakdown>.section-heading>div{min-width:0;flex:1}.report-breakdown>.section-heading>.icon-tile{flex-shrink:0}.report-breakdown h2,.report-charts h2{overflow-wrap:anywhere}
 .cash-account{padding:16px 0}.cash-account h3{font-size:15px;margin-bottom:12px}.cash-account .form-grid{font-size:14px;gap:10px}
 .trend-row{font-size:14px;padding:16px 0}.category-bar{padding-top:18px}.report-help{margin-top:20px}
 .empty{padding:32px 16px}.empty h3{font-size:17px}.empty p{font-size:13px}.public-privacy{font-size:12px}

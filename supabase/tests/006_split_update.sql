@@ -59,7 +59,7 @@ select throws_ok($sql$
     '[{"id":"26000000-0000-4000-8000-000000000001","display_name":"Saya","is_self":true,"share_amount":"40001","sort_order":0},{"id":"26000000-0000-4000-8000-000000000002","display_name":"Ani","is_self":false,"share_amount":"40000","sort_order":1},{"id":"26000000-0000-4000-8000-000000000003","display_name":"Budi","is_self":false,"share_amount":"40000","sort_order":2}]'::jsonb,
     null
   )
-$sql$, 'P0001', 'active settlement locks financial structure');
+$sql$, 'P0001', null, 'active settlement locks financial structure');
 
 select lives_ok($sql$
   select public.api_update_split_bill(
