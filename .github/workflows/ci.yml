@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: npm ci --prefix apps/web
+      - run: npm run check:web
+      - run: npm run test:edge
+      - run: npx --prefix apps/web playwright install --with-deps chromium firefox webkit
+      - run: npm run web:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web-r1-qa
+          path: |
+            apps/web/artifacts/visual
+            apps/web/playwright-report
+            apps/web/test-results
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: npm ci --prefix apps/web
+      - run: npm run check:json
+      - run: npm run test:cloud
+      - run: npm run test:contracts
+      - run: deno check supabase/functions/ledger/index.ts supabase/functions/ios-data/index.ts supabase/functions/export-data/index.ts supabase/functions/review-retention/index.ts
+      - run: npm run check:secrets
+
+  database:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - run: supabase start
+      - run: supabase db reset --local
+      - run: supabase test db
+      - run: psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -v ON_ERROR_STOP=1 -f tests/database/retention-smoke.sql
+      - run: DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres sh tests/database/concurrency.sh
+      - if: always()
+        run: supabase stop --no-backup
+
+  ios-contracts:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift test --package-path apps/ios
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: npm ci --prefix apps/web
+      - run: npm run test:export:parity
+
+  ios-app:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build iOS app
+        run: xcodebuild -project apps/ios/Danarapi.xcodeproj -scheme Danarapi -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+      - name: Run XCTest and UI tests
+        shell: bash
+        run: |
+          SIMULATOR_UDID=$(xcrun simctl list devices available -j | jq -r '.devices[][] | select(.name | startswith("iPhone")) | .udid' | sed -n '1p')
+          test -n "$SIMULATOR_UDID"
+          xcodebuild -project apps/ios/Danarapi.xcodeproj -scheme Danarapi -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" CODE_SIGNING_ALLOWED=NO test
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

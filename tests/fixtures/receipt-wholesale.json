@@ -1,0 +1,22 @@
+{
+  "merchant": "TOKO ABANG",
+  "date": "2023-01-10",
+  "items": [
+    {"name":"Beras","qty":4000,"unit_price":12500,"line_total":50000000,"note":"Kg"},
+    {"name":"Minyak Goreng","qty":1600,"unit_price":27500,"line_total":44000000,"note":"Kg"},
+    {"name":"Gula Pasir","qty":1600,"unit_price":15000,"line_total":24000000,"note":"Kg"},
+    {"name":"The Celup Isi 25","qty":800,"unit_price":7500,"line_total":6000000,"note":"Box"},
+    {"name":"Mie Instan","qty":8000,"unit_price":3000,"line_total":24000000,"note":"Pcs"},
+    {"name":"Susu Kaleng","qty":1600,"unit_price":14000,"line_total":22400000,"note":"Klg"},
+    {"name":"Sarden","qty":1600,"unit_price":14000,"line_total":22400000,"note":"Klg"},
+    {"name":"Kardus Packing","qty":800,"unit_price":9000,"line_total":7800000,"note":"Pcs"}
+  ],
+  "subtotal":200000000,
+  "service_charge":0,
+  "tax":0,
+  "discount":0,
+  "rounding":0,
+  "grand_total":200000000,
+  "tax_included_in_price":false,
+  "unreadable_fields":[]
+}

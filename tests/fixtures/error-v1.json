@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "example": {
+    "code": "OBLIGATION_EXCEEDED",
+    "message": "Pelunasan melebihi sisa kewajiban.",
+    "request_id": "00000000-0000-4000-8000-000000000099",
+    "details": { "remaining": "25000" }
+  }
+}
+

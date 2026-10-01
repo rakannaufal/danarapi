@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "encoding": "UTF-8 BOM",
+  "money": "decimal integer string",
+  "split_bill_status": ["unsettled", "partially_settled", "settled"],
+  "payer": "Saya for self-paid, otherwise local payer display_name",
+  "personal_expenses.csv": ["event_id", "source_bill_id", "occurred_at", "type", "amount", "category", "merchant", "is_non_cash"],
+  "cash_flow.csv": ["event_id", "source_bill_id", "occurred_at", "type", "amount", "account", "note"],
+  "split_bills.csv": ["source_bill_id", "occurred_at", "title", "total", "payer", "self_share", "status", "remaining"],
+  "split_members.csv": ["source_bill_id", "member_id", "display_name", "is_self", "share_amount", "settled_amount", "resolved_amount", "remaining_amount"],
+  "split_settlements.csv": ["event_id", "source_bill_id", "member_id", "direction", "account", "amount", "occurred_at", "reversed", "note"],
+  "split_resolutions.csv": ["event_id", "source_bill_id", "member_id", "kind", "amount", "occurred_at", "reversed", "reason"]
+}

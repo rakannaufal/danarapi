@@ -1,0 +1,6 @@
+<script setup lang="ts">
+import { House, ArrowLeftRight, ScanLine, ChartNoAxesCombined, Settings2, Plus, ArrowUpRight, ArrowDownLeft, Wallet, ChevronRight, X, Users, Upload, Eye, EyeOff, Sun, Moon, Trash2, Pencil, Download, Check, RefreshCw, Search, CircleAlert, FileText, ArrowLeft, Copy, Menu, MoreHorizontal, Coffee, Bike, ShoppingBag, Landmark, Bell, CircleHelp, Target, ChartPie, CalendarDays } from '@lucide/vue';
+defineProps<{ name: string; size?: number }>();
+const icons: Record<string, any> = { target: Target, budget: ChartPie, calendar: CalendarDays, home: House, transactions: ArrowLeftRight, review: ScanLine, reports: ChartNoAxesCombined, settings: Settings2, plus: Plus, income: ArrowDownLeft, expense: ArrowUpRight, transfer: ArrowLeftRight, split: Users, wallet: Wallet, next: ChevronRight, close: X, upload: Upload, eye: Eye, hidden: EyeOff, sun: Sun, moon: Moon, trash: Trash2, edit: Pencil, download: Download, check: Check, reset: RefreshCw, search: Search, warning: CircleAlert, file: FileText, back: ArrowLeft, copy: Copy, menu: Menu, more: MoreHorizontal, food: Coffee, transport: Bike, household: ShoppingBag, bank: Landmark, bell: Bell, help: CircleHelp, Target, ChartPie, CalendarDays };
+</script>
+<template><component :is="icons[name] ?? icons.wallet" :size="size ?? 20" :stroke-width="1.8" aria-hidden="true" /></template>

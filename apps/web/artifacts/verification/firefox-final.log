@@ -1,0 +1,790 @@
+
+> @danarapi/web@0.1.0 test:e2e
+> playwright test --project=firefox
+
+
+Running 20 tests using 1 worker
+
+(node:11641) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   1 [firefox] › e2e/web.spec.ts:21:1 › Local QR image/PDF import, MIME/5MB errors, no automatic posting (8ms)
+(node:11721) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   2 [firefox] › e2e/web.spec.ts:24:1 › Unreadable PDF and unsupported QR retain attachments for manual review (8ms)
+(node:11740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   3 [firefox] › e2e/web.spec.ts:33:1 › Posted manual attachment and confirmed import preview never post another transaction (23ms)
+(node:11760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   4 [firefox] › e2e/web.spec.ts:57:1 › Large synthetic snapshot keeps transaction DOM bounded and filters usable (3ms)
+(node:11783) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   5 [firefox] › e2e/web.spec.ts:72:1 › Bundled Demo PDF imports locally with evidence and no posting (3ms)
+(node:11792) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   6 [firefox] › e2e/web.spec.ts:81:1 › Duplicate bill review can be dismissed or explicitly merged without double posting (5ms)
+(node:11803) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   7 [firefox] › e2e/web.spec.ts:98:1 › 20 quick entries and 10 split entries automated regression, not human usability (3ms)
+(node:11814) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   8 [firefox] › e2e/web.spec.ts:105:38 › accessibility five screens, small phone, 200% text light (3ms)
+(node:11831) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   9 [firefox] › e2e/web.spec.ts:105:38 › accessibility five screens, small phone, 200% text dark (3ms)
+(node:11842) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  10 [firefox] › e2e/web.spec.ts:154:1 › Demo offline, no backend; edit/delete/undo; CSV matches filter (3ms)
+(node:11863) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  11 [firefox] › e2e/web.spec.ts:161:1 › Import remains review; ambiguous amount missing; explicit confirmation; reject undo (5ms)
+(node:11903) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  12 [firefox] › e2e/web.spec.ts:165:1 › Split bill, partial settlement, overpay, noncash resolution and reversal (5ms)
+(node:11917) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  13 [firefox] › e2e/web.spec.ts:168:1 › Transfer validation, creation, edit/delete/undo; last account protected (5ms)
+(node:11925) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  14 [firefox] › e2e/web.spec.ts:171:1 › Unsaved input guards browser back; keyboard focus; theme persists without sensitive data (3ms)
+(node:11943) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  15 [firefox] › e2e/web.spec.ts:174:1 › Keyboard dialog traps focus, Escape restores trigger; controls meet 44px and reduced motion (4ms)
+(node:11956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  16 [firefox] › e2e/web.spec.ts:190:1 › Accounts, categories, merchant rules, budget and full export (4ms)
+(node:11969) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  17 [firefox] › e2e/web.spec.ts:194:69 › visual five screens 390 light (4ms)
+(node:11983) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  18 [firefox] › e2e/web.spec.ts:194:69 › visual five screens 390 dark (4ms)
+(node:11997) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  19 [firefox] › e2e/web.spec.ts:194:69 › visual five screens 1440 light (4ms)
+(node:12010) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  20 [firefox] › e2e/web.spec.ts:194:69 › visual five screens 1440 dark (5ms)
+
+
+  1) [firefox] › e2e/web.spec.ts:21:1 › Local QR image/PDF import, MIME/5MB errors, no automatic posting 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-K9ea4e -juggler-pipe -silent
+    <launched> pid=11646
+    [pid=11646][err] *** You are running in headless mode.
+    [pid=11646][err] Could not find profile folder.
+    [pid=11646] <process did exit: exitCode=1, signal=null>
+    [pid=11646] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-K9ea4e -juggler-pipe -silent
+      - <launched> pid=11646
+      - [pid=11646][err] *** You are running in headless mode.
+      - [pid=11646][err] Could not find profile folder.
+      - [pid=11646] <process did exit: exitCode=1, signal=null>
+      - [pid=11646] starting temporary directories cleanup
+      - [pid=11646] <gracefully close start>
+      - [pid=11646] <kill>
+      - [pid=11646] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11646] finished temporary directories cleanup
+      - [pid=11646] <gracefully close end>
+
+
+    Error Context: test-results/web-Local-QR-image-PDF-imp-cf3ac-errors-no-automatic-posting-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-Local-QR-image-PDF-imp-cf3ac-errors-no-automatic-posting-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-Local-QR-image-PDF-imp-cf3ac-errors-no-automatic-posting-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [firefox] › e2e/web.spec.ts:24:1 › Unreadable PDF and unsupported QR retain attachments for manual review 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-7du4Hh -juggler-pipe -silent
+    <launched> pid=11727
+    [pid=11727][err] *** You are running in headless mode.
+    [pid=11727][err] Could not find profile folder.
+    [pid=11727] <process did exit: exitCode=1, signal=null>
+    [pid=11727] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-7du4Hh -juggler-pipe -silent
+      - <launched> pid=11727
+      - [pid=11727][err] *** You are running in headless mode.
+      - [pid=11727][err] Could not find profile folder.
+      - [pid=11727] <process did exit: exitCode=1, signal=null>
+      - [pid=11727] starting temporary directories cleanup
+      - [pid=11727] <gracefully close start>
+      - [pid=11727] <kill>
+      - [pid=11727] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11727] finished temporary directories cleanup
+      - [pid=11727] <gracefully close end>
+
+
+    Error Context: test-results/web-Unreadable-PDF-and-uns-9a480-tachments-for-manual-review-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-Unreadable-PDF-and-uns-9a480-tachments-for-manual-review-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-Unreadable-PDF-and-uns-9a480-tachments-for-manual-review-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [firefox] › e2e/web.spec.ts:33:1 › Posted manual attachment and confirmed import preview never post another transaction 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-obGCie -juggler-pipe -silent
+    <launched> pid=11748
+    [pid=11748][err] *** You are running in headless mode.
+    [pid=11748][err] Could not find profile folder.
+    [pid=11748] <process did exit: exitCode=1, signal=null>
+    [pid=11748] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-obGCie -juggler-pipe -silent
+      - <launched> pid=11748
+      - [pid=11748][err] *** You are running in headless mode.
+      - [pid=11748][err] Could not find profile folder.
+      - [pid=11748] <process did exit: exitCode=1, signal=null>
+      - [pid=11748] starting temporary directories cleanup
+      - [pid=11748] <gracefully close start>
+      - [pid=11748] <kill>
+      - [pid=11748] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11748] finished temporary directories cleanup
+      - [pid=11748] <gracefully close end>
+
+
+    Error Context: test-results/web-Posted-manual-attachme-23832-er-post-another-transaction-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-Posted-manual-attachme-23832-er-post-another-transaction-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-Posted-manual-attachme-23832-er-post-another-transaction-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [firefox] › e2e/web.spec.ts:57:1 › Large synthetic snapshot keeps transaction DOM bounded and filters usable 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-4X5T3a -juggler-pipe -silent
+    <launched> pid=11761
+    [pid=11761][err] *** You are running in headless mode.
+    [pid=11761][err] Could not find profile folder.
+    [pid=11761] <process did exit: exitCode=1, signal=null>
+    [pid=11761] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-4X5T3a -juggler-pipe -silent
+      - <launched> pid=11761
+      - [pid=11761][err] *** You are running in headless mode.
+      - [pid=11761][err] Could not find profile folder.
+      - [pid=11761] <process did exit: exitCode=1, signal=null>
+      - [pid=11761] starting temporary directories cleanup
+      - [pid=11761] <gracefully close start>
+      - [pid=11761] <kill>
+      - [pid=11761] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11761] finished temporary directories cleanup
+      - [pid=11761] <gracefully close end>
+
+
+    Error Context: test-results/web-Large-synthetic-snapsh-ff35e--bounded-and-filters-usable-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-Large-synthetic-snapsh-ff35e--bounded-and-filters-usable-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-Large-synthetic-snapsh-ff35e--bounded-and-filters-usable-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [firefox] › e2e/web.spec.ts:72:1 › Bundled Demo PDF imports locally with evidence and no posting 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-LwiUAR -juggler-pipe -silent
+    <launched> pid=11786
+    [pid=11786][err] *** You are running in headless mode.
+    [pid=11786][err] Could not find profile folder.
+    [pid=11786] <process did exit: exitCode=1, signal=null>
+    [pid=11786] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-LwiUAR -juggler-pipe -silent
+      - <launched> pid=11786
+      - [pid=11786][err] *** You are running in headless mode.
+      - [pid=11786][err] Could not find profile folder.
+      - [pid=11786] <process did exit: exitCode=1, signal=null>
+      - [pid=11786] starting temporary directories cleanup
+      - [pid=11786] <gracefully close start>
+      - [pid=11786] <kill>
+      - [pid=11786] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11786] finished temporary directories cleanup
+      - [pid=11786] <gracefully close end>
+
+
+    Error Context: test-results/web-Bundled-Demo-PDF-impor-c2932-ith-evidence-and-no-posting-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-Bundled-Demo-PDF-impor-c2932-ith-evidence-and-no-posting-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-Bundled-Demo-PDF-impor-c2932-ith-evidence-and-no-posting-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [firefox] › e2e/web.spec.ts:81:1 › Duplicate bill review can be dismissed or explicitly merged without double posting 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-YqEBeA -juggler-pipe -silent
+    <launched> pid=11795
+    [pid=11795][err] *** You are running in headless mode.
+    [pid=11795][err] Could not find profile folder.
+    [pid=11795] <process did exit: exitCode=1, signal=null>
+    [pid=11795] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-YqEBeA -juggler-pipe -silent
+      - <launched> pid=11795
+      - [pid=11795][err] *** You are running in headless mode.
+      - [pid=11795][err] Could not find profile folder.
+      - [pid=11795] <process did exit: exitCode=1, signal=null>
+      - [pid=11795] starting temporary directories cleanup
+      - [pid=11795] <gracefully close start>
+      - [pid=11795] <kill>
+      - [pid=11795] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11795] finished temporary directories cleanup
+      - [pid=11795] <gracefully close end>
+
+
+    Error Context: test-results/web-Duplicate-bill-review--de6d6-rged-without-double-posting-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-Duplicate-bill-review--de6d6-rged-without-double-posting-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-Duplicate-bill-review--de6d6-rged-without-double-posting-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [firefox] › e2e/web.spec.ts:98:1 › 20 quick entries and 10 split entries automated regression, not human usability 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-A6JZVh -juggler-pipe -silent
+    <launched> pid=11804
+    [pid=11804][err] *** You are running in headless mode.
+    [pid=11804][err] Could not find profile folder.
+    [pid=11804] <process did exit: exitCode=1, signal=null>
+    [pid=11804] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-A6JZVh -juggler-pipe -silent
+      - <launched> pid=11804
+      - [pid=11804][err] *** You are running in headless mode.
+      - [pid=11804][err] Could not find profile folder.
+      - [pid=11804] <process did exit: exitCode=1, signal=null>
+      - [pid=11804] starting temporary directories cleanup
+      - [pid=11804] <gracefully close start>
+      - [pid=11804] <kill>
+      - [pid=11804] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11804] finished temporary directories cleanup
+      - [pid=11804] <gracefully close end>
+
+
+    Error Context: test-results/web-20-quick-entries-and-1-89808-ression-not-human-usability-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-20-quick-entries-and-1-89808-ression-not-human-usability-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-20-quick-entries-and-1-89808-ression-not-human-usability-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [firefox] › e2e/web.spec.ts:105:38 › accessibility five screens, small phone, 200% text light ─
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-wyJ1uX -juggler-pipe -silent
+    <launched> pid=11817
+    [pid=11817][err] *** You are running in headless mode.
+    [pid=11817][err] Could not find profile folder.
+    [pid=11817] <process did exit: exitCode=1, signal=null>
+    [pid=11817] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-wyJ1uX -juggler-pipe -silent
+      - <launched> pid=11817
+      - [pid=11817][err] *** You are running in headless mode.
+      - [pid=11817][err] Could not find profile folder.
+      - [pid=11817] <process did exit: exitCode=1, signal=null>
+      - [pid=11817] starting temporary directories cleanup
+      - [pid=11817] <gracefully close start>
+      - [pid=11817] <kill>
+      - [pid=11817] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11817] finished temporary directories cleanup
+      - [pid=11817] <gracefully close end>
+
+
+    Error Context: test-results/web-accessibility-five-screens-small-phone-200-text-light-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-accessibility-five-screens-small-phone-200-text-light-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-accessibility-five-screens-small-phone-200-text-light-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [firefox] › e2e/web.spec.ts:105:38 › accessibility five screens, small phone, 200% text dark ──
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-MO3Qwv -juggler-pipe -silent
+    <launched> pid=11835
+    [pid=11835][err] *** You are running in headless mode.
+    [pid=11835][err] Could not find profile folder.
+    [pid=11835] <process did exit: exitCode=1, signal=null>
+    [pid=11835] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-MO3Qwv -juggler-pipe -silent
+      - <launched> pid=11835
+      - [pid=11835][err] *** You are running in headless mode.
+      - [pid=11835][err] Could not find profile folder.
+      - [pid=11835] <process did exit: exitCode=1, signal=null>
+      - [pid=11835] starting temporary directories cleanup
+      - [pid=11835] <gracefully close start>
+      - [pid=11835] <kill>
+      - [pid=11835] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11835] finished temporary directories cleanup
+      - [pid=11835] <gracefully close end>
+
+
+    Error Context: test-results/web-accessibility-five-screens-small-phone-200-text-dark-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-accessibility-five-screens-small-phone-200-text-dark-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-accessibility-five-screens-small-phone-200-text-dark-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [firefox] › e2e/web.spec.ts:154:1 › Demo offline, no backend; edit/delete/undo; CSV matches filter 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-bBNaN1 -juggler-pipe -silent
+    <launched> pid=11847
+    [pid=11847][err] *** You are running in headless mode.
+    [pid=11847][err] Could not find profile folder.
+    [pid=11847] <process did exit: exitCode=1, signal=null>
+    [pid=11847] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-bBNaN1 -juggler-pipe -silent
+      - <launched> pid=11847
+      - [pid=11847][err] *** You are running in headless mode.
+      - [pid=11847][err] Could not find profile folder.
+      - [pid=11847] <process did exit: exitCode=1, signal=null>
+      - [pid=11847] starting temporary directories cleanup
+      - [pid=11847] <gracefully close start>
+      - [pid=11847] <kill>
+      - [pid=11847] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11847] finished temporary directories cleanup
+      - [pid=11847] <gracefully close end>
+
+
+    Error Context: test-results/web-Demo-offline-no-backen-ca65e-ete-undo-CSV-matches-filter-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-Demo-offline-no-backen-ca65e-ete-undo-CSV-matches-filter-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-Demo-offline-no-backen-ca65e-ete-undo-CSV-matches-filter-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [firefox] › e2e/web.spec.ts:161:1 › Import remains review; ambiguous amount missing; explicit confirmation; reject undo 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-0ZKSIe -juggler-pipe -silent
+    <launched> pid=11895
+    [pid=11895][err] *** You are running in headless mode.
+    [pid=11895][err] Could not find profile folder.
+    [pid=11895] <process did exit: exitCode=1, signal=null>
+    [pid=11895] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-0ZKSIe -juggler-pipe -silent
+      - <launched> pid=11895
+      - [pid=11895][err] *** You are running in headless mode.
+      - [pid=11895][err] Could not find profile folder.
+      - [pid=11895] <process did exit: exitCode=1, signal=null>
+      - [pid=11895] starting temporary directories cleanup
+      - [pid=11895] <gracefully close start>
+      - [pid=11895] <kill>
+      - [pid=11895] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11895] finished temporary directories cleanup
+      - [pid=11895] <gracefully close end>
+
+
+    Error Context: test-results/web-Import-remains-review--428a4-it-confirmation-reject-undo-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-Import-remains-review--428a4-it-confirmation-reject-undo-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-Import-remains-review--428a4-it-confirmation-reject-undo-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) [firefox] › e2e/web.spec.ts:165:1 › Split bill, partial settlement, overpay, noncash resolution and reversal 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-KWvv37 -juggler-pipe -silent
+    <launched> pid=11909
+    [pid=11909][err] *** You are running in headless mode.
+    [pid=11909][err] Could not find profile folder.
+    [pid=11909] <process did exit: exitCode=1, signal=null>
+    [pid=11909] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-KWvv37 -juggler-pipe -silent
+      - <launched> pid=11909
+      - [pid=11909][err] *** You are running in headless mode.
+      - [pid=11909][err] Could not find profile folder.
+      - [pid=11909] <process did exit: exitCode=1, signal=null>
+      - [pid=11909] starting temporary directories cleanup
+      - [pid=11909] <gracefully close start>
+      - [pid=11909] <kill>
+      - [pid=11909] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11909] finished temporary directories cleanup
+      - [pid=11909] <gracefully close end>
+
+
+    Error Context: test-results/web-Split-bill-partial-set-bd714-ash-resolution-and-reversal-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-Split-bill-partial-set-bd714-ash-resolution-and-reversal-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-Split-bill-partial-set-bd714-ash-resolution-and-reversal-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13) [firefox] › e2e/web.spec.ts:168:1 › Transfer validation, creation, edit/delete/undo; last account protected 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-Dhf59K -juggler-pipe -silent
+    <launched> pid=11922
+    [pid=11922][err] *** You are running in headless mode.
+    [pid=11922][err] Could not find profile folder.
+    [pid=11922] <process did exit: exitCode=1, signal=null>
+    [pid=11922] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-Dhf59K -juggler-pipe -silent
+      - <launched> pid=11922
+      - [pid=11922][err] *** You are running in headless mode.
+      - [pid=11922][err] Could not find profile folder.
+      - [pid=11922] <process did exit: exitCode=1, signal=null>
+      - [pid=11922] starting temporary directories cleanup
+      - [pid=11922] <gracefully close start>
+      - [pid=11922] <kill>
+      - [pid=11922] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11922] finished temporary directories cleanup
+      - [pid=11922] <gracefully close end>
+
+
+    Error Context: test-results/web-Transfer-validation-cr-54aca-undo-last-account-protected-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-Transfer-validation-cr-54aca-undo-last-account-protected-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-Transfer-validation-cr-54aca-undo-last-account-protected-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  14) [firefox] › e2e/web.spec.ts:171:1 › Unsaved input guards browser back; keyboard focus; theme persists without sensitive data 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-y28mfE -juggler-pipe -silent
+    <launched> pid=11933
+    [pid=11933][err] *** You are running in headless mode.
+    [pid=11933][err] Could not find profile folder.
+    [pid=11933] <process did exit: exitCode=1, signal=null>
+    [pid=11933] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-y28mfE -juggler-pipe -silent
+      - <launched> pid=11933
+      - [pid=11933][err] *** You are running in headless mode.
+      - [pid=11933][err] Could not find profile folder.
+      - [pid=11933] <process did exit: exitCode=1, signal=null>
+      - [pid=11933] starting temporary directories cleanup
+      - [pid=11933] <gracefully close start>
+      - [pid=11933] <kill>
+      - [pid=11933] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11933] finished temporary directories cleanup
+      - [pid=11933] <gracefully close end>
+
+
+    Error Context: test-results/web-Unsaved-input-guards-b-5d655-ists-without-sensitive-data-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-Unsaved-input-guards-b-5d655-ists-without-sensitive-data-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-Unsaved-input-guards-b-5d655-ists-without-sensitive-data-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  15) [firefox] › e2e/web.spec.ts:174:1 › Keyboard dialog traps focus, Escape restores trigger; controls meet 44px and reduced motion 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-2osoDc -juggler-pipe -silent
+    <launched> pid=11948
+    [pid=11948][err] *** You are running in headless mode.
+    [pid=11948][err] Could not find profile folder.
+    [pid=11948] <process did exit: exitCode=1, signal=null>
+    [pid=11948] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-2osoDc -juggler-pipe -silent
+      - <launched> pid=11948
+      - [pid=11948][err] *** You are running in headless mode.
+      - [pid=11948][err] Could not find profile folder.
+      - [pid=11948] <process did exit: exitCode=1, signal=null>
+      - [pid=11948] starting temporary directories cleanup
+      - [pid=11948] <gracefully close start>
+      - [pid=11948] <kill>
+      - [pid=11948] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11948] finished temporary directories cleanup
+      - [pid=11948] <gracefully close end>
+
+
+    Error Context: test-results/web-Keyboard-dialog-traps--e0ec2-eet-44px-and-reduced-motion-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-Keyboard-dialog-traps--e0ec2-eet-44px-and-reduced-motion-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-Keyboard-dialog-traps--e0ec2-eet-44px-and-reduced-motion-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  16) [firefox] › e2e/web.spec.ts:190:1 › Accounts, categories, merchant rules, budget and full export 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-3aZpAt -juggler-pipe -silent
+    <launched> pid=11961
+    [pid=11961][err] *** You are running in headless mode.
+    [pid=11961][err] Could not find profile folder.
+    [pid=11961] <process did exit: exitCode=1, signal=null>
+    [pid=11961] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-3aZpAt -juggler-pipe -silent
+      - <launched> pid=11961
+      - [pid=11961][err] *** You are running in headless mode.
+      - [pid=11961][err] Could not find profile folder.
+      - [pid=11961] <process did exit: exitCode=1, signal=null>
+      - [pid=11961] starting temporary directories cleanup
+      - [pid=11961] <gracefully close start>
+      - [pid=11961] <kill>
+      - [pid=11961] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11961] finished temporary directories cleanup
+      - [pid=11961] <gracefully close end>
+
+
+    Error Context: test-results/web-Accounts-categories-me-6c19c-ules-budget-and-full-export-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-Accounts-categories-me-6c19c-ules-budget-and-full-export-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-Accounts-categories-me-6c19c-ules-budget-and-full-export-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  17) [firefox] › e2e/web.spec.ts:194:69 › visual five screens 390 light ───────────────────────────
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-EsszGr -juggler-pipe -silent
+    <launched> pid=11976
+    [pid=11976][err] *** You are running in headless mode.
+    [pid=11976][err] Could not find profile folder.
+    [pid=11976] <process did exit: exitCode=1, signal=null>
+    [pid=11976] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-EsszGr -juggler-pipe -silent
+      - <launched> pid=11976
+      - [pid=11976][err] *** You are running in headless mode.
+      - [pid=11976][err] Could not find profile folder.
+      - [pid=11976] <process did exit: exitCode=1, signal=null>
+      - [pid=11976] starting temporary directories cleanup
+      - [pid=11976] <gracefully close start>
+      - [pid=11976] <kill>
+      - [pid=11976] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11976] finished temporary directories cleanup
+      - [pid=11976] <gracefully close end>
+
+
+    Error Context: test-results/web-visual-five-screens-390-light-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-visual-five-screens-390-light-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-visual-five-screens-390-light-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  18) [firefox] › e2e/web.spec.ts:194:69 › visual five screens 390 dark ────────────────────────────
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-AJxSN6 -juggler-pipe -silent
+    <launched> pid=11988
+    [pid=11988][err] *** You are running in headless mode.
+    [pid=11988][err] Could not find profile folder.
+    [pid=11988] <process did exit: exitCode=1, signal=null>
+    [pid=11988] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-AJxSN6 -juggler-pipe -silent
+      - <launched> pid=11988
+      - [pid=11988][err] *** You are running in headless mode.
+      - [pid=11988][err] Could not find profile folder.
+      - [pid=11988] <process did exit: exitCode=1, signal=null>
+      - [pid=11988] starting temporary directories cleanup
+      - [pid=11988] <gracefully close start>
+      - [pid=11988] <kill>
+      - [pid=11988] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=11988] finished temporary directories cleanup
+      - [pid=11988] <gracefully close end>
+
+
+    Error Context: test-results/web-visual-five-screens-390-dark-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-visual-five-screens-390-dark-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-visual-five-screens-390-dark-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  19) [firefox] › e2e/web.spec.ts:194:69 › visual five screens 1440 light ──────────────────────────
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-qzUcBz -juggler-pipe -silent
+    <launched> pid=12003
+    [pid=12003][err] *** You are running in headless mode.
+    [pid=12003][err] Could not find profile folder.
+    [pid=12003] <process did exit: exitCode=1, signal=null>
+    [pid=12003] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-qzUcBz -juggler-pipe -silent
+      - <launched> pid=12003
+      - [pid=12003][err] *** You are running in headless mode.
+      - [pid=12003][err] Could not find profile folder.
+      - [pid=12003] <process did exit: exitCode=1, signal=null>
+      - [pid=12003] starting temporary directories cleanup
+      - [pid=12003] <gracefully close start>
+      - [pid=12003] <kill>
+      - [pid=12003] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=12003] finished temporary directories cleanup
+      - [pid=12003] <gracefully close end>
+
+
+    Error Context: test-results/web-visual-five-screens-1440-light-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-visual-five-screens-1440-light-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-visual-five-screens-1440-light-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  20) [firefox] › e2e/web.spec.ts:194:69 › visual five screens 1440 dark ───────────────────────────
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-JhvE8Y -juggler-pipe -silent
+    <launched> pid=12013
+    [pid=12013][err] *** You are running in headless mode.
+    [pid=12013][err] Could not find profile folder.
+    [pid=12013] <process did exit: exitCode=1, signal=null>
+    [pid=12013] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/hw/jxcjts5x3tq7n14008rpjl2c0000gn/T/playwright_firefoxdev_profile-JhvE8Y -juggler-pipe -silent
+      - <launched> pid=12013
+      - [pid=12013][err] *** You are running in headless mode.
+      - [pid=12013][err] Could not find profile folder.
+      - [pid=12013] <process did exit: exitCode=1, signal=null>
+      - [pid=12013] starting temporary directories cleanup
+      - [pid=12013] <gracefully close start>
+      - [pid=12013] <kill>
+      - [pid=12013] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=12013] finished temporary directories cleanup
+      - [pid=12013] <gracefully close end>
+
+
+    Error Context: test-results/web-visual-five-screens-1440-dark-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-visual-five-screens-1440-dark-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-visual-five-screens-1440-dark-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  20 failed
+    [firefox] › e2e/web.spec.ts:21:1 › Local QR image/PDF import, MIME/5MB errors, no automatic posting 
+    [firefox] › e2e/web.spec.ts:24:1 › Unreadable PDF and unsupported QR retain attachments for manual review 
+    [firefox] › e2e/web.spec.ts:33:1 › Posted manual attachment and confirmed import preview never post another transaction 
+    [firefox] › e2e/web.spec.ts:57:1 › Large synthetic snapshot keeps transaction DOM bounded and filters usable 
+    [firefox] › e2e/web.spec.ts:72:1 › Bundled Demo PDF imports locally with evidence and no posting 
+    [firefox] › e2e/web.spec.ts:81:1 › Duplicate bill review can be dismissed or explicitly merged without double posting 
+    [firefox] › e2e/web.spec.ts:98:1 › 20 quick entries and 10 split entries automated regression, not human usability 
+    [firefox] › e2e/web.spec.ts:105:38 › accessibility five screens, small phone, 200% text light ──
+    [firefox] › e2e/web.spec.ts:105:38 › accessibility five screens, small phone, 200% text dark ───
+    [firefox] › e2e/web.spec.ts:154:1 › Demo offline, no backend; edit/delete/undo; CSV matches filter 
+    [firefox] › e2e/web.spec.ts:161:1 › Import remains review; ambiguous amount missing; explicit confirmation; reject undo 
+    [firefox] › e2e/web.spec.ts:165:1 › Split bill, partial settlement, overpay, noncash resolution and reversal 
+    [firefox] › e2e/web.spec.ts:168:1 › Transfer validation, creation, edit/delete/undo; last account protected 
+    [firefox] › e2e/web.spec.ts:171:1 › Unsaved input guards browser back; keyboard focus; theme persists without sensitive data 
+    [firefox] › e2e/web.spec.ts:174:1 › Keyboard dialog traps focus, Escape restores trigger; controls meet 44px and reduced motion 
+    [firefox] › e2e/web.spec.ts:190:1 › Accounts, categories, merchant rules, budget and full export 
+    [firefox] › e2e/web.spec.ts:194:69 › visual five screens 390 light ─────────────────────────────
+    [firefox] › e2e/web.spec.ts:194:69 › visual five screens 390 dark ──────────────────────────────
+    [firefox] › e2e/web.spec.ts:194:69 › visual five screens 1440 light ────────────────────────────
+    [firefox] › e2e/web.spec.ts:194:69 › visual five screens 1440 dark ─────────────────────────────

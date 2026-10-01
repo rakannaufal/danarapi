@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://danarapi.invalid/contracts/v1/ledger.schema.json",
+  "title": "Danarapi Ledger Contract v1",
+  "type": "object",
+  "$defs": {
+    "money": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,11})$",
+      "description": "Whole Indonesian Rupiah. JSON numbers and fractions are forbidden."
+    },
+    "positiveMoney": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]{0,11}$"
+    },
+    "signedMoney": {
+      "type": "string",
+      "pattern": "^-?(0|[1-9][0-9]{0,11})$"
+    },
+    "uuid": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "instant": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "transactionGoal": {
+      "type": ["string", "null"],
+      "format": "uuid",
+      "description": "Optional goalID / p_goal_id. Only expense transactions may contribute. Goal and transaction must share the owner; deleted goals detach without refunding the expense."
+    },
+    "error": {
+      "type": "object",
+      "required": ["code", "message", "request_id"],
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "request_id": { "$ref": "#/$defs/uuid" },
+        "details": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "splitMemberInput": {
+      "type": "object",
+      "required": ["id", "display_name", "is_self", "share_amount", "sort_order"],
+      "properties": {
+        "id": { "$ref": "#/$defs/uuid" },
+        "display_name": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "is_self": { "type": "boolean" },
+        "share_amount": { "$ref": "#/$defs/money" },
+        "sort_order": { "type": "integer", "minimum": 0, "maximum": 19 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["schema_version"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" }
+  }
+}

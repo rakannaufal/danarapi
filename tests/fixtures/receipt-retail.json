@@ -1,0 +1,16 @@
+{
+  "merchant": "JIMS HONEY",
+  "date": "2025-06-29",
+  "items": [
+    { "name": "Paper Bag Jh Large", "qty": 1, "unit_price": 11000, "line_total": 11000, "note": "0%" },
+    { "name": "Jennie Bp D (black)", "qty": 1, "unit_price": 350000, "line_total": 175000, "note": "50%" }
+  ],
+  "subtotal": 361000,
+  "service_charge": 0,
+  "tax": 0,
+  "discount": 175000,
+  "rounding": 0,
+  "grand_total": 186000,
+  "tax_included_in_price": false,
+  "unreadable_fields": []
+}

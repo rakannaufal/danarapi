@@ -1,0 +1,597 @@
+{
+  "synthetic": true,
+  "generated_at": "2026-09-30T22:58:15.276Z",
+  "browsers": [
+    "chromium",
+    "webkit"
+  ],
+  "screens": [
+    "beranda",
+    "input",
+    "split-bill",
+    "perlu-ditinjau",
+    "laporan"
+  ],
+  "matrix": [
+    "390 light/dark",
+    "1440 light/dark",
+    "375 text200 light/dark"
+  ],
+  "screenshot_count": 76,
+  "source_files": [
+    {
+      "name": "apps/web/src/App.vue",
+      "sha256": "d2df9a6e85938ac7ddb006f33561ee760f0eb3b45390ee761f87ce499d0c4d5a"
+    },
+    {
+      "name": "apps/web/src/style.css",
+      "sha256": "c6c0081bcbbf6a07fc66f6645937d5a10d164e45f9674247b186355bb038365e"
+    },
+    {
+      "name": "apps/web/src/tokens.css",
+      "sha256": "a1c368092bdef7b94a3a29c89ea6d3fda027d28d4c8b00bfdb574d527eca0622"
+    },
+    {
+      "name": "apps/web/src/components/Modal.vue",
+      "sha256": "5edae09c5be890195007a511a8069d83dc625fea8ed738c9b36b16f8ecdf60b3"
+    },
+    {
+      "name": "apps/web/src/components/AttachmentPanel.vue",
+      "sha256": "46144959fe796c0ec327e0c82c5f9486059d4627285f9d9fe0040f521c06f19c"
+    },
+    {
+      "name": "apps/web/src/components/TransactionForm.vue",
+      "sha256": "010518468437c4a83a1b9a24a6bbb94b83c8441f5dc0de1918fb748b92c85f5f"
+    },
+    {
+      "name": "apps/web/src/components/SplitForm.vue",
+      "sha256": "4e75f53e9ce7007fbcae4bb06034f657ec6cfd4d92a1b659646d6f07d6874b62"
+    },
+    {
+      "name": "apps/web/e2e/web.spec.ts",
+      "sha256": "1f174edcd7d042fe6ede26674008ad46a4528d3ea1cb5921218772192442b3a0"
+    },
+    {
+      "name": "apps/web/playwright.config.ts",
+      "sha256": "65fff9984ff62ccf5f6d0cb7dbac2125b3b35bd4a412fc32b98a137cef868724"
+    },
+    {
+      "name": "contracts/design-tokens.json",
+      "sha256": "41bcf7b3825933f15f54e89031a43674cb9d63f534f6770714ab7f6d75ce22c5"
+    }
+  ],
+  "files": [
+    {
+      "browser": "chromium",
+      "name": "beranda-1440-dark.png",
+      "bytes": 225808,
+      "sha256": "f8ac6cf17d4f38bfc51c679d057c8bcc8855c555a6d1d48e627451b675a1887e",
+      "captured_at": "2026-09-30T22:56:54.003Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "beranda-1440-light.png",
+      "bytes": 222487,
+      "sha256": "6f5fcd1b329fa97b2f329a6cf21ee4ce3aadae376abba2f61cd63d9568ad8b16",
+      "captured_at": "2026-09-30T22:56:52.093Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "beranda-375-text200-dark.png",
+      "bytes": 367062,
+      "sha256": "649d4d509657497781a181f780845e94a7a6a30723f78ffd23ffe7f0852a35f1",
+      "captured_at": "2026-09-30T22:56:40.113Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "beranda-375-text200-light.png",
+      "bytes": 359209,
+      "sha256": "cfaa25a005487a14507c0daa10112550447bb534407a97b452ee086b07f405b0",
+      "captured_at": "2026-09-30T22:56:34.974Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "beranda-390-dark.png",
+      "bytes": 173046,
+      "sha256": "72d5d16819d850c9abbfed454cea670e75c102e59600782121b77ea599e8a04a",
+      "captured_at": "2026-09-30T22:56:50.834Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "beranda-390-light.png",
+      "bytes": 168543,
+      "sha256": "66ebb8891b49fdf2b3081df2bd76bf544d11ba4822e983cad3d3f1f820b8f9af",
+      "captured_at": "2026-09-30T22:56:49.595Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "input-1440-dark.png",
+      "bytes": 212367,
+      "sha256": "5ada6b3f39c0b33a10953062dbddf4b9cdd5fba4f7819d75872fb7b008960da3",
+      "captured_at": "2026-09-30T22:56:54.324Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "input-1440-light.png",
+      "bytes": 210463,
+      "sha256": "e9b1107b4d992b66603c2217dd99183d003224828fe5c045fbba2f99c5c761d0",
+      "captured_at": "2026-09-30T22:56:52.352Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "input-375-text200-dark-bottom.png",
+      "bytes": 52011,
+      "sha256": "a4c3626cfb81a27466759e7a525d914d48d7058b5dc0f9d7cb6a89ee54ccdb01",
+      "captured_at": "2026-09-30T22:56:40.452Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "input-375-text200-dark-viewport.png",
+      "bytes": 39784,
+      "sha256": "927bc6b04764e33a819bffd87ebb383dab19b880be33fa66ffd0e570c4a1742b",
+      "captured_at": "2026-09-30T22:56:40.413Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "input-375-text200-dark.png",
+      "bytes": 358152,
+      "sha256": "d4b685150a533bf3ca455e808db5a34fd59a310616d02186896230a4406cde6e",
+      "captured_at": "2026-09-30T22:56:40.349Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "input-375-text200-light-bottom.png",
+      "bytes": 51971,
+      "sha256": "06c9be5d145561fde680b9e7ddf63ca9ac4429b3291dab549b44bf8821cc7e8b",
+      "captured_at": "2026-09-30T22:56:35.403Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "input-375-text200-light-viewport.png",
+      "bytes": 39952,
+      "sha256": "fe64f445750b3ea49802643a982019b777d9dc85675c2f6546dcea96c0f1ed3a",
+      "captured_at": "2026-09-30T22:56:35.366Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "input-375-text200-light.png",
+      "bytes": 350642,
+      "sha256": "4408d1bbe6f664fb8a70f6fc5023d90807dc8b6181fea9292d765654d443da1d",
+      "captured_at": "2026-09-30T22:56:35.287Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "input-390-dark.png",
+      "bytes": 151402,
+      "sha256": "446ca37a262fd9a2d6defa1fea2c1627e19c542f7b5bc7f0fefb97059c741041",
+      "captured_at": "2026-09-30T22:56:51.066Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "input-390-light.png",
+      "bytes": 148460,
+      "sha256": "3e5c906613587b9a2232ffef4a0532307edc22e39fd490b94865b5f0fe1828df",
+      "captured_at": "2026-09-30T22:56:49.760Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "laporan-1440-dark.png",
+      "bytes": 245396,
+      "sha256": "59f3277d532bf4771aafe29268805f78e09292a5965269babab773819d5b6dbd",
+      "captured_at": "2026-09-30T22:56:55.141Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "laporan-1440-light.png",
+      "bytes": 240546,
+      "sha256": "90a86df4284e423b9edf5b2e22c25c62ddf2e456e871701d03e6ee1bbd0db905",
+      "captured_at": "2026-09-30T22:56:53.131Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "laporan-375-text200-dark.png",
+      "bytes": 448598,
+      "sha256": "fcfc1b917f86e579722153debfa7e24e9f90f5903776824fd4ecda064c0947b8",
+      "captured_at": "2026-09-30T22:56:41.319Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "laporan-375-text200-light.png",
+      "bytes": 439143,
+      "sha256": "8ff3a9b19895f06f6b535af2993472054478e53b51d1262470e4a98f3f507b95",
+      "captured_at": "2026-09-30T22:56:36.459Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "laporan-390-dark.png",
+      "bytes": 200022,
+      "sha256": "08ef9756b2a115ee4867e17121266d10e19564e378d2b55daf58fd9988969b09",
+      "captured_at": "2026-09-30T22:56:51.536Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "laporan-390-light.png",
+      "bytes": 195793,
+      "sha256": "86ecff3bceb53ed4e05ea4d9dc811c1b06640b256cf8ee6373be09b7e7054794",
+      "captured_at": "2026-09-30T22:56:50.186Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "perlu-ditinjau-1440-dark.png",
+      "bytes": 149356,
+      "sha256": "cbb441f644ecbd6c65500db6f185bb536966f34f2e1df5c05acd1808d6699bd8",
+      "captured_at": "2026-09-30T22:56:54.880Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "perlu-ditinjau-1440-light.png",
+      "bytes": 146664,
+      "sha256": "538a25713f9b89c27e00d5bfaeb4352a122e82047ae89dd51cb0c46bb6924ecc",
+      "captured_at": "2026-09-30T22:56:52.874Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "perlu-ditinjau-375-text200-dark.png",
+      "bytes": 250815,
+      "sha256": "9d8236c9c706dfd563910437073ed630f4c0804807b3cc48a80a98ea99a4acdb",
+      "captured_at": "2026-09-30T22:56:41.016Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "perlu-ditinjau-375-text200-light.png",
+      "bytes": 243970,
+      "sha256": "a5e717016082448fdb594647ab9f2d2e5508758c353664be0438ac3787b908e2",
+      "captured_at": "2026-09-30T22:56:36.164Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "perlu-ditinjau-390-dark.png",
+      "bytes": 113433,
+      "sha256": "4304f8c756a343b6c9b51851923b63ed6e4ba8ec82ea920a756ded22b65f660d",
+      "captured_at": "2026-09-30T22:56:51.412Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "perlu-ditinjau-390-light.png",
+      "bytes": 109958,
+      "sha256": "cfb43424594cfd6154def1280e35d44810a38fc1aa0f7489f8102981f1553d79",
+      "captured_at": "2026-09-30T22:56:50.062Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "split-bill-1440-dark.png",
+      "bytes": 209227,
+      "sha256": "0812cf23a5dd55a8c217ea9a7610a5055bcee702e5c572774437a707b670446c",
+      "captured_at": "2026-09-30T22:56:54.681Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "split-bill-1440-light.png",
+      "bytes": 207787,
+      "sha256": "8eb87172a19e4da0a857e521de77df53d5fa2d2fb1739e53e7435d688e811f4d",
+      "captured_at": "2026-09-30T22:56:52.662Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "split-bill-375-text200-dark-bottom.png",
+      "bytes": 48918,
+      "sha256": "3af44b4ae29cbfdd401b32ec21425c9bdfb041e0782fa3d6ce3a6fcf3d34b2a6",
+      "captured_at": "2026-09-30T22:56:40.835Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "split-bill-375-text200-dark-viewport.png",
+      "bytes": 55861,
+      "sha256": "da3202fe70628530cd74f49813d850268a77c24338453ecfb7709de2370114a0",
+      "captured_at": "2026-09-30T22:56:40.801Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "split-bill-375-text200-dark.png",
+      "bytes": 374438,
+      "sha256": "3b2af740e4c3e6c48336729b26542942518fa0202dc9651e63bea37655ec6156",
+      "captured_at": "2026-09-30T22:56:40.749Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "split-bill-375-text200-light-bottom.png",
+      "bytes": 49428,
+      "sha256": "9fd201f69aff646449a096b21de1d1d5450e84e741062ca862a43097e8d5a543",
+      "captured_at": "2026-09-30T22:56:35.922Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "split-bill-375-text200-light-viewport.png",
+      "bytes": 55734,
+      "sha256": "fe966bfccc4d77b40dc8d3482acfd490769de85a330e5856c49e4fb1de33aa73",
+      "captured_at": "2026-09-30T22:56:35.872Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "split-bill-375-text200-light.png",
+      "bytes": 366356,
+      "sha256": "43e0f9db88cfa30e7cba2ad9041dfdfdcd92cedfe85db323b2c5fee659e1fb59",
+      "captured_at": "2026-09-30T22:56:35.802Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "split-bill-390-dark.png",
+      "bytes": 157759,
+      "sha256": "af627dbd43f19ccda870d23bc2be179869d271c7b4350049cc0ce0a075329b40",
+      "captured_at": "2026-09-30T22:56:51.312Z"
+    },
+    {
+      "browser": "chromium",
+      "name": "split-bill-390-light.png",
+      "bytes": 154668,
+      "sha256": "f4ccb1e97db623426c700cfcf887ae0c3db93ce62e8c3913c457aa9c2e1a1fd7",
+      "captured_at": "2026-09-30T22:56:49.963Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/beranda-1440-dark.png",
+      "bytes": 283549,
+      "sha256": "6726bc2469dc64eef3bafdfbdf701f40856b54e33d514e9471ccef3eb31f59eb",
+      "captured_at": "2026-09-30T22:58:08.866Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/beranda-1440-light.png",
+      "bytes": 284153,
+      "sha256": "ed197017361a467a6dc63dc79dc4b5df9b352b44dc819b14e0b13d973f5dc3b7",
+      "captured_at": "2026-09-30T22:58:06.235Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/beranda-375-text200-dark.png",
+      "bytes": 424600,
+      "sha256": "b62fac63fd5228d3fe30226e84341778a639df4ca728373b6ba5ba47ae00f057",
+      "captured_at": "2026-09-30T22:57:42.437Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/beranda-375-text200-light.png",
+      "bytes": 431220,
+      "sha256": "026b30c6d6433f657aefb612f5ba2759cb4cb500abca39e695e576f73a58b78b",
+      "captured_at": "2026-09-30T22:57:33.540Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/beranda-390-dark.png",
+      "bytes": 209474,
+      "sha256": "7bdd6e3bf0d843be73f453b4fc2eda4e023cb59a63b5b7053e03ae03babb923c",
+      "captured_at": "2026-09-30T22:58:03.676Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/beranda-390-light.png",
+      "bytes": 209579,
+      "sha256": "4d70cfa4ab6cc8586601687fd9dacfc14ebcc456518addddc746cbdd2050d14f",
+      "captured_at": "2026-09-30T22:58:00.662Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/input-1440-dark.png",
+      "bytes": 276963,
+      "sha256": "c3b1a7ee302a1fb7fa949403563c071e735dad4e9a7a2c9b50d8708142127b86",
+      "captured_at": "2026-09-30T22:58:09.162Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/input-1440-light.png",
+      "bytes": 276104,
+      "sha256": "1f8d2f46a67aeb673b99dac4a005b00ddcf3ff43fc013aeb95cb256bbee48c99",
+      "captured_at": "2026-09-30T22:58:06.636Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/input-375-text200-dark-bottom.png",
+      "bytes": 60511,
+      "sha256": "602457355cad8327e1e33889fe96d4330bf4c13d57abda3462863a98173e50e6",
+      "captured_at": "2026-09-30T22:57:42.921Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/input-375-text200-dark-viewport.png",
+      "bytes": 47739,
+      "sha256": "6f59e0e6c1a088abd253f7ed4b2041406167e00ffd1203f64183d70f8d80a205",
+      "captured_at": "2026-09-30T22:57:42.833Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/input-375-text200-dark.png",
+      "bytes": 418779,
+      "sha256": "f51b43b664eb881a8ea33eaa838d544b19a04a7afd2bd9f576f63106a3a99951",
+      "captured_at": "2026-09-30T22:57:42.709Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/input-375-text200-light-bottom.png",
+      "bytes": 60076,
+      "sha256": "2cbaddca0634f7361e83cc4a763f0d01d59318a6dc9cf8120090f7b64ed82b2f",
+      "captured_at": "2026-09-30T22:57:34.322Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/input-375-text200-light-viewport.png",
+      "bytes": 48518,
+      "sha256": "c2280c8de30faf6d90e135f3e184fbada97ae70f59395cf3a66ad50bd7d4c1bb",
+      "captured_at": "2026-09-30T22:57:34.221Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/input-375-text200-light.png",
+      "bytes": 421092,
+      "sha256": "658ac30bb80ddd8631469cf4e822017eb7334c6c6cf92a274aeefba868997075",
+      "captured_at": "2026-09-30T22:57:34.064Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/input-390-dark.png",
+      "bytes": 188734,
+      "sha256": "f61db2f714b5b640afdc1d5e71d5bea3efe374ec435f8276a255996b12aaf4d9",
+      "captured_at": "2026-09-30T22:58:04.137Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/input-390-light.png",
+      "bytes": 187743,
+      "sha256": "1e2be062f0c302c834665cf8b4cafafd211b6cae042b2c0a4a4b8f616280b713",
+      "captured_at": "2026-09-30T22:58:01.077Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/laporan-1440-dark.png",
+      "bytes": 309685,
+      "sha256": "763512b65477e80b44fa324c788473643e921c1654a37dcb88a0d88ee9483cee",
+      "captured_at": "2026-09-30T22:58:10.121Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/laporan-1440-light.png",
+      "bytes": 306360,
+      "sha256": "8661c42e789a0b5ed719aefe42433877ac720857dc9f5694ae1e6875ca438935",
+      "captured_at": "2026-09-30T22:58:07.790Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/laporan-375-text200-dark.png",
+      "bytes": 513979,
+      "sha256": "a04c1f8dfcf1e9ddf1f84723c6d3e6f0bd4c467d2f4490daef94b15bb3ec0918",
+      "captured_at": "2026-09-30T22:57:44.124Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/laporan-375-text200-light.png",
+      "bytes": 512220,
+      "sha256": "40ae3cbaa7785cc1632ece2cfdcc8a08e0ca75fa04e0319fc499f9253893744b",
+      "captured_at": "2026-09-30T22:57:35.569Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/laporan-390-dark.png",
+      "bytes": 248039,
+      "sha256": "f505341f0dc6f5ea7ace3d70e5cd2a00a2f37aed3a5743c4675445a4f8242388",
+      "captured_at": "2026-09-30T22:58:04.867Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/laporan-390-light.png",
+      "bytes": 245241,
+      "sha256": "e6bc1b25b5a0c294120672a9b12c862cd0445042b19cd2a81faa49869d602b8f",
+      "captured_at": "2026-09-30T22:58:02.025Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/perlu-ditinjau-1440-dark.png",
+      "bytes": 191902,
+      "sha256": "a7763a027afbf98c6c45b9f3df1d2cc2c7e8718b13fe03e4444813642aed9808",
+      "captured_at": "2026-09-30T22:58:09.886Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/perlu-ditinjau-1440-light.png",
+      "bytes": 191168,
+      "sha256": "d500950b78fa9be1a85f61614096e5ab00a96c0f69d32915ff088ce9163b2d93",
+      "captured_at": "2026-09-30T22:58:07.494Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/perlu-ditinjau-375-text200-dark.png",
+      "bytes": 279703,
+      "sha256": "827302bd116ee0fe0ad2e6572d5e3b8998e18e0c6c5accc8b328101d51c731c2",
+      "captured_at": "2026-09-30T22:57:43.892Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/perlu-ditinjau-375-text200-light.png",
+      "bytes": 281283,
+      "sha256": "9975a4c8a5094c0068ba1bd977edf7ec558cda230fd7dcab7088a2b8038af2ca",
+      "captured_at": "2026-09-30T22:57:35.353Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/perlu-ditinjau-390-dark.png",
+      "bytes": 139083,
+      "sha256": "f39fa76893fe47b3c7685f71c938c2ac4afd3189a34b59f6089b78e505cc6f3e",
+      "captured_at": "2026-09-30T22:58:04.746Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/perlu-ditinjau-390-light.png",
+      "bytes": 139434,
+      "sha256": "3ca2097a14236e497168346d2f98adeb2b31666ad5ce5b8b75162ad7622235e3",
+      "captured_at": "2026-09-30T22:58:01.747Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/split-bill-1440-dark.png",
+      "bytes": 275621,
+      "sha256": "eea5e93b71401e359735d812293210c8a704013b49ff560d44af75983a730903",
+      "captured_at": "2026-09-30T22:58:09.612Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/split-bill-1440-light.png",
+      "bytes": 275250,
+      "sha256": "b6498f9dda6dd0ff0e74910feae8424ba377d7b6b81652c1be8beb287893806c",
+      "captured_at": "2026-09-30T22:58:07.198Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/split-bill-375-text200-dark-bottom.png",
+      "bytes": 57458,
+      "sha256": "1234940046af0bce3a8ce8a431fa32765f1f87dbdb3a8f762c12325e8ccc3c3e",
+      "captured_at": "2026-09-30T22:57:43.662Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/split-bill-375-text200-dark-viewport.png",
+      "bytes": 61973,
+      "sha256": "78d1105b30cd301e17f0c36c5ab2dd266cacf4247bd910a1abd9d27f27a5f695",
+      "captured_at": "2026-09-30T22:57:43.565Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/split-bill-375-text200-dark.png",
+      "bytes": 432999,
+      "sha256": "ee54d38fa896c9deec8e2dc64e1aee11100db8c0991d22e51d9666c4658d2f45",
+      "captured_at": "2026-09-30T22:57:43.431Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/split-bill-375-text200-light-bottom.png",
+      "bytes": 58244,
+      "sha256": "0e3777fe0d071cd3c814eed615b95ca8f36f75fb635a3bbf49130eaef89488b6",
+      "captured_at": "2026-09-30T22:57:35.102Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/split-bill-375-text200-light-viewport.png",
+      "bytes": 63021,
+      "sha256": "c52621fc457ff46c15277651c68d6b6314456724457700030e4d2141fe8c9c8a",
+      "captured_at": "2026-09-30T22:57:34.997Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/split-bill-375-text200-light.png",
+      "bytes": 434887,
+      "sha256": "29a57253eca4c1a673cea526647d12fa4dd461bdec1e5123261e257d81dee389",
+      "captured_at": "2026-09-30T22:57:34.864Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/split-bill-390-dark.png",
+      "bytes": 195644,
+      "sha256": "73c4854953db0559e65dc29cea92103f0301bf61614308113e2c5ec25a08ad9f",
+      "captured_at": "2026-09-30T22:58:04.570Z"
+    },
+    {
+      "browser": "webkit",
+      "name": "webkit/split-bill-390-light.png",
+      "bytes": 195965,
+      "sha256": "e145dbb239b3ff5ac1ca98cbd04e917da829c64d31cfcd06adf1ae1a542d1e19",
+      "captured_at": "2026-09-30T22:58:01.531Z"
+    }
+  ]
+}

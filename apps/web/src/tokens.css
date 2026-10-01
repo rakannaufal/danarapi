@@ -1,0 +1,28 @@
+:root{font-family:var(--font-family);font-size:100%;line-height:var(--body-line-height)}
+h1{font-size:var(--font-screenTitle);line-height:var(--title-line-height)}
+h2{font-size:var(--font-sectionTitle);line-height:var(--title-line-height)}
+h3{font-size:var(--font-cardTitle);line-height:var(--title-line-height)}
+.primary,.secondary,.danger,.text-button{font-size:var(--font-label);transition-duration:var(--motion-fast)}
+button{min-block-size:var(--touch-minimum)!important;min-inline-size:var(--touch-minimum)!important}
+.provider-sign-in{min-block-size:56px!important}
+input,select,textarea{border-radius:var(--radius-input);border-color:color-mix(in srgb,var(--muted) 75%,var(--surface))}
+.secondary,.upload-zone{border-color:color-mix(in srgb,var(--muted) 75%,var(--surface))}
+button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline-color:color-mix(in srgb,var(--focus-ring) 90%,var(--ink))}
+.modal{border-radius:var(--radius-sheet)}
+.modal{max-width:min(var(--layout-formMaxWidth),calc(100% - 16px))}
+.modal-header h2{min-width:0;overflow-wrap:anywhere}
+.modal-header .icon-button{flex-shrink:0}
+.entry-form .segmented{flex-wrap:wrap}
+.entry-form .segmented button{flex:1 1 9rem;white-space:normal}
+.pill{border-radius:var(--radius-pill)}
+.balance-card{box-shadow:var(--priority-shadow)}
+.entry-form{max-width:var(--layout-formMaxWidth)}
+.balance-flows{grid-template-columns:repeat(auto-fit,minmax(min(100%,8rem),1fr))}
+.balance-flows>div{min-width:0;overflow-wrap:anywhere}
+p{overflow-wrap:anywhere}
+.skip-link{top:12px;transform:translateY(calc(-100% - 24px));clip-path:inset(50%)}
+.skip-link:focus{transform:none;clip-path:none}
+@media(max-width:600px){.bottom-nav{grid-template-columns:repeat(5,minmax(4.3rem,1fr));overflow-x:auto}.bottom-nav a{overflow-wrap:normal;word-break:normal}}
+@media(max-width:600px){.report-toolbar>label{flex:1 1 100%;min-width:0}.report-toolbar .segmented{max-width:100%}.report-toolbar .segmented button{white-space:normal}.category-bar .section-heading{flex-wrap:wrap}.category-bar .section-heading>span{min-width:0;overflow-wrap:anywhere}}
+@media(max-width:600px){.amount-input>div{flex-wrap:wrap}.amount-input>div>span{flex-basis:100%;font-size:1rem}.amount-input input{font-size:clamp(1.25rem,8vw,2.1333rem);flex:1 1 100%;width:100%;min-width:0}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:0s!important;animation-duration:0s!important;scroll-behavior:auto!important}}

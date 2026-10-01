@@ -1,0 +1,19 @@
+
+> @danarapi/web@0.1.0 test:e2e
+> playwright test --project=chromium --project=webkit --grep Posted manual|Keyboard dialog
+
+[WebServer] (node:10046) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:10051) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/web.spec.ts:33:1 › Posted manual attachment and confirmed import preview never post another transaction (6.4s)
+  ✓  2 [chromium] › e2e/web.spec.ts:159:1 › Keyboard dialog traps focus, Escape restores trigger; controls meet 44px and reduced motion (3.2s)
+(node:10070) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [webkit] › e2e/web.spec.ts:33:1 › Posted manual attachment and confirmed import preview never post another transaction (11.4s)
+  ✓  4 [webkit] › e2e/web.spec.ts:159:1 › Keyboard dialog traps focus, Escape restores trigger; controls meet 44px and reduced motion (9.2s)
+
+  4 passed (47.8s)

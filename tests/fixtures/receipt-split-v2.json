@@ -1,0 +1,775 @@
+{
+  "cases": [
+    {
+      "name": "large-3-false",
+      "memberIDs": [
+        "person-0",
+        "person-1",
+        "person-2"
+      ],
+      "draft": {
+        "items": [
+          {
+            "id": "shared",
+            "name": "Bersama",
+            "unitPrice": "123456789987",
+            "quantity": 3,
+            "allocations": [
+              {
+                "memberID": "person-0",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-1",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-2",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "id": "one",
+            "name": "Pribadi",
+            "unitPrice": "987654321",
+            "quantity": 2,
+            "allocations": [
+              {
+                "memberID": "person-1",
+                "quantity": 1
+              }
+            ]
+          }
+        ],
+        "discount": "123456789",
+        "rounding": "-37",
+        "tax": "0",
+        "service": "0",
+        "settings": {
+          "serviceRate": 4.99,
+          "taxRate": 10.01,
+          "taxOnService": true,
+          "taxIncluded": false
+        }
+      },
+      "expected": {
+        "total": "429914801325",
+        "shares": {
+          "person-0": "142544695399",
+          "person-1": "144825410527",
+          "person-2": "142544695399"
+        }
+      }
+    },
+    {
+      "name": "large-3-true",
+      "memberIDs": [
+        "person-0",
+        "person-1",
+        "person-2"
+      ],
+      "draft": {
+        "items": [
+          {
+            "id": "shared",
+            "name": "Bersama",
+            "unitPrice": "123456789987",
+            "quantity": 3,
+            "allocations": [
+              {
+                "memberID": "person-0",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-1",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-2",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "id": "one",
+            "name": "Pribadi",
+            "unitPrice": "987654321",
+            "quantity": 2,
+            "allocations": [
+              {
+                "memberID": "person-1",
+                "quantity": 1
+              }
+            ]
+          }
+        ],
+        "discount": "123456789",
+        "rounding": "-37",
+        "tax": "0",
+        "service": "0",
+        "settings": {
+          "serviceRate": 4.99,
+          "taxRate": 10.01,
+          "taxOnService": true,
+          "taxIncluded": true
+        }
+      },
+      "expected": {
+        "total": "372222221777",
+        "shares": {
+          "person-0": "123415856026",
+          "person-1": "125390509724",
+          "person-2": "123415856027"
+        }
+      }
+    },
+    {
+      "name": "large-7-false",
+      "memberIDs": [
+        "person-0",
+        "person-1",
+        "person-2",
+        "person-3",
+        "person-4",
+        "person-5",
+        "person-6"
+      ],
+      "draft": {
+        "items": [
+          {
+            "id": "shared",
+            "name": "Bersama",
+            "unitPrice": "123456789987",
+            "quantity": 3,
+            "allocations": [
+              {
+                "memberID": "person-0",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-1",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-2",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-3",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-4",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-5",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-6",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "id": "one",
+            "name": "Pribadi",
+            "unitPrice": "987654321",
+            "quantity": 2,
+            "allocations": [
+              {
+                "memberID": "person-1",
+                "quantity": 1
+              }
+            ]
+          }
+        ],
+        "discount": "123456789",
+        "rounding": "-37",
+        "tax": "0",
+        "service": "0",
+        "settings": {
+          "serviceRate": 4.99,
+          "taxRate": 10.01,
+          "taxOnService": true,
+          "taxIncluded": false
+        }
+      },
+      "expected": {
+        "total": "429914801325",
+        "shares": {
+          "person-0": "61090583743",
+          "person-1": "63371298871",
+          "person-2": "61090583743",
+          "person-3": "61090583743",
+          "person-4": "61090583742",
+          "person-5": "61090583741",
+          "person-6": "61090583742"
+        }
+      }
+    },
+    {
+      "name": "large-7-true",
+      "memberIDs": [
+        "person-0",
+        "person-1",
+        "person-2",
+        "person-3",
+        "person-4",
+        "person-5",
+        "person-6"
+      ],
+      "draft": {
+        "items": [
+          {
+            "id": "shared",
+            "name": "Bersama",
+            "unitPrice": "123456789987",
+            "quantity": 3,
+            "allocations": [
+              {
+                "memberID": "person-0",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-1",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-2",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-3",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-4",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-5",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-6",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "id": "one",
+            "name": "Pribadi",
+            "unitPrice": "987654321",
+            "quantity": 2,
+            "allocations": [
+              {
+                "memberID": "person-1",
+                "quantity": 1
+              }
+            ]
+          }
+        ],
+        "discount": "123456789",
+        "rounding": "-37",
+        "tax": "0",
+        "service": "0",
+        "settings": {
+          "serviceRate": 4.99,
+          "taxRate": 10.01,
+          "taxOnService": true,
+          "taxIncluded": true
+        }
+      },
+      "expected": {
+        "total": "372222221777",
+        "shares": {
+          "person-0": "52892509725",
+          "person-1": "54867163424",
+          "person-2": "52892509726",
+          "person-3": "52892509726",
+          "person-4": "52892509725",
+          "person-5": "52892509725",
+          "person-6": "52892509726"
+        }
+      }
+    },
+    {
+      "name": "large-20-false",
+      "memberIDs": [
+        "person-0",
+        "person-1",
+        "person-2",
+        "person-3",
+        "person-4",
+        "person-5",
+        "person-6",
+        "person-7",
+        "person-8",
+        "person-9",
+        "person-10",
+        "person-11",
+        "person-12",
+        "person-13",
+        "person-14",
+        "person-15",
+        "person-16",
+        "person-17",
+        "person-18",
+        "person-19"
+      ],
+      "draft": {
+        "items": [
+          {
+            "id": "shared",
+            "name": "Bersama",
+            "unitPrice": "123456789987",
+            "quantity": 3,
+            "allocations": [
+              {
+                "memberID": "person-0",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-1",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-2",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-3",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-4",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-5",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-6",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-7",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-8",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-9",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-10",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-11",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-12",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-13",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-14",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-15",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-16",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-17",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-18",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-19",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "id": "one",
+            "name": "Pribadi",
+            "unitPrice": "987654321",
+            "quantity": 2,
+            "allocations": [
+              {
+                "memberID": "person-1",
+                "quantity": 1
+              }
+            ]
+          }
+        ],
+        "discount": "123456789",
+        "rounding": "-37",
+        "tax": "0",
+        "service": "0",
+        "settings": {
+          "serviceRate": 4.99,
+          "taxRate": 10.01,
+          "taxOnService": true,
+          "taxIncluded": false
+        }
+      },
+      "expected": {
+        "total": "429914801325",
+        "shares": {
+          "person-0": "21381704311",
+          "person-1": "23662419438",
+          "person-2": "21381704310",
+          "person-3": "21381704310",
+          "person-4": "21381704310",
+          "person-5": "21381704310",
+          "person-6": "21381704311",
+          "person-7": "21381704311",
+          "person-8": "21381704311",
+          "person-9": "21381704310",
+          "person-10": "21381704309",
+          "person-11": "21381704309",
+          "person-12": "21381704309",
+          "person-13": "21381704309",
+          "person-14": "21381704309",
+          "person-15": "21381704309",
+          "person-16": "21381704309",
+          "person-17": "21381704310",
+          "person-18": "21381704310",
+          "person-19": "21381704310"
+        }
+      }
+    },
+    {
+      "name": "large-20-true",
+      "memberIDs": [
+        "person-0",
+        "person-1",
+        "person-2",
+        "person-3",
+        "person-4",
+        "person-5",
+        "person-6",
+        "person-7",
+        "person-8",
+        "person-9",
+        "person-10",
+        "person-11",
+        "person-12",
+        "person-13",
+        "person-14",
+        "person-15",
+        "person-16",
+        "person-17",
+        "person-18",
+        "person-19"
+      ],
+      "draft": {
+        "items": [
+          {
+            "id": "shared",
+            "name": "Bersama",
+            "unitPrice": "123456789987",
+            "quantity": 3,
+            "allocations": [
+              {
+                "memberID": "person-0",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-1",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-2",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-3",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-4",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-5",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-6",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-7",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-8",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-9",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-10",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-11",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-12",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-13",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-14",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-15",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-16",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-17",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-18",
+                "quantity": 1
+              },
+              {
+                "memberID": "person-19",
+                "quantity": 1
+              }
+            ]
+          },
+          {
+            "id": "one",
+            "name": "Pribadi",
+            "unitPrice": "987654321",
+            "quantity": 2,
+            "allocations": [
+              {
+                "memberID": "person-1",
+                "quantity": 1
+              }
+            ]
+          }
+        ],
+        "discount": "123456789",
+        "rounding": "-37",
+        "tax": "0",
+        "service": "0",
+        "settings": {
+          "serviceRate": 4.99,
+          "taxRate": 10.01,
+          "taxOnService": true,
+          "taxIncluded": true
+        }
+      },
+      "expected": {
+        "total": "372222221777",
+        "shares": {
+          "person-0": "18512378404",
+          "person-1": "20487032102",
+          "person-2": "18512378403",
+          "person-3": "18512378403",
+          "person-4": "18512378403",
+          "person-5": "18512378403",
+          "person-6": "18512378404",
+          "person-7": "18512378404",
+          "person-8": "18512378404",
+          "person-9": "18512378404",
+          "person-10": "18512378404",
+          "person-11": "18512378404",
+          "person-12": "18512378404",
+          "person-13": "18512378404",
+          "person-14": "18512378404",
+          "person-15": "18512378404",
+          "person-16": "18512378404",
+          "person-17": "18512378405",
+          "person-18": "18512378405",
+          "person-19": "18512378405"
+        }
+      }
+    },
+    {
+      "name": "tie-1",
+      "memberIDs": [
+        "a",
+        "b",
+        "c"
+      ],
+      "draft": {
+        "items": [
+          {
+            "id": "shared",
+            "name": "Bersama",
+            "unitPrice": "1",
+            "quantity": 1,
+            "allocations": [
+              {
+                "memberID": "a",
+                "quantity": 1
+              },
+              {
+                "memberID": "b",
+                "quantity": 1
+              },
+              {
+                "memberID": "c",
+                "quantity": 1
+              }
+            ]
+          }
+        ],
+        "discount": "0",
+        "rounding": "0",
+        "tax": "0",
+        "service": "0",
+        "settings": {
+          "serviceRate": 0,
+          "taxRate": 0,
+          "taxOnService": false
+        }
+      },
+      "expected": {
+        "total": "1",
+        "shares": {
+          "a": "1",
+          "b": "0",
+          "c": "0"
+        }
+      }
+    },
+    {
+      "name": "tie-33333",
+      "memberIDs": [
+        "a",
+        "b",
+        "c"
+      ],
+      "draft": {
+        "items": [
+          {
+            "id": "shared",
+            "name": "Bersama",
+            "unitPrice": "33333",
+            "quantity": 1,
+            "allocations": [
+              {
+                "memberID": "a",
+                "quantity": 1
+              },
+              {
+                "memberID": "b",
+                "quantity": 1
+              },
+              {
+                "memberID": "c",
+                "quantity": 1
+              }
+            ]
+          }
+        ],
+        "discount": "0",
+        "rounding": "0",
+        "tax": "0",
+        "service": "0",
+        "settings": {
+          "serviceRate": 0,
+          "taxRate": 0,
+          "taxOnService": false
+        }
+      },
+      "expected": {
+        "total": "33333",
+        "shares": {
+          "a": "11111",
+          "b": "11111",
+          "c": "11111"
+        }
+      }
+    },
+    {
+      "name": "tie-999999999997",
+      "memberIDs": [
+        "a",
+        "b",
+        "c"
+      ],
+      "draft": {
+        "items": [
+          {
+            "id": "shared",
+            "name": "Bersama",
+            "unitPrice": "999999999997",
+            "quantity": 1,
+            "allocations": [
+              {
+                "memberID": "a",
+                "quantity": 1
+              },
+              {
+                "memberID": "b",
+                "quantity": 1
+              },
+              {
+                "memberID": "c",
+                "quantity": 1
+              }
+            ]
+          }
+        ],
+        "discount": "0",
+        "rounding": "0",
+        "tax": "0",
+        "service": "0",
+        "settings": {
+          "serviceRate": 0,
+          "taxRate": 0,
+          "taxOnService": false
+        }
+      },
+      "expected": {
+        "total": "999999999997",
+        "shares": {
+          "a": "333333333333",
+          "b": "333333333332",
+          "c": "333333333332"
+        }
+      }
+    }
+  ]
+}

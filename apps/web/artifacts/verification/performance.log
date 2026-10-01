@@ -1,0 +1,31 @@
+
+> danarapi@0.1.0 test:web:performance
+> node --experimental-strip-types scripts/benchmark-web.ts
+
+(node:10117) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/rakan/Documents/Project/Project/danarapi/scripts/benchmark-web.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/rakan/Documents/Project/Project/danarapi/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{
+  "scope": "Node domain/export synthetic benchmark; not HTTP prefetch, browser main thread, ZIP or production SLA",
+  "results": [
+    {
+      "transactions": 10000,
+      "filteredRows": 1650,
+      "deriveMs": 55.8,
+      "filterMs": 15.2,
+      "reportMs": 16.4,
+      "exportMs": 78.1,
+      "csvBytes": 1804782
+    },
+    {
+      "transactions": 50000,
+      "filteredRows": 8250,
+      "deriveMs": 221.4,
+      "filterMs": 61.7,
+      "reportMs": 102.3,
+      "exportMs": 293.4,
+      "csvBytes": 9104582
+    }
+  ]
+}

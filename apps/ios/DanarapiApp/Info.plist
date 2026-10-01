@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>Danarapi</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>CFBundleURLTypes</key>
+	<array><dict><key>CFBundleURLName</key><string>id.danarapi.app.auth</string><key>CFBundleURLSchemes</key><array><string>id.danarapi.app</string></array></dict></array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Kamera dipakai saat Anda memilih memindai QRIS atau memotret bukti. Hasilnya hanya menjadi draft catatan untuk ditinjau, bukan pembayaran.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Face ID dapat dipakai untuk membuka tampilan Danarapi di perangkat ini.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Foto dipilih saat Anda mengimpor gambar QRIS atau bukti untuk ditinjau.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Mode pengembangan menghubungkan pembaca struk iOS ke server scan pada Mac Anda melalui jaringan lokal.</string>
+	<key>NATIVE_SCAN_HOST</key>
+	<string>$(NATIVE_SCAN_HOST)</string>
+	<key>NATIVE_SCAN_PORT</key>
+	<string>$(NATIVE_SCAN_PORT)</string>
+	<key>NATIVE_SCAN_TOKEN</key>
+	<string>$(NATIVE_SCAN_TOKEN)</string>
+	<key>NATIVE_SCAN_CERT_SHA256</key>
+	<string>$(NATIVE_SCAN_CERT_SHA256)</string>
+	<key>SUPABASE_ANON_KEY</key>
+	<string>$(SUPABASE_ANON_KEY)</string>
+	<key>SUPABASE_URL</key>
+	<string>$(SUPABASE_URL)</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>GoogleSans-Medium.ttf</string>
+	</array>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+	</dict>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+</dict>
+</plist>

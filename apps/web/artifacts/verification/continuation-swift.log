@@ -1,0 +1,45 @@
+
+> danarapi@0.1.0 test:swift
+> swift test --package-path apps/ios
+
+Building for debugging...
+[Computing dependencies]
+[Using on-disk description]
+[1 / 5]
+[1 / 4] DanarapiContractsTests-product
+Build complete! (1,77 secs)
+Test Suite 'All tests' started at 2026-10-01 05:50:45.947.
+Test Suite 'DanarapiContractsTests.xctest' started at 2026-10-01 05:50:45.952.
+Test Suite 'GoldenFixtureTests' started at 2026-10-01 05:50:45.952.
+Test Case '-[DanarapiContractsTests.GoldenFixtureTests testContractVersionAndMoneyStrings]' started.
+Test Case '-[DanarapiContractsTests.GoldenFixtureTests testContractVersionAndMoneyStrings]' passed (0.007 seconds).
+Test Case '-[DanarapiContractsTests.GoldenFixtureTests testSplitRoundingMatchesGoldenFixture]' started.
+Test Case '-[DanarapiContractsTests.GoldenFixtureTests testSplitRoundingMatchesGoldenFixture]' passed (0.002 seconds).
+Test Suite 'GoldenFixtureTests' passed at 2026-10-01 05:50:45.963.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.010 (0.011) seconds
+Test Suite 'ItemSplitTests' started at 2026-10-01 05:50:45.963.
+Test Case '-[DanarapiContractsTests.ItemSplitTests testServerGoldenFixture]' started.
+Test Case '-[DanarapiContractsTests.ItemSplitTests testServerGoldenFixture]' passed (0.004 seconds).
+Test Case '-[DanarapiContractsTests.ItemSplitTests testUnassignedDuplicateUnknownAndOverflowRejected]' started.
+Test Case '-[DanarapiContractsTests.ItemSplitTests testUnassignedDuplicateUnknownAndOverflowRejected]' passed (0.001 seconds).
+Test Suite 'ItemSplitTests' passed at 2026-10-01 05:50:45.969.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.005 (0.006) seconds
+Test Suite 'DanarapiContractsTests.xctest' passed at 2026-10-01 05:50:45.969.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.015 (0.017) seconds
+Test Suite 'All tests' passed at 2026-10-01 05:50:45.969.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.015 (0.022) seconds
+◇ Test run started.
+↳ Testing Library Version: 2084
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.003 seconds.
+
+> danarapi@0.1.0 test:swift:fixture
+> sh tests/swift/golden.sh
+
+Swift golden fixture passed: money, equal split, percentage split.
+
+> danarapi@0.1.0 test:swift:typecheck
+> sh tests/swift/typecheck.sh
+
+Swift source and XCTest type-check passed.
+Full iOS app, XCTest, and UI test source type-check passed.

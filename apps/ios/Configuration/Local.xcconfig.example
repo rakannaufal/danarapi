@@ -1,0 +1,3 @@
+// Optional project override. Public publishable/anon keys only; never service-role keys.
+SUPABASE_URL = https:/$()/zoccosfjulasqxczhvfm.supabase.co
+SUPABASE_ANON_KEY = sb_publishable_HFNe0r92MxPPmck_SxfvdA_dwVecyjx

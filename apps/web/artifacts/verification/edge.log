@@ -1,0 +1,19 @@
+
+> danarapi@0.1.0 test:edge
+> deno test --allow-env supabase/tests/web_transport_test.ts
+
+Check supabase/tests/web_transport_test.ts
+running 7 tests from ./supabase/tests/web_transport_test.ts
+web/iOS ledger gateway: same operation, decimal payload, user JWT; restore transfer route ... ok (3ms)
+gateway auth and CORS failures never call upstream ... ok (0ms)
+import creates only pending review with fingerprint; no ledger posting ... ok (0ms)
+malformed attachment MIME rejected before storage upload ... ok (1ms)
+account deletion fails closed when storage inventory fails; identity not deleted ... ok (13ms)
+account deletion verifies every removal and identity disappearance ... ok (0ms)
+full export ZIP supports 300KB attachment and signed decimal CSV; no partial success ... ok (35ms)
+
+ok | 7 passed | 0 failed (58ms)
+
+Check supabase/functions/ledger/index.ts
+Check supabase/functions/ios-data/index.ts
+Check supabase/functions/export-data/index.ts

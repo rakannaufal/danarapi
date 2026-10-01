@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "currency": "IDR",
+  "adjustment_policy": "proportional_subtotal_largest_remainder_participant_order",
+  "cases": [
+    {
+      "name": "a_meal_drink_b_two_meals_drink_c_meal",
+      "memberIDs": ["a", "b", "c"],
+      "draft": {
+        "items": [
+          {"id": "meal", "name": "Nasi", "quantity": 4, "unitPrice": "25000", "allocations": [{"memberID": "a", "quantity": 1}, {"memberID": "b", "quantity": 2}, {"memberID": "c", "quantity": 1}]},
+          {"id": "drink", "name": "Minum", "quantity": 2, "unitPrice": "15000", "allocations": [{"memberID": "a", "quantity": 1}, {"memberID": "b", "quantity": 1}]}
+        ],
+        "tax": "0", "service": "0", "discount": "0"
+      },
+      "expected": {"total": "130000", "shares": {"a": "40000", "b": "65000", "c": "25000"}}
+    },
+    {
+      "name": "proportional_adjustments",
+      "memberIDs": ["a", "b", "c"],
+      "draft": {
+        "items": [
+          {"id": "meal", "name": "Nasi", "quantity": 4, "unitPrice": "25000", "allocations": [{"memberID": "a", "quantity": 1}, {"memberID": "b", "quantity": 2}, {"memberID": "c", "quantity": 1}]},
+          {"id": "drink", "name": "Minum", "quantity": 2, "unitPrice": "15000", "allocations": [{"memberID": "a", "quantity": 1}, {"memberID": "b", "quantity": 1}]}
+        ],
+        "tax": "13000", "service": "6500", "discount": "6500"
+      },
+      "expected": {"total": "143000", "shares": {"a": "44000", "b": "71500", "c": "27500"}}
+    },
+    {
+      "name": "one_rupiah_stable_remainder",
+      "memberIDs": ["a", "b", "c"],
+      "draft": {"items": [{"id": "meal", "name": "Menu", "quantity": 3, "unitPrice": "333", "allocations": [{"memberID": "a", "quantity": 1}, {"memberID": "b", "quantity": 1}, {"memberID": "c", "quantity": 1}]}], "tax": "1", "service": "0", "discount": "0"},
+      "expected": {"total": "1000", "shares": {"a": "334", "b": "333", "c": "333"}}
+    },
+    {
+      "name": "maximum_without_integer_product_overflow",
+      "memberIDs": ["a", "b"],
+      "draft": {"items": [{"id": "meal", "name": "Menu", "quantity": 1, "unitPrice": "999999999998", "allocations": [{"memberID": "a", "quantity": 1}]}], "tax": "1", "service": "0", "discount": "0"},
+      "expected": {"total": "999999999999", "shares": {"a": "999999999999", "b": "0"}}
+    }
+  ]
+}

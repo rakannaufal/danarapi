@@ -1,0 +1,90 @@
+
+> danarapi@0.1.0 check:web
+> npm run web:lint && npm run web:typecheck && npm run web:test && npm run web:build
+
+
+> danarapi@0.1.0 web:lint
+> npm run lint --prefix apps/web
+
+
+> @danarapi/web@0.1.0 lint
+> eslint src tests e2e
+
+
+> danarapi@0.1.0 web:typecheck
+> npm run typecheck --prefix apps/web
+
+
+> @danarapi/web@0.1.0 typecheck
+> vue-tsc --noEmit
+
+
+> danarapi@0.1.0 web:test
+> npm run test --prefix apps/web
+
+
+> @danarapi/web@0.1.0 test
+> node --experimental-strip-types --test tests/*.test.ts
+
+✔ golden fixture uses contract v1 (3.638584ms)
+✔ IDR JSON boundary accepts decimal strings only (1.947083ms)
+✔ equal split distributes remainder in visible order (1.203084ms)
+✔ percentage split uses largest remainder and stable order (0.404875ms)
+✔ all expected financial amounts remain JSON strings (0.596291ms)
+✔ seed shared: exact 200 transactions, 3 months; reset discards mutations (77.847166ms)
+✔ QR/CRC golden import fixture (0.985042ms)
+✔ text golden: explicit total only; ambiguous subtotal never guessed (6.1695ms)
+✔ invalid date and multiple totals require user confirmation (0.298125ms)
+✔ equal/percentage/amount share validation (0.681417ms)
+✔ §3.5 self-paid: cash -120000, expense 40000, receivable 80000 (4.545042ms)
+✔ §3.5 friend-paid: cash unchanged, expense 40000, payable 40000 (1.645583ms)
+✔ settlements change cash, not expense/income/budget; overpay rejected (2.013333ms)
+✔ writeoff noncash + reversal preserves account and reporting (2.126167ms)
+✔ friend payable forgiveness is noncash income (1.763834ms)
+✔ active settlement locks structure/delete (1.874542ms)
+✔ idempotency + stale version + failed mutation rollback (3.272291ms)
+✔ transfer is atomic; same account rejected; edit/delete/restore no expense (1.856916ms)
+✔ review never affects balances before explicit confirm; confirm only once (1.862833ms)
+✔ review-to-split and posted conversion replace original impact atomically (1.988792ms)
+✔ duplicate uses bill total, ±2 days, normalized merchant, selected account (1.842ms)
+✔ filter/CSV share same row set and stable keyset order (3.260958ms)
+✔ CSV BOM, decimal negative numbers, text formula escape (0.262334ms)
+✔ full ZIP has six CSVs, versioned data, verified SHA manifest (46.976542ms)
+✔ last active account, duplicate category name and archived category prevented (1.763333ms)
+✔ timezone period boundaries use local day, not UTC date substring (2.776209ms)
+✔ all demo derived financial totals remain decimal strings (3.530292ms)
+✔ snapshot rejects JSON numbers including extraction field values (3.442ms)
+✔ six CSV headers match shared contract; expense and cash sums match period reports (5.049292ms)
+✔ duplicate bill merge marks review without changing balances or reports (8.889917ms)
+✔ item split matches the shared PostgreSQL and Swift golden fixture (3.721833ms)
+✔ item split rejects incomplete allocation, duplicates and monetary overflow (0.722167ms)
+✔ item split rejects non-string receipt and participant identities (0.390709ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 452.358667
+
+> danarapi@0.1.0 web:build
+> npm run build --prefix apps/web
+
+
+> @danarapi/web@0.1.0 build
+> vue-tsc --noEmit && vite build
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 1968 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                              1.02 kB │ gzip:   0.53 kB
+dist/assets/pdf.worker.min-Dswkl-cV.mjs  1,265.41 kB
+dist/assets/index-f1iNjoxp.css              31.48 kB │ gzip:   6.80 kB
+dist/assets/pdf.worker.min-CWpYdfRJ.js       0.07 kB │ gzip:   0.09 kB
+dist/assets/jsQR-BnGm8Ll0.js               130.78 kB │ gzip:  47.46 kB
+dist/assets/index-BPzhE1Cz.js              254.31 kB │ gzip:  80.63 kB
+dist/assets/pdf-YYBQA8p7.js                437.74 kB │ gzip: 131.10 kB
+✓ built in 3.81s

@@ -1,0 +1,1880 @@
+{
+  "schema_version": "1.0.0",
+  "seed": "danarapi-demo-v1",
+  "synthetic": true,
+  "timezone": "Asia/Jakarta",
+  "period": {
+    "from": "2026-07-01T00:00:00.000Z",
+    "to": "2026-09-30T23:59:59.999Z"
+  },
+  "accounts": [
+    {
+      "id": "cash",
+      "name": "Tunai",
+      "kind": "cash",
+      "opening_balance": "500000"
+    },
+    {
+      "id": "bank",
+      "name": "Bank Demo",
+      "kind": "bank",
+      "opening_balance": "2500000"
+    }
+  ],
+  "categories": [
+    {
+      "id": "food",
+      "name": "Makan",
+      "kind": "expense"
+    },
+    {
+      "id": "transport",
+      "name": "Transportasi",
+      "kind": "expense"
+    },
+    {
+      "id": "household",
+      "name": "Rumah",
+      "kind": "expense"
+    },
+    {
+      "id": "salary",
+      "name": "Gaji",
+      "kind": "income"
+    }
+  ],
+  "budgets": [
+    {
+      "category_id": "food",
+      "month": "2026-09",
+      "limit_amount": "1800000"
+    },
+    {
+      "category_id": "transport",
+      "month": "2026-09",
+      "limit_amount": "700000"
+    }
+  ],
+  "split_bills": [
+    {
+      "id": "demo-bill-self",
+      "total": "120000",
+      "self_share": "40000",
+      "payer": "self",
+      "status": "partially_settled",
+      "settled_amount": "15000",
+      "resolved_amount": "0"
+    },
+    {
+      "id": "demo-bill-other",
+      "total": "90000",
+      "self_share": "30000",
+      "payer": "Ani",
+      "status": "unsettled",
+      "settled_amount": "0",
+      "resolved_amount": "0"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "demo-transaction-001",
+      "type": "income",
+      "amount": "4500000",
+      "account_id": "cash",
+      "category_id": "salary",
+      "merchant": "Pemberi kerja sintetis",
+      "occurred_at": "2026-07-01T01:00:00.000Z"
+    },
+    {
+      "id": "demo-transaction-002",
+      "type": "expense",
+      "amount": "118420",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-07-02T02:07:00.000Z"
+    },
+    {
+      "id": "demo-transaction-003",
+      "type": "expense",
+      "amount": "62721",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-07-03T03:14:00.000Z"
+    },
+    {
+      "id": "demo-transaction-004",
+      "type": "expense",
+      "amount": "63976",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-07-04T04:21:00.000Z"
+    },
+    {
+      "id": "demo-transaction-005",
+      "type": "expense",
+      "amount": "30701",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-07-05T05:28:00.000Z"
+    },
+    {
+      "id": "demo-transaction-006",
+      "type": "expense",
+      "amount": "66898",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-07-06T06:35:00.000Z"
+    },
+    {
+      "id": "demo-transaction-007",
+      "type": "expense",
+      "amount": "145532",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-07-07T07:42:00.000Z"
+    },
+    {
+      "id": "demo-transaction-008",
+      "type": "expense",
+      "amount": "132084",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-07-08T08:49:00.000Z"
+    },
+    {
+      "id": "demo-transaction-009",
+      "type": "expense",
+      "amount": "31870",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-07-09T09:56:00.000Z"
+    },
+    {
+      "id": "demo-transaction-010",
+      "type": "expense",
+      "amount": "59227",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-07-10T10:03:00.000Z"
+    },
+    {
+      "id": "demo-transaction-011",
+      "type": "expense",
+      "amount": "139649",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-07-11T01:10:00.000Z"
+    },
+    {
+      "id": "demo-transaction-012",
+      "type": "expense",
+      "amount": "13257",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-07-12T02:17:00.000Z"
+    },
+    {
+      "id": "demo-transaction-013",
+      "type": "expense",
+      "amount": "99382",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-07-13T03:24:00.000Z"
+    },
+    {
+      "id": "demo-transaction-014",
+      "type": "expense",
+      "amount": "120768",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-07-14T04:31:00.000Z"
+    },
+    {
+      "id": "demo-transaction-015",
+      "type": "expense",
+      "amount": "89223",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-07-15T05:38:00.000Z"
+    },
+    {
+      "id": "demo-transaction-016",
+      "type": "expense",
+      "amount": "27409",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-07-16T06:45:00.000Z"
+    },
+    {
+      "id": "demo-transaction-017",
+      "type": "expense",
+      "amount": "28160",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-07-17T07:52:00.000Z"
+    },
+    {
+      "id": "demo-transaction-018",
+      "type": "expense",
+      "amount": "127749",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-07-18T08:59:00.000Z"
+    },
+    {
+      "id": "demo-transaction-019",
+      "type": "expense",
+      "amount": "70484",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-07-19T09:06:00.000Z"
+    },
+    {
+      "id": "demo-transaction-020",
+      "type": "expense",
+      "amount": "28448",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-07-20T10:13:00.000Z"
+    },
+    {
+      "id": "demo-transaction-021",
+      "type": "expense",
+      "amount": "53785",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-07-21T01:20:00.000Z"
+    },
+    {
+      "id": "demo-transaction-022",
+      "type": "expense",
+      "amount": "118825",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-07-22T02:27:00.000Z"
+    },
+    {
+      "id": "demo-transaction-023",
+      "type": "expense",
+      "amount": "38469",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-07-23T03:34:00.000Z"
+    },
+    {
+      "id": "demo-transaction-024",
+      "type": "expense",
+      "amount": "130834",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-07-24T04:41:00.000Z"
+    },
+    {
+      "id": "demo-transaction-025",
+      "type": "expense",
+      "amount": "57921",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-07-25T05:48:00.000Z"
+    },
+    {
+      "id": "demo-transaction-026",
+      "type": "expense",
+      "amount": "144131",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-07-26T06:55:00.000Z"
+    },
+    {
+      "id": "demo-transaction-027",
+      "type": "expense",
+      "amount": "29324",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-07-27T07:02:00.000Z"
+    },
+    {
+      "id": "demo-transaction-028",
+      "type": "expense",
+      "amount": "59940",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-07-28T08:09:00.000Z"
+    },
+    {
+      "id": "demo-transaction-029",
+      "type": "expense",
+      "amount": "91448",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-07-29T09:16:00.000Z"
+    },
+    {
+      "id": "demo-transaction-030",
+      "type": "expense",
+      "amount": "27547",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-07-30T10:23:00.000Z"
+    },
+    {
+      "id": "demo-transaction-031",
+      "type": "expense",
+      "amount": "131702",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-07-31T01:30:00.000Z"
+    },
+    {
+      "id": "demo-transaction-032",
+      "type": "expense",
+      "amount": "92101",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-08-01T02:37:00.000Z"
+    },
+    {
+      "id": "demo-transaction-033",
+      "type": "expense",
+      "amount": "8373",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-08-02T03:44:00.000Z"
+    },
+    {
+      "id": "demo-transaction-034",
+      "type": "expense",
+      "amount": "10500",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-08-03T04:51:00.000Z"
+    },
+    {
+      "id": "demo-transaction-035",
+      "type": "expense",
+      "amount": "137471",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-08-04T05:58:00.000Z"
+    },
+    {
+      "id": "demo-transaction-036",
+      "type": "expense",
+      "amount": "23773",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-08-05T06:05:00.000Z"
+    },
+    {
+      "id": "demo-transaction-037",
+      "type": "expense",
+      "amount": "129081",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-08-06T07:12:00.000Z"
+    },
+    {
+      "id": "demo-transaction-038",
+      "type": "expense",
+      "amount": "135624",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-08-07T08:19:00.000Z"
+    },
+    {
+      "id": "demo-transaction-039",
+      "type": "expense",
+      "amount": "140434",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-08-08T09:26:00.000Z"
+    },
+    {
+      "id": "demo-transaction-040",
+      "type": "expense",
+      "amount": "79388",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-08-09T10:33:00.000Z"
+    },
+    {
+      "id": "demo-transaction-041",
+      "type": "expense",
+      "amount": "113902",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-08-10T01:40:00.000Z"
+    },
+    {
+      "id": "demo-transaction-042",
+      "type": "expense",
+      "amount": "94013",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-08-11T02:47:00.000Z"
+    },
+    {
+      "id": "demo-transaction-043",
+      "type": "expense",
+      "amount": "132919",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-08-12T03:54:00.000Z"
+    },
+    {
+      "id": "demo-transaction-044",
+      "type": "expense",
+      "amount": "98112",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-08-13T04:01:00.000Z"
+    },
+    {
+      "id": "demo-transaction-045",
+      "type": "expense",
+      "amount": "12179",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-08-14T05:08:00.000Z"
+    },
+    {
+      "id": "demo-transaction-046",
+      "type": "expense",
+      "amount": "109763",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-08-15T06:15:00.000Z"
+    },
+    {
+      "id": "demo-transaction-047",
+      "type": "expense",
+      "amount": "122500",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-08-16T07:22:00.000Z"
+    },
+    {
+      "id": "demo-transaction-048",
+      "type": "income",
+      "amount": "4500000",
+      "account_id": "bank",
+      "category_id": "salary",
+      "merchant": "Pemberi kerja sintetis",
+      "occurred_at": "2026-08-17T08:29:00.000Z"
+    },
+    {
+      "id": "demo-transaction-049",
+      "type": "expense",
+      "amount": "67665",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-08-18T09:36:00.000Z"
+    },
+    {
+      "id": "demo-transaction-050",
+      "type": "expense",
+      "amount": "62689",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-08-19T10:43:00.000Z"
+    },
+    {
+      "id": "demo-transaction-051",
+      "type": "expense",
+      "amount": "94689",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-08-20T01:50:00.000Z"
+    },
+    {
+      "id": "demo-transaction-052",
+      "type": "expense",
+      "amount": "42714",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-08-21T02:57:00.000Z"
+    },
+    {
+      "id": "demo-transaction-053",
+      "type": "expense",
+      "amount": "47343",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-08-22T03:04:00.000Z"
+    },
+    {
+      "id": "demo-transaction-054",
+      "type": "expense",
+      "amount": "16517",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-08-23T04:11:00.000Z"
+    },
+    {
+      "id": "demo-transaction-055",
+      "type": "expense",
+      "amount": "31263",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-08-24T05:18:00.000Z"
+    },
+    {
+      "id": "demo-transaction-056",
+      "type": "expense",
+      "amount": "139640",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-08-25T06:25:00.000Z"
+    },
+    {
+      "id": "demo-transaction-057",
+      "type": "expense",
+      "amount": "91764",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-08-26T07:32:00.000Z"
+    },
+    {
+      "id": "demo-transaction-058",
+      "type": "expense",
+      "amount": "81572",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-08-27T08:39:00.000Z"
+    },
+    {
+      "id": "demo-transaction-059",
+      "type": "expense",
+      "amount": "83474",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-08-28T09:46:00.000Z"
+    },
+    {
+      "id": "demo-transaction-060",
+      "type": "expense",
+      "amount": "101312",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-08-29T10:53:00.000Z"
+    },
+    {
+      "id": "demo-transaction-061",
+      "type": "expense",
+      "amount": "87229",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-08-30T01:00:00.000Z"
+    },
+    {
+      "id": "demo-transaction-062",
+      "type": "expense",
+      "amount": "38001",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-08-31T02:07:00.000Z"
+    },
+    {
+      "id": "demo-transaction-063",
+      "type": "expense",
+      "amount": "17896",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-09-01T03:14:00.000Z"
+    },
+    {
+      "id": "demo-transaction-064",
+      "type": "expense",
+      "amount": "127945",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-09-02T04:21:00.000Z"
+    },
+    {
+      "id": "demo-transaction-065",
+      "type": "expense",
+      "amount": "43251",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-09-03T05:28:00.000Z"
+    },
+    {
+      "id": "demo-transaction-066",
+      "type": "expense",
+      "amount": "18039",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-09-04T06:35:00.000Z"
+    },
+    {
+      "id": "demo-transaction-067",
+      "type": "expense",
+      "amount": "132004",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-09-05T07:42:00.000Z"
+    },
+    {
+      "id": "demo-transaction-068",
+      "type": "expense",
+      "amount": "17542",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-09-06T08:49:00.000Z"
+    },
+    {
+      "id": "demo-transaction-069",
+      "type": "expense",
+      "amount": "146920",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-09-07T09:56:00.000Z"
+    },
+    {
+      "id": "demo-transaction-070",
+      "type": "expense",
+      "amount": "103066",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-09-08T10:03:00.000Z"
+    },
+    {
+      "id": "demo-transaction-071",
+      "type": "expense",
+      "amount": "24300",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-09-09T01:10:00.000Z"
+    },
+    {
+      "id": "demo-transaction-072",
+      "type": "expense",
+      "amount": "21962",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-09-10T02:17:00.000Z"
+    },
+    {
+      "id": "demo-transaction-073",
+      "type": "expense",
+      "amount": "86602",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-09-11T03:24:00.000Z"
+    },
+    {
+      "id": "demo-transaction-074",
+      "type": "expense",
+      "amount": "25555",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-09-12T04:31:00.000Z"
+    },
+    {
+      "id": "demo-transaction-075",
+      "type": "expense",
+      "amount": "10581",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-09-13T05:38:00.000Z"
+    },
+    {
+      "id": "demo-transaction-076",
+      "type": "expense",
+      "amount": "83069",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-09-14T06:45:00.000Z"
+    },
+    {
+      "id": "demo-transaction-077",
+      "type": "expense",
+      "amount": "116250",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-09-15T07:52:00.000Z"
+    },
+    {
+      "id": "demo-transaction-078",
+      "type": "expense",
+      "amount": "15738",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-09-16T08:59:00.000Z"
+    },
+    {
+      "id": "demo-transaction-079",
+      "type": "expense",
+      "amount": "96251",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-09-17T09:06:00.000Z"
+    },
+    {
+      "id": "demo-transaction-080",
+      "type": "expense",
+      "amount": "66055",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-09-18T10:13:00.000Z"
+    },
+    {
+      "id": "demo-transaction-081",
+      "type": "expense",
+      "amount": "80444",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-09-19T01:20:00.000Z"
+    },
+    {
+      "id": "demo-transaction-082",
+      "type": "expense",
+      "amount": "62711",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-09-20T02:27:00.000Z"
+    },
+    {
+      "id": "demo-transaction-083",
+      "type": "expense",
+      "amount": "120352",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-09-21T03:34:00.000Z"
+    },
+    {
+      "id": "demo-transaction-084",
+      "type": "expense",
+      "amount": "26643",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-09-22T04:41:00.000Z"
+    },
+    {
+      "id": "demo-transaction-085",
+      "type": "expense",
+      "amount": "14336",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-09-23T05:48:00.000Z"
+    },
+    {
+      "id": "demo-transaction-086",
+      "type": "expense",
+      "amount": "122840",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-09-24T06:55:00.000Z"
+    },
+    {
+      "id": "demo-transaction-087",
+      "type": "expense",
+      "amount": "29505",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-09-25T07:02:00.000Z"
+    },
+    {
+      "id": "demo-transaction-088",
+      "type": "expense",
+      "amount": "79026",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-09-26T08:09:00.000Z"
+    },
+    {
+      "id": "demo-transaction-089",
+      "type": "expense",
+      "amount": "115612",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-09-27T09:16:00.000Z"
+    },
+    {
+      "id": "demo-transaction-090",
+      "type": "expense",
+      "amount": "117663",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-09-28T10:23:00.000Z"
+    },
+    {
+      "id": "demo-transaction-091",
+      "type": "expense",
+      "amount": "84843",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-09-29T01:30:00.000Z"
+    },
+    {
+      "id": "demo-transaction-092",
+      "type": "expense",
+      "amount": "132626",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-09-30T02:37:00.000Z"
+    },
+    {
+      "id": "demo-transaction-093",
+      "type": "expense",
+      "amount": "63297",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-07-01T03:44:00.000Z"
+    },
+    {
+      "id": "demo-transaction-094",
+      "type": "expense",
+      "amount": "98527",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-07-02T04:51:00.000Z"
+    },
+    {
+      "id": "demo-transaction-095",
+      "type": "income",
+      "amount": "4500000",
+      "account_id": "bank",
+      "category_id": "salary",
+      "merchant": "Pemberi kerja sintetis",
+      "occurred_at": "2026-07-03T05:58:00.000Z"
+    },
+    {
+      "id": "demo-transaction-096",
+      "type": "expense",
+      "amount": "61176",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-07-04T06:05:00.000Z"
+    },
+    {
+      "id": "demo-transaction-097",
+      "type": "expense",
+      "amount": "68057",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-07-05T07:12:00.000Z"
+    },
+    {
+      "id": "demo-transaction-098",
+      "type": "expense",
+      "amount": "82986",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-07-06T08:19:00.000Z"
+    },
+    {
+      "id": "demo-transaction-099",
+      "type": "expense",
+      "amount": "138942",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-07-07T09:26:00.000Z"
+    },
+    {
+      "id": "demo-transaction-100",
+      "type": "expense",
+      "amount": "73671",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-07-08T10:33:00.000Z"
+    },
+    {
+      "id": "demo-transaction-101",
+      "type": "expense",
+      "amount": "117393",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-07-09T01:40:00.000Z"
+    },
+    {
+      "id": "demo-transaction-102",
+      "type": "expense",
+      "amount": "73597",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-07-10T02:47:00.000Z"
+    },
+    {
+      "id": "demo-transaction-103",
+      "type": "expense",
+      "amount": "106821",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-07-11T03:54:00.000Z"
+    },
+    {
+      "id": "demo-transaction-104",
+      "type": "expense",
+      "amount": "96242",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-07-12T04:01:00.000Z"
+    },
+    {
+      "id": "demo-transaction-105",
+      "type": "expense",
+      "amount": "71045",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-07-13T05:08:00.000Z"
+    },
+    {
+      "id": "demo-transaction-106",
+      "type": "expense",
+      "amount": "111073",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-07-14T06:15:00.000Z"
+    },
+    {
+      "id": "demo-transaction-107",
+      "type": "expense",
+      "amount": "14073",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-07-15T07:22:00.000Z"
+    },
+    {
+      "id": "demo-transaction-108",
+      "type": "expense",
+      "amount": "107645",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-07-16T08:29:00.000Z"
+    },
+    {
+      "id": "demo-transaction-109",
+      "type": "expense",
+      "amount": "126474",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-07-17T09:36:00.000Z"
+    },
+    {
+      "id": "demo-transaction-110",
+      "type": "expense",
+      "amount": "56304",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-07-18T10:43:00.000Z"
+    },
+    {
+      "id": "demo-transaction-111",
+      "type": "expense",
+      "amount": "100888",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-07-19T01:50:00.000Z"
+    },
+    {
+      "id": "demo-transaction-112",
+      "type": "expense",
+      "amount": "61712",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-07-20T02:57:00.000Z"
+    },
+    {
+      "id": "demo-transaction-113",
+      "type": "expense",
+      "amount": "38730",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-07-21T03:04:00.000Z"
+    },
+    {
+      "id": "demo-transaction-114",
+      "type": "expense",
+      "amount": "119687",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-07-22T04:11:00.000Z"
+    },
+    {
+      "id": "demo-transaction-115",
+      "type": "expense",
+      "amount": "67560",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-07-23T05:18:00.000Z"
+    },
+    {
+      "id": "demo-transaction-116",
+      "type": "expense",
+      "amount": "68458",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-07-24T06:25:00.000Z"
+    },
+    {
+      "id": "demo-transaction-117",
+      "type": "expense",
+      "amount": "87268",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-07-25T07:32:00.000Z"
+    },
+    {
+      "id": "demo-transaction-118",
+      "type": "expense",
+      "amount": "78008",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-07-26T08:39:00.000Z"
+    },
+    {
+      "id": "demo-transaction-119",
+      "type": "expense",
+      "amount": "33075",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-07-27T09:46:00.000Z"
+    },
+    {
+      "id": "demo-transaction-120",
+      "type": "expense",
+      "amount": "48979",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-07-28T10:53:00.000Z"
+    },
+    {
+      "id": "demo-transaction-121",
+      "type": "expense",
+      "amount": "14199",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-07-29T01:00:00.000Z"
+    },
+    {
+      "id": "demo-transaction-122",
+      "type": "expense",
+      "amount": "10118",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-07-30T02:07:00.000Z"
+    },
+    {
+      "id": "demo-transaction-123",
+      "type": "expense",
+      "amount": "133031",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-07-31T03:14:00.000Z"
+    },
+    {
+      "id": "demo-transaction-124",
+      "type": "expense",
+      "amount": "13524",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-08-01T04:21:00.000Z"
+    },
+    {
+      "id": "demo-transaction-125",
+      "type": "expense",
+      "amount": "104031",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-08-02T05:28:00.000Z"
+    },
+    {
+      "id": "demo-transaction-126",
+      "type": "expense",
+      "amount": "89650",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-08-03T06:35:00.000Z"
+    },
+    {
+      "id": "demo-transaction-127",
+      "type": "expense",
+      "amount": "133850",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-08-04T07:42:00.000Z"
+    },
+    {
+      "id": "demo-transaction-128",
+      "type": "expense",
+      "amount": "131758",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-08-05T08:49:00.000Z"
+    },
+    {
+      "id": "demo-transaction-129",
+      "type": "expense",
+      "amount": "95652",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-08-06T09:56:00.000Z"
+    },
+    {
+      "id": "demo-transaction-130",
+      "type": "expense",
+      "amount": "96227",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-08-07T10:03:00.000Z"
+    },
+    {
+      "id": "demo-transaction-131",
+      "type": "expense",
+      "amount": "30647",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-08-08T01:10:00.000Z"
+    },
+    {
+      "id": "demo-transaction-132",
+      "type": "expense",
+      "amount": "29766",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-08-09T02:17:00.000Z"
+    },
+    {
+      "id": "demo-transaction-133",
+      "type": "expense",
+      "amount": "86384",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-08-10T03:24:00.000Z"
+    },
+    {
+      "id": "demo-transaction-134",
+      "type": "expense",
+      "amount": "15637",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-08-11T04:31:00.000Z"
+    },
+    {
+      "id": "demo-transaction-135",
+      "type": "expense",
+      "amount": "60256",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-08-12T05:38:00.000Z"
+    },
+    {
+      "id": "demo-transaction-136",
+      "type": "expense",
+      "amount": "132884",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-08-13T06:45:00.000Z"
+    },
+    {
+      "id": "demo-transaction-137",
+      "type": "expense",
+      "amount": "104541",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-08-14T07:52:00.000Z"
+    },
+    {
+      "id": "demo-transaction-138",
+      "type": "expense",
+      "amount": "117150",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-08-15T08:59:00.000Z"
+    },
+    {
+      "id": "demo-transaction-139",
+      "type": "expense",
+      "amount": "54350",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-08-16T09:06:00.000Z"
+    },
+    {
+      "id": "demo-transaction-140",
+      "type": "expense",
+      "amount": "85254",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-08-17T10:13:00.000Z"
+    },
+    {
+      "id": "demo-transaction-141",
+      "type": "expense",
+      "amount": "83218",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-08-18T01:20:00.000Z"
+    },
+    {
+      "id": "demo-transaction-142",
+      "type": "income",
+      "amount": "4500000",
+      "account_id": "bank",
+      "category_id": "salary",
+      "merchant": "Pemberi kerja sintetis",
+      "occurred_at": "2026-08-19T02:27:00.000Z"
+    },
+    {
+      "id": "demo-transaction-143",
+      "type": "expense",
+      "amount": "100173",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-08-20T03:34:00.000Z"
+    },
+    {
+      "id": "demo-transaction-144",
+      "type": "expense",
+      "amount": "87634",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-08-21T04:41:00.000Z"
+    },
+    {
+      "id": "demo-transaction-145",
+      "type": "expense",
+      "amount": "136508",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-08-22T05:48:00.000Z"
+    },
+    {
+      "id": "demo-transaction-146",
+      "type": "expense",
+      "amount": "36877",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-08-23T06:55:00.000Z"
+    },
+    {
+      "id": "demo-transaction-147",
+      "type": "expense",
+      "amount": "141963",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-08-24T07:02:00.000Z"
+    },
+    {
+      "id": "demo-transaction-148",
+      "type": "expense",
+      "amount": "70147",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-08-25T08:09:00.000Z"
+    },
+    {
+      "id": "demo-transaction-149",
+      "type": "expense",
+      "amount": "134671",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-08-26T09:16:00.000Z"
+    },
+    {
+      "id": "demo-transaction-150",
+      "type": "expense",
+      "amount": "32002",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-08-27T10:23:00.000Z"
+    },
+    {
+      "id": "demo-transaction-151",
+      "type": "expense",
+      "amount": "110673",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-08-28T01:30:00.000Z"
+    },
+    {
+      "id": "demo-transaction-152",
+      "type": "expense",
+      "amount": "86062",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-08-29T02:37:00.000Z"
+    },
+    {
+      "id": "demo-transaction-153",
+      "type": "expense",
+      "amount": "27273",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-08-30T03:44:00.000Z"
+    },
+    {
+      "id": "demo-transaction-154",
+      "type": "expense",
+      "amount": "143586",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-08-31T04:51:00.000Z"
+    },
+    {
+      "id": "demo-transaction-155",
+      "type": "expense",
+      "amount": "122180",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-09-01T05:58:00.000Z"
+    },
+    {
+      "id": "demo-transaction-156",
+      "type": "expense",
+      "amount": "141302",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-09-02T06:05:00.000Z"
+    },
+    {
+      "id": "demo-transaction-157",
+      "type": "expense",
+      "amount": "141887",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-09-03T07:12:00.000Z"
+    },
+    {
+      "id": "demo-transaction-158",
+      "type": "expense",
+      "amount": "58692",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-09-04T08:19:00.000Z"
+    },
+    {
+      "id": "demo-transaction-159",
+      "type": "expense",
+      "amount": "40929",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-09-05T09:26:00.000Z"
+    },
+    {
+      "id": "demo-transaction-160",
+      "type": "expense",
+      "amount": "22042",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-09-06T10:33:00.000Z"
+    },
+    {
+      "id": "demo-transaction-161",
+      "type": "expense",
+      "amount": "34590",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-09-07T01:40:00.000Z"
+    },
+    {
+      "id": "demo-transaction-162",
+      "type": "expense",
+      "amount": "94122",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-09-08T02:47:00.000Z"
+    },
+    {
+      "id": "demo-transaction-163",
+      "type": "expense",
+      "amount": "72740",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-09-09T03:54:00.000Z"
+    },
+    {
+      "id": "demo-transaction-164",
+      "type": "expense",
+      "amount": "16924",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-09-10T04:01:00.000Z"
+    },
+    {
+      "id": "demo-transaction-165",
+      "type": "expense",
+      "amount": "33445",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-09-11T05:08:00.000Z"
+    },
+    {
+      "id": "demo-transaction-166",
+      "type": "expense",
+      "amount": "115628",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-09-12T06:15:00.000Z"
+    },
+    {
+      "id": "demo-transaction-167",
+      "type": "expense",
+      "amount": "97810",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-09-13T07:22:00.000Z"
+    },
+    {
+      "id": "demo-transaction-168",
+      "type": "expense",
+      "amount": "109176",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-09-14T08:29:00.000Z"
+    },
+    {
+      "id": "demo-transaction-169",
+      "type": "expense",
+      "amount": "28678",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-09-15T09:36:00.000Z"
+    },
+    {
+      "id": "demo-transaction-170",
+      "type": "expense",
+      "amount": "124930",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-09-16T10:43:00.000Z"
+    },
+    {
+      "id": "demo-transaction-171",
+      "type": "expense",
+      "amount": "148855",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-09-17T01:50:00.000Z"
+    },
+    {
+      "id": "demo-transaction-172",
+      "type": "expense",
+      "amount": "24406",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-09-18T02:57:00.000Z"
+    },
+    {
+      "id": "demo-transaction-173",
+      "type": "expense",
+      "amount": "97767",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-09-19T03:04:00.000Z"
+    },
+    {
+      "id": "demo-transaction-174",
+      "type": "expense",
+      "amount": "104345",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-09-20T04:11:00.000Z"
+    },
+    {
+      "id": "demo-transaction-175",
+      "type": "expense",
+      "amount": "104266",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-09-21T05:18:00.000Z"
+    },
+    {
+      "id": "demo-transaction-176",
+      "type": "expense",
+      "amount": "23309",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-09-22T06:25:00.000Z"
+    },
+    {
+      "id": "demo-transaction-177",
+      "type": "expense",
+      "amount": "92803",
+      "account_id": "cash",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-09-23T07:32:00.000Z"
+    },
+    {
+      "id": "demo-transaction-178",
+      "type": "expense",
+      "amount": "66421",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-09-24T08:39:00.000Z"
+    },
+    {
+      "id": "demo-transaction-179",
+      "type": "expense",
+      "amount": "78759",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-09-25T09:46:00.000Z"
+    },
+    {
+      "id": "demo-transaction-180",
+      "type": "expense",
+      "amount": "47899",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-09-26T10:53:00.000Z"
+    },
+    {
+      "id": "demo-transaction-181",
+      "type": "expense",
+      "amount": "37005",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-09-27T01:00:00.000Z"
+    },
+    {
+      "id": "demo-transaction-182",
+      "type": "expense",
+      "amount": "114733",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-09-28T02:07:00.000Z"
+    },
+    {
+      "id": "demo-transaction-183",
+      "type": "expense",
+      "amount": "25423",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-09-29T03:14:00.000Z"
+    },
+    {
+      "id": "demo-transaction-184",
+      "type": "expense",
+      "amount": "33473",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-09-30T04:21:00.000Z"
+    },
+    {
+      "id": "demo-transaction-185",
+      "type": "expense",
+      "amount": "103401",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-07-01T05:28:00.000Z"
+    },
+    {
+      "id": "demo-transaction-186",
+      "type": "expense",
+      "amount": "49731",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-07-02T06:35:00.000Z"
+    },
+    {
+      "id": "demo-transaction-187",
+      "type": "expense",
+      "amount": "98035",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-07-03T07:42:00.000Z"
+    },
+    {
+      "id": "demo-transaction-188",
+      "type": "expense",
+      "amount": "49872",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-07-04T08:49:00.000Z"
+    },
+    {
+      "id": "demo-transaction-189",
+      "type": "income",
+      "amount": "4500000",
+      "account_id": "cash",
+      "category_id": "salary",
+      "merchant": "Pemberi kerja sintetis",
+      "occurred_at": "2026-07-05T09:56:00.000Z"
+    },
+    {
+      "id": "demo-transaction-190",
+      "type": "expense",
+      "amount": "51094",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-07-06T10:03:00.000Z"
+    },
+    {
+      "id": "demo-transaction-191",
+      "type": "expense",
+      "amount": "69522",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-07-07T01:10:00.000Z"
+    },
+    {
+      "id": "demo-transaction-192",
+      "type": "expense",
+      "amount": "78358",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-07-08T02:17:00.000Z"
+    },
+    {
+      "id": "demo-transaction-193",
+      "type": "expense",
+      "amount": "10024",
+      "account_id": "cash",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-07-09T03:24:00.000Z"
+    },
+    {
+      "id": "demo-transaction-194",
+      "type": "expense",
+      "amount": "52266",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-07-10T04:31:00.000Z"
+    },
+    {
+      "id": "demo-transaction-195",
+      "type": "expense",
+      "amount": "79293",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Bus Kota",
+      "occurred_at": "2026-07-11T05:38:00.000Z"
+    },
+    {
+      "id": "demo-transaction-196",
+      "type": "expense",
+      "amount": "41624",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Toko Buku",
+      "occurred_at": "2026-07-12T06:45:00.000Z"
+    },
+    {
+      "id": "demo-transaction-197",
+      "type": "expense",
+      "amount": "21634",
+      "account_id": "cash",
+      "category_id": "transport",
+      "merchant": "Kedai Sore",
+      "occurred_at": "2026-07-13T07:52:00.000Z"
+    },
+    {
+      "id": "demo-transaction-198",
+      "type": "expense",
+      "amount": "56722",
+      "account_id": "bank",
+      "category_id": "household",
+      "merchant": "Apotek Demo",
+      "occurred_at": "2026-07-14T08:59:00.000Z"
+    },
+    {
+      "id": "demo-transaction-199",
+      "type": "expense",
+      "amount": "71043",
+      "account_id": "bank",
+      "category_id": "food",
+      "merchant": "Warung Pagi",
+      "occurred_at": "2026-07-15T09:06:00.000Z"
+    },
+    {
+      "id": "demo-transaction-200",
+      "type": "expense",
+      "amount": "120886",
+      "account_id": "bank",
+      "category_id": "transport",
+      "merchant": "Pasar Lokal",
+      "occurred_at": "2026-07-16T10:13:00.000Z"
+    }
+  ]
+}

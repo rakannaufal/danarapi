@@ -1,0 +1,5 @@
+
+> danarapi@0.1.0 check:json
+> node scripts/check-json.mjs
+
+Validated 8 JSON files and 200 synthetic demo transactions.

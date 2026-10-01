@@ -1,0 +1,37 @@
+import { randomBytes, X509Certificate } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { createServer } from 'node:https';
+import { mkdirSync, readFileSync, writeFileSync, renameSync, rmSync } from 'node:fs';
+import { networkInterfaces } from 'node:os';
+import { fileURLToPath } from 'node:url';
+import { loadEnv } from 'vite';
+import { nativeScanHandler } from './local-receipt-scan.ts';
+
+const root = fileURLToPath(new URL('../../../', import.meta.url));
+const env = loadEnv('development', `${root}supabase`, '');
+if (env.LOCAL_RECEIPT_SCAN !== '1' || !env.GEMINI_API_KEY) throw new Error('Aktifkan LOCAL_RECEIPT_SCAN pada konfigurasi backend lokal. API key tetap di server.');
+const privateIPv4 = (host: string) => /^(?:10\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)/.test(host);
+const requested = process.argv.find(value => value.startsWith('--host='))?.slice(7);
+const addresses = Object.values(networkInterfaces()).flat().filter(value => value?.family === 'IPv4' && !value.internal && privateIPv4(value.address)).map(value => value!.address);
+const address = requested ?? addresses[0];
+if (!address || !addresses.includes(address)) throw new Error('Alamat Wi-Fi privat tidak tersedia. Gunakan --host=alamat-IP-Mac pada jaringan privat.');
+const port = 5174;
+const token = randomBytes(32).toString('hex');
+const directory = `${root}apps/ios/.native-scan`;
+mkdirSync(directory, { recursive: true, mode: 0o700 });
+const key = `${directory}/key.pem`, certificate = `${directory}/cert.pem`;
+execFileSync('/usr/bin/openssl', ['req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-days', '7', '-keyout', key, '-out', certificate, '-subj', '/CN=Danarapi Development Scanner'], { stdio: 'ignore' });
+const cert = readFileSync(certificate);
+const pin = new X509Certificate(cert).fingerprint256.replaceAll(':', '').toLowerCase();
+const handler = nativeScanHandler({ token, host: `${address}:${port}`, apiKey: env.GEMINI_API_KEY, model: env.GEMINI_MODEL || 'gemini-3.5-flash-lite', fallbackModel: env.GEMINI_FALLBACK_MODEL || undefined, dailyLimit: Number(env.SCAN_DAILY_LIMIT || 50), interval: Number(env.SCAN_INTERVAL_MS || 4000) });
+const server = createServer({ key: readFileSync(key), cert, minVersion: 'TLSv1.2' }, (request, response) => { void handler(request, response); });
+server.requestTimeout = 115000; server.headersTimeout = 10000;
+server.listen(port, address, () => {
+  const destination = `${root}apps/ios/Configuration/NativeScan.xcconfig`;
+  const configuration = `NATIVE_SCAN_HOST[config=Debug] = ${address}\nNATIVE_SCAN_PORT[config=Debug] = ${port}\nNATIVE_SCAN_TOKEN[config=Debug] = ${token}\nNATIVE_SCAN_CERT_SHA256[config=Debug] = ${pin}\n`;
+  writeFileSync(`${destination}.tmp`, configuration, { mode: 0o600 }); renameSync(`${destination}.tmp`, destination);
+  console.log(`Scanner iOS aktif pada jaringan privat ${address}:${port}. Build ulang iOS Debug; izinkan Jaringan Lokal. Mac dan iPhone harus berada pada Wi-Fi yang sama. Foto dikirim melalui TLS ke layanan scan yang sama dengan web. API key tidak masuk aplikasi.`);
+});
+server.on('error', () => { console.error('Scanner iOS gagal dimulai. Port 5174 mungkin sudah dipakai.'); process.exitCode = 1; });
+const stop = () => { server.close(); rmSync(key, { force: true }); rmSync(certificate, { force: true }); };
+process.on('SIGINT', stop); process.on('SIGTERM', stop);

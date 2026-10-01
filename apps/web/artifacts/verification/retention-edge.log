@@ -1,0 +1,22 @@
+Check supabase/tests/web_transport_test.ts
+Check supabase/tests/retention_test.ts
+running 9 tests from ./supabase/tests/web_transport_test.ts
+posted attachment validates owner before Storage (true) ... ok (7ms)
+posted attachment validates owner before Storage (false) ... ok (1ms)
+web/iOS ledger gateway: same operation, decimal payload, user JWT; restore transfer route ... ok (0ms)
+gateway auth and CORS failures never call upstream ... ok (19ms)
+import creates only pending review with fingerprint; no ledger posting ... ok (1ms)
+malformed attachment MIME rejected before storage upload ... ok (0ms)
+account deletion fails closed when storage inventory fails; identity not deleted ... ok (0ms)
+account deletion verifies every removal and identity disappearance ... ok (0ms)
+full export ZIP supports 300KB attachment and signed decimal CSV; no partial success ... ok (108ms)
+running 6 tests from ./supabase/tests/retention_test.ts
+retention deletes bytes before metadata; missing bytes permit idempotent replay ... ok (1ms)
+retention preserves DB metadata when absence verification returns 200 ... ok (0ms)
+retention preserves DB metadata when absence verification returns 400 ... ok (0ms)
+retention preserves DB metadata when absence verification returns 403 ... ok (0ms)
+retention preserves DB metadata when absence verification returns 500 ... ok (0ms)
+retention endpoint denies absent/incorrect secret; correct secret still requires POST ... ok (1ms)
+
+ok | 15 passed | 0 failed (402ms)
+

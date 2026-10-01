@@ -1,0 +1,206 @@
+v1.31.3: Pulling from supabase/mailpit
+v1.79.28: Pulling from supabase/storage-api
+15.19.0.002: Pulling from supabase/postgres
+v2.197.0: Pulling from supabase/gotrue
+v16.4: Pulling from supabase/postgrest
+2.8.1: Pulling from supabase/kong
+v1.77.1: Pulling from supabase/edge-runtime
+fecedcf5e48a: Pulling fs layer
+d8380bfcbd9b: Pulling fs layer
+9b18e9b68314: Pulling fs layer
+7fd91e922960: Pulling fs layer
+450997ae687c: Pulling fs layer
+0c821febc85a: Pulling fs layer
+333125b5cee9: Pulling fs layer
+1fa39e0141d2: Pulling fs layer
+fc47cc6d8f98: Pulling fs layer
+7df46aa8c2d8: Pulling fs layer
+c0e5f8b3e1e4: Pulling fs layer
+d8380bfcbd9b: Download complete
+7fd91e922960: Download complete
+75135058766b: Pulling fs layer
+5de55e5ef9c0: Pulling fs layer
+2d710e537411: Pulling fs layer
+a3a316c5ce21: Pulling fs layer
+3441f90f9083: Pulling fs layer
+28ddbbdf4855: Pulling fs layer
+b64f3726e50f: Pulling fs layer
+ace1621be7ff: Pulling fs layer
+669b82b9d4fa: Pulling fs layer
+263603b36610: Pulling fs layer
+463ee0779ff4: Pulling fs layer
+f0a392c32f95: Pulling fs layer
+bbe847469675: Pulling fs layer
+a096616cf959: Pulling fs layer
+ff3f1422973f: Pulling fs layer
+2f0a1b79bf08: Pulling fs layer
+3aa89b67d0f1: Pulling fs layer
+a972835e8c30: Pulling fs layer
+373d76568f1d: Pulling fs layer
+da58fa18808b: Pulling fs layer
+44136fa355b3: Download complete
+315cf9d73187: Pulling fs layer
+a9986cd6f37d: Pulling fs layer
+b9cb61e18109: Pulling fs layer
+44136fa355b3: Download complete
+44136fa355b3: Download complete
+fecedcf5e48a: Download complete
+41879233f832: Download complete
+4504e983fa00: Download complete
+463ee0779ff4: Download complete
+fecedcf5e48a: Pull complete
+Digest: sha256:d155c6718ed9a9f990d159a2ab7c0a3f16944dbb6d0a0344557421042acfe0df
+Status: Downloaded newer image for public.ecr.aws/supabase/postgrest:v16.4
+public.ecr.aws/supabase/postgrest:v16.4
+b64f3726e50f: Download complete
+fc47cc6d8f98: Download complete
+75135058766b: Download complete
+28ddbbdf4855: Download complete
+2d710e537411: Download complete
+ff3f1422973f: Download complete
+44136fa355b3: Download complete
+bbe847469675: Download complete
+315cf9d73187: Download complete
+da58fa18808b: Download complete
+3441f90f9083: Download complete
+a096616cf959: Download complete
+3aa89b67d0f1: Download complete
+d759f24579c1: Download complete
+cd40d77e8051: Pulling fs layer
+ace1621be7ff: Pulling fs layer
+e430a6ba1fe5: Pulling fs layer
+035cde1505fd: Pulling fs layer
+5f1de85def02: Pulling fs layer
+3d02434164fa: Pulling fs layer
+a88bd1cc8729: Pulling fs layer
+8ba6e1d52764: Pulling fs layer
+2c918a6c8609: Pulling fs layer
+45c3e9be0b84: Pulling fs layer
+3d46ded01600: Pulling fs layer
+1781df8dc5c0: Pulling fs layer
+52cb5c409282: Pulling fs layer
+bcbfbcceb8ca: Pulling fs layer
+c73696d93389: Pulling fs layer
+f120e08a8755: Pulling fs layer
+5589215280a3: Pulling fs layer
+8212ea0189c6: Pulling fs layer
+fa93f5b5d7ba: Pulling fs layer
+6da1369809d0: Pulling fs layer
+fce0db289d6a: Pulling fs layer
+865e6e0e2a85: Pulling fs layer
+936c9f89fde5: Pulling fs layer
+1598979b77a2: Pulling fs layer
+7569e7966cef: Pulling fs layer
+08ad8ff8c66e: Pulling fs layer
+200395f2f3cf: Pulling fs layer
+9eae225c780e: Pulling fs layer
+bac249521fa3: Download complete
+44136fa355b3: Download complete
+263603b36610: Download complete
+d1a87fec08e1: Download complete
+a9986cd6f37d: Download complete
+373d76568f1d: Download complete
+a9986cd6f37d: Pull complete
+cd40d77e8051: Download complete
+e430a6ba1fe5: Download complete
+035cde1505fd: Download complete
+a88bd1cc8729: Download complete
+5f1de85def02: Download complete
+3d46ded01600: Download complete
+9eae225c780e: Download complete
+fa93f5b5d7ba: Download complete
+865e6e0e2a85: Download complete
+c73696d93389: Download complete
+bcbfbcceb8ca: Download complete
+6da1369809d0: Download complete
+1781df8dc5c0: Download complete
+52cb5c409282: Download complete
+f120e08a8755: Download complete
+fce0db289d6a: Download complete
+5589215280a3: Download complete
+936c9f89fde5: Download complete
+2c918a6c8609: Download complete
+1598979b77a2: Download complete
+08ad8ff8c66e: Download complete
+7569e7966cef: Download complete
+200395f2f3cf: Download complete
+8212ea0189c6: Download complete
+2f0a1b79bf08: Download complete
+45c3e9be0b84: Download complete
+3d02434164fa: Download complete
+9b18e9b68314: Download complete
+7fd91e922960: Pull complete
+9b18e9b68314: Pull complete
+669b82b9d4fa: Download complete
+ace1621be7ff: Download complete
+ace1621be7ff: Download complete
+ace1621be7ff: Pull complete
+b9cb61e18109: Download complete
+b9cb61e18109: Pull complete
+315cf9d73187: Pull complete
+Digest: sha256:ed9b00c609e77e99c79b93f1178255ebc271868920f2c69a8d166bd5634ed10d
+Status: Downloaded newer image for public.ecr.aws/supabase/mailpit:v1.31.3
+public.ecr.aws/supabase/mailpit:v1.31.3
+5de55e5ef9c0: Download complete
+669b82b9d4fa: Pull complete
+3d02434164fa: Pull complete
+a88bd1cc8729: Pull complete
+463ee0779ff4: Pull complete
+263603b36610: Pull complete
+5de55e5ef9c0: Pull complete
+2d710e537411: Pull complete
+75135058766b: Pull complete
+450997ae687c: Download complete
+d8380bfcbd9b: Pull complete
+450997ae687c: Pull complete
+Digest: sha256:1b53405d8680a09d6f44494b7990bf7da2ea43f84a258c59717d4539abf09f6d
+Status: Downloaded newer image for public.ecr.aws/supabase/kong:2.8.1
+public.ecr.aws/supabase/kong:2.8.1
+0c821febc85a: Download complete
+333125b5cee9: Download complete
+333125b5cee9: Pull complete
+a3a316c5ce21: Download complete
+28ddbbdf4855: Pull complete
+3441f90f9083: Pull complete
+a3a316c5ce21: Pull complete
+Digest: sha256:1736a63078f5922b198c4cbe50f80ab9a2d3b54fe8b7b6cfb2e9dc5dbbc12c6b
+Status: Downloaded newer image for public.ecr.aws/supabase/gotrue:v2.197.0
+public.ecr.aws/supabase/gotrue:v2.197.0
+1fa39e0141d2: Download complete
+a972835e8c30: Download complete
+fc47cc6d8f98: Pull complete
+1fa39e0141d2: Pull complete
+f0a392c32f95: Download complete
+f0a392c32f95: Pull complete
+7df46aa8c2d8: Download complete
+bbe847469675: Pull complete
+c0e5f8b3e1e4: Download complete
+7df46aa8c2d8: Pull complete
+8ba6e1d52764: Download complete
+ff3f1422973f: Pull complete
+a096616cf959: Pull complete
+2f0a1b79bf08: Pull complete
+3aa89b67d0f1: Pull complete
+c0e5f8b3e1e4: Pull complete
+0c821febc85a: Pull complete
+Digest: sha256:645d0e45446181f3e9d87efeef637b494615f32365befff00e2d2b0fe8535fef
+Status: Downloaded newer image for public.ecr.aws/supabase/edge-runtime:v1.77.1
+public.ecr.aws/supabase/edge-runtime:v1.77.1
+failed to extract layer (application/vnd.oci.image.layer.v1.tar+gzip sha256:8ba6e1d527646b1d4cea5b5d37c8cfe001f5c177407782b040df051daa08fd36) to overlayfs as "extract-752336595-QC2B sha256:7e7259379d77ac174051137bd52490af9bd050cd59fbc412013c9027e6cf0c95": write /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/16/fs/nix/store/h4qhxh7vwmxgy6w05g0xsf6r1bfi9vga-gcc-15.2.0-lib/lib/libtsan.so.2.0.0: input/output error
+failed to extract layer (application/vnd.oci.image.layer.v1.tar+gzip sha256:a972835e8c30b1504c6997ce5bc79b6fbf67d9e4553e3425a14d983965f3f5c8) to overlayfs as "extract-976610642-hrJC sha256:a7c2a9ed9ef9d716760d0bd3c09ad5a9704a452825372ea1b152d48117c859e2": open /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/34/fs/app/node_modules/@opentelemetry/instrumentation-lru-memoizer/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/RequireInTheMiddleSingleton.d.ts: input/output error
+Retrying after 4s: public.ecr.aws/supabase/storage-api:v1.79.28
+Retrying after 4s: public.ecr.aws/supabase/postgres:15.19.0.002
+Error response from daemon: write /var/lib/containerd/io.containerd.metadata.v1.bolt/meta.db: input/output error
+Error response from daemon: write /var/lib/containerd/io.containerd.metadata.v1.bolt/meta.db: input/output error
+Retrying after 8s: public.ecr.aws/supabase/postgres:15.19.0.002
+Retrying after 8s: public.ecr.aws/supabase/storage-api:v1.79.28
+Error response from daemon: write /var/lib/containerd/io.containerd.metadata.v1.bolt/meta.db: input/output error
+Error response from daemon: write /var/lib/containerd/io.containerd.metadata.v1.bolt/meta.db: input/output error
+Error response from daemon: write /var/lib/containerd/io.containerd.metadata.v1.bolt/meta.db: input/output error
+Retrying after 4s: ghcr.io/supabase/postgres:15.19.0.002
+Error response from daemon: write /var/lib/containerd/io.containerd.metadata.v1.bolt/meta.db: input/output error
+Retrying after 4s: ghcr.io/supabase/storage-api:v1.79.28
+Error response from daemon: write /var/lib/containerd/io.containerd.metadata.v1.bolt/meta.db: input/output error
+Error response from daemon: write /var/lib/containerd/io.containerd.metadata.v1.bolt/meta.db: input/output error
+Retrying after 8s: ghcr.io/supabase/postgres:15.19.0.002
+Retrying after 8s: ghcr.io/supabase/storage-api:v1.79.28

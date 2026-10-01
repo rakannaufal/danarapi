@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "qris": [
+    {
+      "id": "merchant-dynamic-valid",
+      "raw": "000201260400025909TOKO DEMO6007JAKARTA5405750006304EB2D",
+      "expected": {
+        "merchant": "TOKO DEMO",
+        "city": "JAKARTA",
+        "amount": "75000"
+      }
+    },
+    {
+      "id": "crc-invalid",
+      "raw": "000201260400025909TOKO DEMO6007JAKARTA5405750006304EB20",
+      "error": "VALIDATION"
+    },
+    {
+      "id": "non-qris",
+      "raw": "https://example.invalid/not-qris",
+      "error": "VALIDATION"
+    }
+  ],
+  "text": [
+    {
+      "id": "explicit-total",
+      "raw": "TOKO DEMO\nTotal: Rp75.000\n30/09/2026",
+      "expected_amount": "75000",
+      "expected_confidence": "high"
+    },
+    {
+      "id": "ambiguous-amount",
+      "raw": "KEDAI SORE\nSubtotal 50.000\nPajak 5.000",
+      "expected_amount": null,
+      "expected_confidence": "low"
+    }
+  ],
+  "files": [
+    { "id": "image-without-qr", "expected": "manual_review" },
+    { "id": "pdf-text-layer", "expected": "text_review" },
+    { "id": "pdf-scanned", "expected": "manual_review" }
+  ]
+}

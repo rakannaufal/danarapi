@@ -1,0 +1,51 @@
+
+> @danarapi/web@0.1.0 test:e2e
+> playwright test --project=firefox --grep Bundled Demo
+
+[WebServer] (node:18621) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:18625) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [firefox] › e2e/web.spec.ts:33:1 › Bundled Demo PDF imports locally with evidence and no posting (1ms)
+
+
+  1) [firefox] › e2e/web.spec.ts:33:1 › Bundled Demo PDF imports locally with evidence and no posting 
+
+    Error: browserType.launch: Failed to launch the browser process.
+    Browser logs:
+
+    <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /private/tmp/playwright_firefoxdev_profile-DWXiYn -juggler-pipe -silent
+    <launched> pid=18627
+    [pid=18627][err] *** You are running in headless mode.
+    [pid=18627][err] Could not find profile folder.
+    [pid=18627] <process did exit: exitCode=1, signal=null>
+    [pid=18627] starting temporary directories cleanup
+    Call log:
+      - <launching> /Users/rakan/Library/Caches/ms-playwright/firefox-1543/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /private/tmp/playwright_firefoxdev_profile-DWXiYn -juggler-pipe -silent
+      - <launched> pid=18627
+      - [pid=18627][err] *** You are running in headless mode.
+      - [pid=18627][err] Could not find profile folder.
+      - [pid=18627] <process did exit: exitCode=1, signal=null>
+      - [pid=18627] starting temporary directories cleanup
+      - [pid=18627] <gracefully close start>
+      - [pid=18627] <kill>
+      - [pid=18627] <skipped force kill spawnedProcess.killed=false processClosed=true>
+      - [pid=18627] finished temporary directories cleanup
+      - [pid=18627] <gracefully close end>
+
+
+    Error Context: test-results/web-Bundled-Demo-PDF-impor-c2932-ith-evidence-and-no-posting-firefox/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/web-Bundled-Demo-PDF-impor-c2932-ith-evidence-and-no-posting-firefox/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/web-Bundled-Demo-PDF-impor-c2932-ith-evidence-and-no-posting-firefox/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [firefox] › e2e/web.spec.ts:33:1 › Bundled Demo PDF imports locally with evidence and no posting 

@@ -1,0 +1,181 @@
+openapi: 3.1.0
+info:
+  title: Danarapi Ledger API
+  version: 1.0.0
+  description: Financial mutations are atomic PostgreSQL RPC calls. IDR values cross JSON boundaries as decimal strings.
+servers:
+  - url: https://PROJECT.supabase.co/rest/v1/rpc
+security:
+  - bearerAuth: []
+paths:
+  /api_calculate_split:
+    post:
+      operationId: calculateSplit
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_create_account:
+    post:
+      operationId: createAccount
+      x-idempotent: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccount'
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_create_transaction:
+    post:
+      operationId: createTransaction
+      x-idempotent: true
+      description: Optional p_goal_id links an expense to an owned target and selects the Target category. Source qris requires expense and automatically selects QRIS. Each mutation debits only the selected account once.
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_update_transaction:
+    post:
+      operationId: updateTransaction
+      x-idempotent: true
+      description: Optional p_goal_id updates the target link atomically with the ledger. Editing QRIS preserves its source and expense category. Version checks prevent stale updates.
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_delete_transaction:
+    post:
+      operationId: deleteTransaction
+      x-idempotent: true
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_restore_transaction:
+    post:
+      operationId: restoreTransaction
+      x-idempotent: true
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_create_transfer:
+    post:
+      operationId: createTransfer
+      x-idempotent: true
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_update_transfer:
+    post:
+      operationId: updateTransfer
+      x-idempotent: true
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_delete_transfer:
+    post:
+      operationId: deleteTransfer
+      x-idempotent: true
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_create_split_bill:
+    post:
+      operationId: createSplitBill
+      x-idempotent: true
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_restore_transfer:
+    post:
+      operationId: restoreTransfer
+      x-idempotent: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [p_client_mutation_id, p_transfer_id, p_expected_version]
+              properties:
+                p_client_mutation_id: { type: string, format: uuid }
+                p_transfer_id: { type: string, format: uuid }
+                p_expected_version: { type: integer, minimum: 1 }
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_record_split_settlement:
+    post:
+      operationId: recordSplitSettlement
+      x-idempotent: true
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_record_split_resolution:
+    post:
+      operationId: recordSplitResolution
+      x-idempotent: true
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_reverse_split_settlement:
+    post:
+      operationId: reverseSplitSettlement
+      x-idempotent: true
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_reverse_split_resolution:
+    post:
+      operationId: reverseSplitResolution
+      x-idempotent: true
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_delete_split_bill:
+    post:
+      operationId: deleteSplitBill
+      x-idempotent: true
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_restore_split_bill:
+    post:
+      operationId: restoreSplitBill
+      x-idempotent: true
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_confirm_review_item:
+    post:
+      operationId: confirmReviewItem
+      x-idempotent: true
+      description: Atomically creates the reviewed transaction and marks the review item saved. QRIS always posts as expense in its own category. Exact replay returns the original response; a saved review with a new mutation ID cannot create another charge.
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+  /api_ensure_feature_categories:
+    post:
+      operationId: ensureFeatureCategories
+      description: Creates or reuses the authenticated owner's Target and QRIS expense categories atomically.
+      responses:
+        '200': { $ref: '#/components/responses/MutationResponse' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Money:
+      type: string
+      pattern: '^[1-9][0-9]{0,11}$'
+      example: '120000'
+    MutationId:
+      type: string
+      format: uuid
+    CreateAccount:
+      type: object
+      required: [p_client_mutation_id, p_name, p_kind, p_opening_balance, p_opened_at]
+      properties:
+        p_client_mutation_id: { $ref: '#/components/schemas/MutationId' }
+        p_name: { type: string, minLength: 1, maxLength: 80 }
+        p_kind: { type: string, enum: [cash, bank, ewallet, other] }
+        p_opening_balance:
+          type: string
+          pattern: '^-?(0|[1-9][0-9]{0,11})$'
+        p_opened_at: { type: string, format: date-time }
+    MutationEnvelope:
+      type: object
+      required: [schema_version, request_id, data]
+      properties:
+        schema_version: { const: 1.0.0 }
+        request_id: { type: string, format: uuid }
+        data: { type: object }
+  responses:
+    MutationResponse:
+      description: Applied once or replayed from the idempotency receipt.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/MutationEnvelope' }

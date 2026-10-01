@@ -1,0 +1,131 @@
+psql:supabase/migrations/202609300002_rls_storage.sql:33: NOTICE:  trigger "on_auth_user_created" for relation "auth.users" does not exist, skipping
+psql:supabase/migrations/202609300004_ios_review_rpc.sql:44: NOTICE:  trigger "accounts_protect_opening" for relation "public.accounts" does not exist, skipping
+psql:supabase/migrations/202609300004_ios_review_rpc.sql:60: NOTICE:  trigger "accounts_protect_last_active" for relation "public.accounts" does not exist, skipping
+INSERT 0 2
+INSERT 0 1
+INSERT 0 1
+SET
+DO
+DO
+SET
+                              set_config                               
+-----------------------------------------------------------------------
+ {"sub":"15000000-0000-4000-8000-000000000002","role":"authenticated"}
+(1 row)
+
+DO
+RESET
+                 result                  
+-----------------------------------------
+ plain PostgreSQL migration smoke passed
+(1 row)
+
+SET
+DO
+INSERT 0 1
+INSERT 0 1
+                                                                                    api_confirm_review_item                                                                                    
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ {"data": {"id": "31a675d2-3e68-47b3-817b-1d8be3b815ce", "type": "expense", "amount": "12500", "version": 1}, "request_id": "00c87140-70a0-41ee-a161-0172dbdf992d", "schema_version": "1.0.0"}
+(1 row)
+
+DO
+DO
+             result             
+--------------------------------
+ iOS R1 PostgreSQL smoke passed
+(1 row)
+
+BEGIN
+SET
+SET
+DO
+ROLLBACK
+                                              result                                              
+--------------------------------------------------------------------------------------------------
+ Web/iOS shared RPC read-write, stale version, transfer undo/replay and exact source guard passed
+(1 row)
+
+                                                                                                                             set_config                                                                                                                             
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ {                                                                                                                                                                                                                                                                 +
+   "schema_version": "1.0.0",                                                                                                                                                                                                                                      +
+   "currency": "IDR",                                                                                                                                                                                                                                              +
+   "adjustment_policy": "proportional_subtotal_largest_remainder_participant_order",                                                                                                                                                                               +
+   "cases": [                                                                                                                                                                                                                                                      +
+     {                                                                                                                                                                                                                                                             +
+       "name": "a_meal_drink_b_two_meals_drink_c_meal",                                                                                                                                                                                                            +
+       "memberIDs": ["a", "b", "c"],                                                                                                                                                                                                                               +
+       "draft": {                                                                                                                                                                                                                                                  +
+         "items": [                                                                                                                                                                                                                                                +
+           {"id": "meal", "name": "Nasi", "quantity": 4, "unitPrice": "25000", "allocations": [{"memberID": "a", "quantity": 1}, {"memberID": "b", "quantity": 2}, {"memberID": "c", "quantity": 1}]},                                                             +
+           {"id": "drink", "name": "Minum", "quantity": 2, "unitPrice": "15000", "allocations": [{"memberID": "a", "quantity": 1}, {"memberID": "b", "quantity": 1}]}                                                                                              +
+         ],                                                                                                                                                                                                                                                        +
+         "tax": "0", "service": "0", "discount": "0"                                                                                                                                                                                                               +
+       },                                                                                                                                                                                                                                                          +
+       "expected": {"total": "130000", "shares": {"a": "40000", "b": "65000", "c": "25000"}}                                                                                                                                                                       +
+     },                                                                                                                                                                                                                                                            +
+     {                                                                                                                                                                                                                                                             +
+       "name": "proportional_adjustments",                                                                                                                                                                                                                         +
+       "memberIDs": ["a", "b", "c"],                                                                                                                                                                                                                               +
+       "draft": {                                                                                                                                                                                                                                                  +
+         "items": [                                                                                                                                                                                                                                                +
+           {"id": "meal", "name": "Nasi", "quantity": 4, "unitPrice": "25000", "allocations": [{"memberID": "a", "quantity": 1}, {"memberID": "b", "quantity": 2}, {"memberID": "c", "quantity": 1}]},                                                             +
+           {"id": "drink", "name": "Minum", "quantity": 2, "unitPrice": "15000", "allocations": [{"memberID": "a", "quantity": 1}, {"memberID": "b", "quantity": 1}]}                                                                                              +
+         ],                                                                                                                                                                                                                                                        +
+         "tax": "13000", "service": "6500", "discount": "6500"                                                                                                                                                                                                     +
+       },                                                                                                                                                                                                                                                          +
+       "expected": {"total": "143000", "shares": {"a": "44000", "b": "71500", "c": "27500"}}                                                                                                                                                                       +
+     },                                                                                                                                                                                                                                                            +
+     {                                                                                                                                                                                                                                                             +
+       "name": "one_rupiah_stable_remainder",                                                                                                                                                                                                                      +
+       "memberIDs": ["a", "b", "c"],                                                                                                                                                                                                                               +
+       "draft": {"items": [{"id": "meal", "name": "Menu", "quantity": 3, "unitPrice": "333", "allocations": [{"memberID": "a", "quantity": 1}, {"memberID": "b", "quantity": 1}, {"memberID": "c", "quantity": 1}]}], "tax": "1", "service": "0", "discount": "0"},+
+       "expected": {"total": "1000", "shares": {"a": "334", "b": "333", "c": "333"}}                                                                                                                                                                               +
+     },                                                                                                                                                                                                                                                            +
+     {                                                                                                                                                                                                                                                             +
+       "name": "maximum_without_integer_product_overflow",                                                                                                                                                                                                         +
+       "memberIDs": ["a", "b"],                                                                                                                                                                                                                                    +
+       "draft": {"items": [{"id": "meal", "name": "Menu", "quantity": 1, "unitPrice": "999999999998", "allocations": [{"memberID": "a", "quantity": 1}]}], "tax": "1", "service": "0", "discount": "0"},                                                           +
+       "expected": {"total": "999999999999", "shares": {"a": "999999999999", "b": "0"}}                                                                                                                                                                            +
+     }                                                                                                                                                                                                                                                             +
+   ]                                                                                                                                                                                                                                                               +
+ }
+(1 row)
+
+INSERT 0 3
+SET
+SET
+DO
+DO
+                                                                      api_save_goal                                                                      
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+ {"data": {"id": "88000000-0000-4000-8000-000000000001", "version": 1}, "request_id": "7ccbe1d2-b073-42e0-a007-3c1e288ee6d6", "schema_version": "1.0.0"}
+(1 row)
+
+                                                                      api_save_goal                                                                      
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+ {"data": {"id": "88000000-0000-4000-8000-000000000001", "version": 1}, "request_id": "7ccbe1d2-b073-42e0-a007-3c1e288ee6d6", "schema_version": "1.0.0"}
+(1 row)
+
+DO
+SET
+DO
+RESET
+SET
+SET
+DO
+DO
+                                   result                                   
+----------------------------------------------------------------------------
+ Goals RLS/version/idempotency and shared item split fixtures/ledger passed
+(1 row)
+
+BEGIN
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 2
+COMMIT
+Concurrency invariant passed: one 30000 settlement committed, remaining 20000.

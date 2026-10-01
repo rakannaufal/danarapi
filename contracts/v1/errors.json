@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "errors": [
+    { "code": "VALIDATION", "http_status": 422 },
+    { "code": "UNAUTHORIZED", "http_status": 401 },
+    { "code": "FORBIDDEN", "http_status": 403 },
+    { "code": "NOT_FOUND", "http_status": 404 },
+    { "code": "CONFLICT_VERSION", "http_status": 409 },
+    { "code": "DUPLICATE_MUTATION", "http_status": 409 },
+    { "code": "OBLIGATION_EXCEEDED", "http_status": 409 },
+    { "code": "STRUCTURE_LOCKED", "http_status": 409 },
+    { "code": "QUOTA_EXCEEDED", "http_status": 429 },
+    { "code": "REQUIRES_ONLINE", "http_status": 503 },
+    { "code": "INTERNAL", "http_status": 500 }
+  ]
+}
+

@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0.0",
+  "currency": "IDR",
+  "money": {
+    "valid": ["0", "1", "120000", "999999999999"],
+    "invalid": ["", "00", "01", "-1", "1.0", "1e3", "NaN", "1000000000000", 120000]
+  },
+  "split_rounding": [
+    {
+      "id": "equal-100000-three",
+      "method": "equal",
+      "total": "100000",
+      "participants": [
+        { "id": "self", "included": true },
+        { "id": "ani", "included": true },
+        { "id": "budi", "included": true }
+      ],
+      "expected": { "self": "33334", "ani": "33333", "budi": "33333" }
+    },
+    {
+      "id": "equal-zero-participant",
+      "method": "equal",
+      "total": "100000",
+      "participants": [
+        { "id": "self", "included": true },
+        { "id": "ani", "included": true },
+        { "id": "payer", "included": false }
+      ],
+      "expected": { "self": "50000", "ani": "50000", "payer": "0" }
+    },
+    {
+      "id": "percentage-largest-remainder",
+      "method": "percentage",
+      "total": "100001",
+      "participants": [
+        { "id": "self", "basis_points": 3334 },
+        { "id": "ani", "basis_points": 3333 },
+        { "id": "budi", "basis_points": 3333 }
+      ],
+      "expected": { "self": "33341", "ani": "33330", "budi": "33330" }
+    }
+  ],
+  "ledger_scenarios": [
+    {
+      "id": "prd-3.4",
+      "opening": { "cash": "100000", "bank": "200000" },
+      "events": [
+        { "kind": "expense", "account": "cash", "amount": "25000" },
+        { "kind": "transfer", "from": "bank", "to": "cash", "amount": "50000" },
+        { "kind": "income", "account": "bank", "amount": "10000" },
+        { "kind": "review_duplicate", "amount": "25000" }
+      ],
+      "expected": {
+        "balances": { "cash": "125000", "bank": "160000" },
+        "account_balance": "285000",
+        "personal_expense": "25000",
+        "personal_income": "10000"
+      }
+    },
+    {
+      "id": "split-self-pays",
+      "opening": { "cash": "200000" },
+      "bill": { "total": "120000", "self_share": "40000", "payer": "self", "receivables": { "ani": "40000", "budi": "40000" } },
+      "settlements": [{ "member": "ani", "amount": "15000", "account": "cash" }],
+      "expected": { "cash": "95000", "receivables": "65000", "payables": "0", "net_position": "160000", "personal_expense": "40000" }
+    },
+    {
+      "id": "split-other-pays",
+      "opening": { "cash": "200000" },
+      "bill": { "total": "120000", "self_share": "40000", "payer": "ani" },
+      "settlements": [{ "member": "ani", "amount": "40000", "account": "cash" }],
+      "expected": { "cash": "160000", "receivables": "0", "payables": "0", "net_position": "160000", "personal_expense": "40000" }
+    },
+    {
+      "id": "writeoff-and-reversal",
+      "opening": { "cash": "200000" },
+      "bill": { "total": "120000", "self_share": "40000", "payer": "self", "receivables": { "ani": "40000", "budi": "40000" } },
+      "resolutions": [{ "member": "ani", "amount": "10000", "kind": "receivable_writeoff" }],
+      "expected": { "cash": "80000", "receivables": "70000", "net_position": "150000", "personal_expense": "50000", "non_cash_expense": "10000" },
+      "after_reversal": { "cash": "80000", "receivables": "80000", "net_position": "160000", "personal_expense": "40000" }
+    }
+  ],
+  "mutation_cases": [
+    { "id": "same-retry", "mutation_id": "00000000-0000-4000-8000-000000000001", "same_payload_returns_same_result": true },
+    { "id": "changed-retry", "mutation_id": "00000000-0000-4000-8000-000000000002", "changed_payload_error": "DUPLICATE_MUTATION" },
+    { "id": "overpay-one-rupiah", "remaining": "25000", "attempt": "25001", "error": "OBLIGATION_EXCEEDED" },
+    { "id": "edit-after-settlement", "error": "STRUCTURE_LOCKED" }
+  ]
+}
+
