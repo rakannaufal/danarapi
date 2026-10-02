@@ -33,6 +33,13 @@ struct RupiahTextField: UIViewRepresentable {
         field.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         field.adjustsFontSizeToFitWidth = true
         field.minimumFontSize = 16
+        context.coordinator.field = field
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        let done = UIBarButtonItem(title: "Selesai", style: .done, target: context.coordinator, action: #selector(Coordinator.finishEditing))
+        done.accessibilityIdentifier = "money.keyboardDone"
+        toolbar.items = [UIBarButtonItem(systemItem: .flexibleSpace), done]
+        field.inputAccessoryView = toolbar
         return field
     }
 
@@ -58,7 +65,13 @@ struct RupiahTextField: UIViewRepresentable {
 
     final class Coordinator: NSObject, UITextFieldDelegate {
         var parent: RupiahTextField
+        weak var field: UITextField?
         init(_ parent: RupiahTextField) { self.parent = parent }
+
+        @objc func finishEditing() {
+            parent.focus?.wrappedValue = nil
+            field?.resignFirstResponder()
+        }
 
         func textFieldDidBeginEditing(_ textField: UITextField) { if let focusID = parent.focusID { parent.focus?.wrappedValue = focusID } }
         func textFieldDidEndEditing(_ textField: UITextField) {

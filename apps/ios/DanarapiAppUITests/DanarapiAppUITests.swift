@@ -218,7 +218,7 @@ final class DanarapiAppUITests: XCTestCase {
         amount.tap()
         amount.typeText("25000")
         XCTAssertEqual(amount.value as? String, "25.000")
-        let done = app.buttons["transaction.keyboardDone"]
+        let done = app.buttons["money.keyboardDone"]
         XCTAssertTrue(done.waitForExistence(timeout: 3)); done.tap()
         app.buttons["Catat pengeluaran"].tap()
         XCTAssertTrue(app.staticTexts["Tersimpan"].waitForExistence(timeout: 5))
@@ -295,7 +295,7 @@ final class DanarapiAppUITests: XCTestCase {
         let amount = app.textFields["money.Nominal"]
         XCTAssertTrue(amount.waitForExistence(timeout: 4)); amount.tap(); amount.typeText("500000")
         XCTAssertEqual(amount.value as? String, "500.000")
-        let done = app.buttons["transaction.keyboardDone"]
+        let done = app.buttons["money.keyboardDone"]
         XCTAssertTrue(done.waitForExistence(timeout: 3)); done.tap()
         let save = app.buttons["Catat pengeluaran"]
         reveal(save, in: app); XCTAssertTrue(save.isEnabled); save.tap()

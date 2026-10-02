@@ -96,15 +96,18 @@ enum AIConsentPresenter {
 
 struct ProductLinksView: View {
     @Environment(AppModel.self) private var app
+    @State private var showLinks = false
     var body: some View {
-        Menu {
+        Button { showLinks = true } label: {
+            Label("Tentang & bantuan", systemImage: "questionmark.circle")
+                .frame(minHeight: 44).contentShape(Rectangle())
+        }
+        .buttonStyle(.plain).font(.subheadline)
+        .confirmationDialog("Tentang & bantuan", isPresented: $showLinks, titleVisibility: .visible) {
             ForEach(ProductCatalog.links, id: \.0) { identifier, title in
                 Button(title) { app.productPage = ProductRoute(id: identifier) }
             }
-        } label: {
-            Label("Tentang & bantuan", systemImage: "questionmark.circle")
-                .frame(minHeight: 44).contentShape(Rectangle())
-        }.font(.subheadline)
+        }
     }
 }
 

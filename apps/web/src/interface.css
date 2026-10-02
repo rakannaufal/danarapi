@@ -23,6 +23,8 @@ button, input, select, textarea { font-family: var(--font-family); }
 h1 { font-size: clamp(1.65rem, 2.6vw, 2rem); font-weight: 650; letter-spacing: -.04em; }
 h2 { font-size: 1.125rem; font-weight: 600; letter-spacing: -.025em; }
 h3 { font-size: 1rem; font-weight: 600; letter-spacing: -.015em; }
+.section-heading h2 { min-width: 0; overflow-wrap: anywhere; }
+.section-heading > svg { flex-shrink: 0; }
 button, a, input, select, textarea, .card { min-width: 0; }
 button, a { transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease; }
 button:disabled { opacity: .55; }
