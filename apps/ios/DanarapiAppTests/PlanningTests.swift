@@ -72,10 +72,10 @@ final class PlanningTests: XCTestCase {
         XCTAssertTrue(content.contains("kas_keluar"))
         XCTAssertTrue(content.contains("periode_akhir"))
     }
-    func testSharedVisualTokensUseNeutralPalette() {
-        XCTAssertEqual(DesignTokens.version, "1.2.0")
-        XCTAssertEqual(DesignTokenCatalog.bundled?.hex("canvas", theme: "light"), 0xF5F5F7)
-        XCTAssertEqual(DesignTokenCatalog.bundled?.hex("canvas", theme: "dark"), 0x111113)
+    func testSharedVisualTokensUseBrandPalette() {
+        XCTAssertEqual(DesignTokens.version, "1.3.0")
+        XCTAssertEqual(DesignTokenCatalog.bundled?.hex("canvas", theme: "light"), 0xFBFCFB)
+        XCTAssertEqual(DesignTokenCatalog.bundled?.hex("canvas", theme: "dark"), 0x0A1624)
         XCTAssertEqual(DesignTokens.cornerControl, 12)
         XCTAssertEqual(DesignTokens.minimumTouch, 44)
     }

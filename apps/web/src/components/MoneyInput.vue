@@ -1,10 +1,37 @@
 <script setup lang="ts" generic="Value extends string | number | null | undefined">
-import { ref, watch } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { formatMoneyInput, moneyDigits, moneyCaret, separatorDeletion } from '../money-input.ts';
 defineOptions({ inheritAttrs: false });
 const props = defineProps<{ modelValue: Value; numeric?: boolean; signed?: boolean }>();
 const emit = defineEmits<{ 'update:modelValue': [value: Value]; input: [event: Event] }>();
 const display = ref(formatMoneyInput(props.modelValue, props.signed));
+const inputElement = ref<HTMLInputElement>();
+let resizeObserver: ResizeObserver | undefined;
+let textSizeObserver: MutationObserver | undefined;
+function fitAmount() {
+  const input = inputElement.value;
+  if (!input?.closest('.amount-input')) return;
+  input.style.fontSize = '';
+  const style = getComputedStyle(input);
+  const context = document.createElement('canvas').getContext('2d');
+  if (!context) return;
+  context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+  const width = context.measureText(input.value || input.placeholder).width;
+  const available = input.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - 2;
+  if (available > 0 && width > available) input.style.fontSize = `${parseFloat(style.fontSize) * available / width}px`;
+}
+watch(display, () => { void nextTick(fitAmount); });
+onMounted(() => {
+  const input = inputElement.value;
+  if (!input?.closest('.amount-input')) return;
+  resizeObserver = new ResizeObserver(fitAmount);
+  resizeObserver.observe(input);
+  textSizeObserver = new MutationObserver(() => { void nextTick(fitAmount); });
+  textSizeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'class', 'data-theme'] });
+  void document.fonts.ready.then(fitAmount);
+  fitAmount();
+});
+onBeforeUnmount(() => { resizeObserver?.disconnect(); textSizeObserver?.disconnect(); });
 watch(() => [props.modelValue, props.signed] as const, () => {
   if (props.numeric && props.signed && props.modelValue === null && display.value === '-') return;
   display.value = formatMoneyInput(props.modelValue, props.signed);
@@ -35,7 +62,7 @@ function update(event: Event) {
   emit('input', event);
 }
 </script>
-<template><input v-bind="$attrs" type="text" class="money-input" :class="{ 'money-long': display.length > 11 }" :inputmode="signed ? 'text' : 'numeric'" :value="display" :pattern="signed ? '-?[0-9]{1,3}(\\.[0-9]{3})*' : '[0-9]{1,3}(\\.[0-9]{3})*'" @beforeinput="beforeInput" @input="update"></template>
+<template><input ref="inputElement" v-bind="$attrs" type="text" class="money-input" :class="{ 'money-long': display.length > 11 }" :inputmode="signed ? 'text' : 'numeric'" :value="display" :pattern="signed ? '-?[0-9]{1,3}(\\.[0-9]{3})*' : '[0-9]{1,3}(\\.[0-9]{3})*'" @beforeinput="beforeInput" @input="update"></template>
 <style scoped>
 .money-input{font-variant-numeric:tabular-nums}
 .amount-input .money-input.money-long{font-size:clamp(1rem,6vw,2.1333rem)}

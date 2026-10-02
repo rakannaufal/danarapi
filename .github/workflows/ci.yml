@@ -94,7 +94,12 @@ jobs:
         run: |
           SIMULATOR_UDID=$(xcrun simctl list devices available -j | jq -r '.devices[][] | select(.name | startswith("iPhone")) | .udid' | sed -n '1p')
           test -n "$SIMULATOR_UDID"
-          xcodebuild -project apps/ios/Danarapi.xcodeproj -scheme Danarapi -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" CODE_SIGNING_ALLOWED=NO test
+          xcodebuild -project apps/ios/Danarapi.xcodeproj -scheme Danarapi -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" -resultBundlePath /tmp/DanarapiTests.xcresult CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=- DEVELOPMENT_TEAM= test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: ios-test-diagnostics
+          path: /tmp/DanarapiTests.xcresult
 
   secret-scan:
     runs-on: ubuntu-latest

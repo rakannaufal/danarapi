@@ -90,7 +90,7 @@ final class DanarapiAppUITests: XCTestCase {
         app.buttons["Tentang & bantuan"].tap()
         app.buttons["Kebijakan privasi"].tap()
         XCTAssertTrue(app.navigationBars["Kebijakan privasi"].waitForExistence(timeout: 4))
-        XCTAssertTrue(app.staticTexts["Penyedia layanan"].exists)
+        XCTAssertTrue(app.staticTexts["Layanan pendukung"].exists)
     }
     @MainActor
     func testStartupShowsLogoWithoutPrematureNetworkError() {
@@ -193,9 +193,7 @@ final class DanarapiAppUITests: XCTestCase {
 
     @MainActor
     func testDemoCoreNavigation() throws {
-        let app = XCUIApplication()
-        app.launchArguments = ["--ui-testing-demo"]
-        app.launch()
+        let app = launchDemo()
 
         XCTAssertTrue(app.navigationBars["Ringkasan keuangan"].waitForExistence(timeout: 8))
         app.buttons["nav.1"].tap()
@@ -211,9 +209,7 @@ final class DanarapiAppUITests: XCTestCase {
 
     @MainActor
     func testCreateDemoExpense() throws {
-        let app = XCUIApplication()
-        app.launchArguments = ["--ui-testing-demo"]
-        app.launch()
+        let app = launchDemo()
         XCTAssertTrue(app.buttons["Tambah catatan"].waitForExistence(timeout: 8))
         app.buttons["Tambah catatan"].tap()
         app.buttons["Pengeluaran"].tap()
@@ -222,15 +218,15 @@ final class DanarapiAppUITests: XCTestCase {
         amount.tap()
         amount.typeText("25000")
         XCTAssertEqual(amount.value as? String, "25.000")
+        let done = app.buttons["transaction.keyboardDone"]
+        XCTAssertTrue(done.waitForExistence(timeout: 3)); done.tap()
         app.buttons["Catat pengeluaran"].tap()
         XCTAssertTrue(app.staticTexts["Tersimpan"].waitForExistence(timeout: 5))
     }
 
     @MainActor
     func testTextImportCreatesReviewNotPostedTransaction() throws {
-        let app = XCUIApplication()
-        app.launchArguments = ["--ui-testing-demo"]
-        app.launch()
+        let app = launchDemo()
         XCTAssertTrue(app.buttons["Tambah catatan"].waitForExistence(timeout: 8))
         app.buttons["Tambah catatan"].tap()
         app.buttons["Impor bukti"].tap()
@@ -299,6 +295,8 @@ final class DanarapiAppUITests: XCTestCase {
         let amount = app.textFields["money.Nominal"]
         XCTAssertTrue(amount.waitForExistence(timeout: 4)); amount.tap(); amount.typeText("500000")
         XCTAssertEqual(amount.value as? String, "500.000")
+        let done = app.buttons["transaction.keyboardDone"]
+        XCTAssertTrue(done.waitForExistence(timeout: 3)); done.tap()
         let save = app.buttons["Catat pengeluaran"]
         reveal(save, in: app); XCTAssertTrue(save.isEnabled); save.tap()
         XCTAssertTrue(progress.waitForExistence(timeout: 6))

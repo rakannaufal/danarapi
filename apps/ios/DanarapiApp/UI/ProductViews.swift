@@ -97,11 +97,14 @@ enum AIConsentPresenter {
 struct ProductLinksView: View {
     @Environment(AppModel.self) private var app
     var body: some View {
-        Menu("Tentang & bantuan", systemImage: "questionmark.circle") {
+        Menu {
             ForEach(ProductCatalog.links, id: \.0) { identifier, title in
                 Button(title) { app.productPage = ProductRoute(id: identifier) }
             }
-        }.frame(minHeight: 44).font(.subheadline)
+        } label: {
+            Label("Tentang & bantuan", systemImage: "questionmark.circle")
+                .frame(minHeight: 44).contentShape(Rectangle())
+        }.font(.subheadline)
     }
 }
 

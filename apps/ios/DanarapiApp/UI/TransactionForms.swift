@@ -133,6 +133,7 @@ struct TransactionFormView: View {
     @State private var merchant: String
     @State private var note: String
     @State private var goalID: String
+    @FocusState private var focusedField: String?
 
     init(kind: TransactionKind, editing: FinanceTransaction? = nil, initialGoal: SavingsGoal? = nil, onSaved: @escaping () -> Void = {}) {
         self.editing = editing
@@ -162,22 +163,29 @@ struct TransactionFormView: View {
         Form {
             Section {
                 if !isQRIS { Picker("Jenis", selection: $kind) { ForEach(TransactionKind.allCases) { Text($0.title).tag($0) } }.pickerStyle(.segmented) }
-                MoneyField(title: "Nominal", value: $amount).listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
+                MoneyField(title: "Nominal", value: $amount, focus: $focusedField).listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
             }
             Section("Rincian") {
                 Picker("Akun", selection: $accountID) { Text("Pilih akun").tag(""); ForEach(app.activeAccounts) { Text($0.name).tag($0.id) } }
                 Picker("Kategori", selection: $categoryID) { Text("Pilih kategori").tag(""); ForEach(categories) { Text($0.name).tag($0.id) } }.disabled(isQRIS)
                 if goalSelected { Picker("Target", selection: $goalID) { Text("Pilih target").tag(""); ForEach(app.snapshot.goals ?? []) { Text($0.name).tag($0.id) } }.accessibilityIdentifier("transaction.goal") }
                 DatePicker("Tanggal", selection: $occurredAt)
-                LabeledContent { TextField("Nama merchant", text: $merchant).multilineTextAlignment(.trailing) } label: { HStack(spacing: 6) { Text("Merchant"); Text("opsional").font(.caption).foregroundStyle(Color.danarapiMuted) } }
+                LabeledContent { TextField("Nama merchant", text: $merchant).focused($focusedField, equals: "merchant").multilineTextAlignment(.trailing) } label: { HStack(spacing: 6) { Text("Merchant"); Text("opsional").font(.caption).foregroundStyle(Color.danarapiMuted) } }
                 if let merchantSuggestion, merchantSuggestion.id != categoryID {
                     Button { categoryID = merchantSuggestion.id } label: { Label("Gunakan kategori \(merchantSuggestion.name)", systemImage: "wand.and.stars") }
                 }
-                TextField("Catatan (opsional)", text: $note, axis: .vertical)
+                TextField("Catatan (opsional)", text: $note, axis: .vertical).focused($focusedField, equals: "note")
             }
             Section { Button(editing == nil ? "Catat \(kind.title.lowercased())" : "Simpan perubahan") { Task { await save() } }.buttonStyle(PrimaryButtonStyle()).disabled(!valid).listRowInsets(EdgeInsets()).listRowBackground(Color.clear) }
         }
         .scrollContentBackground(.hidden).background(Color.danarapiCanvas)
+        .scrollDismissesKeyboard(.interactively)
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Selesai") { focusedField = nil }.accessibilityIdentifier("transaction.keyboardDone")
+            }
+        }
         .navigationTitle(editing == nil ? "Tambah transaksi" : "Ubah transaksi").navigationBarTitleDisplayMode(.inline)
         .onAppear { setDefaults() }
         .onChange(of: kind) { _, _ in categoryID = categories.first?.id ?? ""; goalID = "" }

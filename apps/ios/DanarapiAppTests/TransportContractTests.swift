@@ -262,9 +262,9 @@ final class TransportContractTests: XCTestCase {
     func testBundledDesignTokensDecodeAllNativeValues() throws {
         let catalog = try XCTUnwrap(DesignTokenCatalog.bundled)
         XCTAssertEqual(catalog.version, DesignTokens.version)
-        XCTAssertEqual(catalog.hex("primary", theme: "light"), 0x0066CC)
-        XCTAssertEqual(catalog.hex("primary", theme: "dark"), 0x80BAFF)
-        XCTAssertEqual(catalog.hex("on-primary", theme: "dark"), 0x101C30)
+        XCTAssertEqual(catalog.hex("primary", theme: "light"), 0x09746C)
+        XCTAssertEqual(catalog.hex("primary", theme: "dark"), 0x7BDDC2)
+        XCTAssertEqual(catalog.hex("on-primary", theme: "dark"), 0x0A1624)
         XCTAssertEqual(catalog.radius["card"], 20)
         XCTAssertEqual(catalog.radius["button"], 12)
         XCTAssertEqual(catalog.radius["card"], Double(DesignTokens.cornerCard))

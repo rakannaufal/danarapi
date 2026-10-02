@@ -21,8 +21,8 @@ struct MainTabView: View {
                 tabContent(3) { ReportsView() }
                 tabContent(4) { SettingsView() }
             }
+            bottomNavigation
         }
-        .safeAreaInset(edge: .bottom, spacing: 0) { bottomNavigation }
         .tint(.danarapiPrimary)
         .sheet(isPresented: $showAdd) { AddMenuView().presentationDragIndicator(.visible).presentationCornerRadius(24) }
         .fullScreenCover(isPresented: $showScan) { ScanHubView() }
