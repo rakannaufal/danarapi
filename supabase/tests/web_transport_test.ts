@@ -28,6 +28,23 @@ for (const owned of [true, false]) Deno.test(`posted attachment validates owner 
   }, url => url.includes('/transactions?') ? Response.json(owned ? [{ id: target }] : []) : url.endsWith('/auth/v1/user') ? Response.json({ id: 'cb000000-0000-4000-8000-000000000001' }) : Response.json({}));
 });
 function request(body: unknown, path = 'ios-data', authorized = true) { return new Request(`https://edge.invalid/functions/v1/${path}`, { method: 'POST', headers: { 'content-type': 'application/json', ...(authorized ? { authorization: 'Bearer test-user-token' } : {}) }, body: JSON.stringify(body) }); }
+for (const month of ['2026-10', '2026-10-01']) Deno.test(`budget normalizes native/web month (${month})`, async () => {
+  await mocked(async calls => {
+    const response = await data(request({ operation: 'upsert_budget', payload: { category_id: 'synthetic-category', month, limit_amount: '4000' } }));
+    assert(response.status === 200); assert(calls.length === 1);
+    const values = JSON.parse(String(calls[0].init?.body));
+    assert(values.month === '2026-10-01'); assert(values.limit_amount === '4000');
+  }, () => new Response(null, { status: 204 }));
+});
+Deno.test('budget rejects invalid month without database writes', async () => {
+  await mocked(async calls => {
+    for (const month of ['2026-00', '2026-13', '2026-10-02', '', '2026-10-01T00:00:00Z']) {
+      const response = await data(request({ operation: 'upsert_budget', payload: { month, category_id: 'synthetic-category', limit_amount: '4000' } }));
+      assert(response.status === 422);
+    }
+    assert(calls.length === 0);
+  }, () => { throw new Error('Invalid month reached database'); });
+});
 async function mocked(run: (calls: { url: string; init?: RequestInit }[]) => Promise<void>, responder: (url: string, init?: RequestInit) => Response | Promise<Response>) {
   const originalFetch = globalThis.fetch, calls: { url: string; init?: RequestInit }[] = [];
   globalThis.fetch = (input, init) => { const url = String(input); calls.push({ url, init }); return Promise.resolve(responder(url, init)); };
@@ -94,6 +111,6 @@ Deno.test('OAuth deletion rejects stale, future, missing and foreign-owner authe
 });
 Deno.test('full export ZIP supports 300KB attachment and signed decimal CSV; no partial success',async()=>{
   const dashboard={accounts:[{id:'cash',name:'Tunai'}],categories:[{id:'food',name:'Makan'}],transactions:[{id:'transaction',kind:'expense',amount:'75000',accountID:'cash',categoryID:'food',occurredAt:'2026-09-30T05:00:00Z',note:'=HYPERLINK(1)',merchant:'TOKO'}],splitBills:[],transfers:[]};
-  await mocked(async()=>{const response=await exportData(request({}));assert(response.ok);assert(response.headers.get('content-type')==='application/zip');const bytes=new Uint8Array(await response.arrayBuffer());assert(bytes.length>300000);const text=new TextDecoder().decode(bytes);assert(text.includes('"-75000"'));assert(!text.includes('"\'-75000"'));assert(text.includes("'=HYPERLINK"));assert(text.includes('manifest.json'));},url=>url.includes('/dashboard-full')?Response.json(dashboard):url.includes('/rest/v1/attachments')?Response.json([{id:'attachment',storage_key:'user/bill.pdf',mime:'application/pdf',size_bytes:300000}]):new Response(new Uint8Array(300000),{status:200}));
-  await mocked(async()=>{const response=await exportData(request({}));assert(!response.ok);},url=>url.includes('/dashboard-full')?Response.json(dashboard):url.includes('/rest/v1/attachments')?Response.json([{id:'attachment',storage_key:'user/bill.pdf',mime:'application/pdf',size_bytes:300000}]):new Response('',{status:500}));
+  await mocked(async()=>{const response=await exportData(request({}));assert(response.ok);assert(response.headers.get('content-type')==='application/zip');const bytes=new Uint8Array(await response.arrayBuffer());assert(bytes.length>300000);const text=new TextDecoder().decode(bytes);assert(text.includes('"-75000"'));assert(!text.includes('"\'-75000"'));assert(text.includes("'=HYPERLINK"));assert(text.includes('manifest.json'));assert(text.includes('aiConsent'));assert(text.includes('supportTickets'));},url=>url.includes('/dashboard-full')?Response.json(dashboard):/\/rest\/v1\/(ai_consents|support_tickets)/.test(url)?Response.json([]):url.includes('/rest/v1/attachments')?Response.json([{id:'attachment',storage_key:'user/bill.pdf',mime:'application/pdf',size_bytes:300000}]):new Response(new Uint8Array(300000),{status:200}));
+  await mocked(async()=>{const response=await exportData(request({}));assert(!response.ok);},url=>url.includes('/dashboard-full')?Response.json(dashboard):/\/rest\/v1\/(ai_consents|support_tickets)/.test(url)?Response.json([]):url.includes('/rest/v1/attachments')?Response.json([{id:'attachment',storage_key:'user/bill.pdf',mime:'application/pdf',size_bytes:300000}]):new Response('',{status:500}));
 });

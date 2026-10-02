@@ -36,7 +36,7 @@ enum ImportService {
 
     static func reviewFromReceipt(_ receipt: ScannedReceipt, source: ReviewSource, attachmentName: String? = nil, existing: ReviewItem? = nil) -> ReviewItem {
         let empty = ExtractedField(value: nil, confidence: .low, evidenceSpan: nil, sourceType: source)
-        var item = existing ?? ReviewItem(id: UUID().uuidString, source: source, status: .pending, amount: empty, merchant: empty, date: empty, rawReference: nil, duplicateCandidateID: nil, attachmentName: attachmentName, createdAt: .now)
+        var item = existing ?? ReviewItem(id: UUID().uuidString.lowercased(), source: source, status: .pending, amount: empty, merchant: empty, date: empty, rawReference: nil, duplicateCandidateID: nil, attachmentName: attachmentName, createdAt: .now)
         let validation = receipt.validation
         item.receipt = receipt
         item.receiptLines = receipt.items.map { ReceiptLine(name: $0.name, quantity: $0.qty, unitPrice: $0.unitPrice.map(String.init) ?? "") }
@@ -101,7 +101,7 @@ enum ImportService {
     static func reviewFromQR(_ raw: String, attachmentName: String? = nil) throws -> ReviewItem {
         let payload = try QRISParser.parse(raw)
         return ReviewItem(
-            id: UUID().uuidString,
+            id: UUID().uuidString.lowercased(),
             source: .qris,
             status: .pending,
             amount: ExtractedField(value: payload.amount.map(String.init), confidence: payload.amount == nil ? .low : .high, evidenceSpan: payload.amount.map { "Tag 54: \($0)" }, sourceType: .qris),
@@ -128,7 +128,7 @@ enum ImportService {
         let date = extractDate(text)
         let merchant = text.split(whereSeparator: \.isNewline).first.map(String.init)?.trimmingCharacters(in: .whitespacesAndNewlines)
         return ReviewItem(
-            id: UUID().uuidString,
+            id: UUID().uuidString.lowercased(),
             source: source,
             status: .pending,
             amount: ExtractedField(value: selected.map(String.init), confidence: source == .image ? .low : explicitTotal != nil ? .high : selected == nil ? .low : .medium, evidenceSpan: selected.map { "Nominal: \($0)" }, sourceType: source),
@@ -181,7 +181,7 @@ enum ImportService {
         guard data.count <= 5 * 1_024 * 1_024, let document = PDFDocument(data: data) else { throw AppError.validation("PDF tidak valid atau melebihi 5 MB.") }
         let text = (0..<min(document.pageCount, 30)).compactMap { document.page(at: $0)?.string }.joined(separator: "\n")
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return ReviewItem(id: UUID().uuidString, source: .pdfText, status: .pending,
+            return ReviewItem(id: UUID().uuidString.lowercased(), source: .pdfText, status: .pending,
                 amount: ExtractedField(value: nil, confidence: .low, evidenceSpan: nil, sourceType: .pdfText),
                 merchant: ExtractedField(value: nil, confidence: .low, evidenceSpan: nil, sourceType: .pdfText),
                 date: ExtractedField(value: nil, confidence: .low, evidenceSpan: nil, sourceType: .pdfText),

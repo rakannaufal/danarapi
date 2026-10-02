@@ -1,9 +1,111 @@
 import Foundation
 import XCTest
 import UIKit
+import AuthenticationServices
 @testable import Danarapi
 
 final class TransportContractTests: XCTestCase {
+    @MainActor
+    func testOAuthTimeoutAllowsRetry() async throws {
+        let browser = OAuthBrowserStub()
+        let presenter = OAuthPresenter(timeout: .milliseconds(20)) { _, _, callback in
+            browser.callback = callback
+            return browser
+        }
+        for _ in 0..<2 {
+            do {
+                _ = try await presenter.authenticate(url: URL(string: "https://example.invalid/auth")!, presentationWindow: UIWindow())
+                XCTFail("OAuth did not time out")
+            } catch let error as AppError {
+                XCTAssertEqual(error.code, "TIMEOUT")
+            }
+        }
+        XCTAssertEqual(browser.starts, 2)
+        XCTAssertEqual(browser.cancellations, 2)
+    }
+
+    @MainActor
+    func testOAuthStartFailureAllowsRetry() async throws {
+        let browser = OAuthBrowserStub()
+        browser.canStart = false
+        let presenter = OAuthPresenter { _, _, _ in browser }
+        for _ in 0..<2 {
+            do {
+                _ = try await presenter.authenticate(url: URL(string: "https://example.invalid/auth")!, presentationWindow: UIWindow())
+                XCTFail("OAuth unexpectedly started")
+            } catch {
+                XCTAssertTrue(error is AppError)
+            }
+        }
+        XCTAssertEqual(browser.starts, 2)
+        XCTAssertEqual(browser.cancellations, 2)
+    }
+
+    @MainActor
+    func testOAuthCancellationIgnoresLateCallbackDuringRetry() async throws {
+        let firstBrowser = OAuthBrowserStub()
+        let secondBrowser = OAuthBrowserStub()
+        var attempts = 0
+        let presenter = OAuthPresenter { _, _, callback in
+            attempts += 1
+            let browser = attempts == 1 ? firstBrowser : secondBrowser
+            browser.callback = callback
+            return browser
+        }
+        let window = UIWindow()
+        let firstAttempt = Task { try await presenter.authenticate(url: URL(string: "https://example.invalid/auth")!, presentationWindow: window) }
+        for _ in 0..<100 where firstBrowser.starts == 0 { await Task.yield() }
+        XCTAssertEqual(firstBrowser.starts, 1)
+        presenter.cancel()
+        do { _ = try await firstAttempt.value; XCTFail("Cancelled OAuth completed") }
+        catch { XCTAssertTrue(error is CancellationError) }
+        let secondAttempt = Task { try await presenter.authenticate(url: URL(string: "https://example.invalid/auth")!, presentationWindow: window) }
+        for _ in 0..<100 where secondBrowser.starts == 0 { await Task.yield() }
+        XCTAssertEqual(secondBrowser.starts, 1)
+        firstBrowser.callback?(URL(string: "id.danarapi.app://auth/callback?code=stale"), nil)
+        let expected = URL(string: "id.danarapi.app://auth/callback?code=current")!
+        secondBrowser.callback?(expected, nil)
+        let actual = try await secondAttempt.value
+        XCTAssertEqual(actual, expected)
+        XCTAssertEqual(firstBrowser.cancellations, 1)
+        XCTAssertEqual(secondBrowser.cancellations, 1)
+    }
+
+    @MainActor
+    func testOAuthTaskCancellationReleasesBrowser() async throws {
+        let browser = OAuthBrowserStub()
+        let presenter = OAuthPresenter { _, _, _ in browser }
+        let window = UIWindow()
+        let attempt = Task { try await presenter.authenticate(url: URL(string: "https://example.invalid/auth")!, presentationWindow: window) }
+        for _ in 0..<100 where browser.starts == 0 { await Task.yield() }
+        XCTAssertEqual(browser.starts, 1)
+        attempt.cancel()
+        do { _ = try await attempt.value; XCTFail("Cancelled task completed") }
+        catch { XCTAssertTrue(error is CancellationError) }
+        XCTAssertEqual(browser.cancellations, 1)
+    }
+
+    @MainActor
+    func testStartupShowsBrandBeforeLoadingAndCompletesWithoutSession() async throws {
+        let suite = "id.danarapi.startup.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let app = AppModel(defaults: defaults, sessionStore: KeychainSessionStore(service: suite), offlineStore: try OfflineStore(inMemory: true))
+        XCTAssertTrue(app.isStarting)
+        XCTAssertTrue(app.showsStartupScreen)
+        XCTAssertNil(app.dashboardError)
+        XCTAssertNotNil(UIImage(named: "AppLogo"))
+        await app.start()
+        XCTAssertFalse(app.isStarting)
+        XCTAssertFalse(app.showsStartupScreen)
+        XCTAssertEqual(app.mode, .signedOut)
+        await app.startDemo()
+        XCTAssertTrue(app.hasLoadedDashboard)
+        XCTAssertFalse(app.showsStartupScreen)
+        await app.start()
+        XCTAssertEqual(app.mode, .demo)
+    }
+
     @MainActor
     func testProviderBrandAssetsAreBundled() throws {
         let logo = try XCTUnwrap(UIImage(named: "GoogleSignInLogo"))
@@ -55,6 +157,27 @@ final class TransportContractTests: XCTestCase {
         XCTAssertEqual(URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems, [URLQueryItem(name: "grant_type", value: "password")])
         XCTAssertFalse(url.absoluteString.contains("%3F"))
         XCTAssertThrowsError(try configuration.endpoint("https://another.invalid/auth"))
+    }
+
+    func testNativeOAuthAlwaysReturnsToTheApplication() async throws {
+        let store = KeychainSessionStore(service: "id.danarapi.tests.\(UUID().uuidString)")
+        defer { store.clear() }
+        let configuration = SupabaseConfiguration(url: try XCTUnwrap(URL(string: "https://example.invalid")), anonKey: "sb_publishable_test")
+        let auth = AuthService(configuration: configuration, sessionStore: store)
+        let verifier = try OAuthPKCE.verifier()
+        let url = try await auth.oauthURL(provider: "google", verifier: verifier)
+        let query = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems)
+        XCTAssertEqual(query.first(where: { $0.name == "redirect_to" })?.value, "id.danarapi.app://auth/callback")
+        XCTAssertEqual(query.first(where: { $0.name == "code_challenge_method" })?.value, "s256")
+        XCTAssertEqual(query.first(where: { $0.name == "prompt" })?.value, "select_account")
+        XCTAssertEqual(query.first(where: { $0.name == "code_challenge" })?.value, OAuthPKCE.challenge(verifier))
+        for invalid in ["http://localhost:5173/?code=test", "id.danarapi.app://auth/wrong?code=test", "id.danarapi.app://auth/callback?error=access_denied"] {
+            do {
+                _ = try await auth.finishOAuth(callback: try XCTUnwrap(URL(string: invalid)), verifier: verifier)
+                XCTFail("Invalid callback accepted")
+            } catch { XCTAssertEqual((error as? AppError)?.code, "VALIDATION") }
+        }
+        XCTAssertNil(try store.load())
     }
 
     func testFractionalServerDatesAndWholeSecondDates() throws {
@@ -214,6 +337,17 @@ final class TransportContractTests: XCTestCase {
         XCTAssertNil(request.value(forHTTPHeaderField: "x-danarapi-native-scan"))
         XCTAssertEqual(AuthStubProtocol.state.requests.count, 1)
     }
+}
+
+@MainActor
+private final class OAuthBrowserStub: OAuthBrowserSession {
+    var presentationContextProvider: (any ASWebAuthenticationPresentationContextProviding)?
+    var callback: ((URL?, Error?) -> Void)?
+    var canStart = true
+    var starts = 0
+    var cancellations = 0
+    func start() -> Bool { starts += 1; return canStart }
+    func cancel() { cancellations += 1 }
 }
 
 private final class AuthStubState: @unchecked Sendable {

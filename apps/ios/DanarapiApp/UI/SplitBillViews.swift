@@ -27,9 +27,7 @@ struct SplitBillFormView: View {
     @State private var total = ""
     @State private var method: SplitMethod = .equal
     @State private var participants = [
-        ParticipantDraft(id: UUID().uuidString, name: "Saya", isSelf: true, included: true, amountText: "", percentText: "33.34"),
-        ParticipantDraft(id: UUID().uuidString, name: "Ani", isSelf: false, included: true, amountText: "", percentText: "33.33"),
-        ParticipantDraft(id: UUID().uuidString, name: "Budi", isSelf: false, included: true, amountText: "", percentText: "33.33")
+        ParticipantDraft(id: UUID().uuidString, name: "Saya", isSelf: true, included: true, amountText: "", percentText: "100")
     ]
     @State private var payerID = "self"
     @State private var accountID = ""
@@ -73,6 +71,7 @@ struct SplitBillFormView: View {
     private var amountSum: Int64 { participants.reduce(0) { $0 + (Int64($1.amountText) ?? 0) } }
     private var isValid: Bool {
         guard let parsedTotal, parsedTotal > 0, amountSum == parsedTotal, participants.count >= 2,
+              participants.allSatisfy({ !$0.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && $0.name.count <= 80 }),
               Set(participants.map { $0.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() }).count == participants.count,
               !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, !categoryID.isEmpty else { return false }
         if method == .percentage && (participants.compactMap { basisPoints($0.percentText) }.count != participants.count || participants.compactMap { basisPoints($0.percentText) }.reduce(0, +) != 10_000) { return false }
@@ -96,11 +95,24 @@ struct SplitBillFormView: View {
                             if method == .equal { Toggle("Ikut", isOn: $participant.included).labelsHidden() }
                             if method == .percentage { TextField("%", text: $participant.percentText).keyboardType(.decimalPad).frame(width: 70).multilineTextAlignment(.trailing) }
                             else { RupiahTextField("Rp", text: $participant.amountText).keyboardType(.numberPad).frame(width: 100).multilineTextAlignment(.trailing).disabled(method == .equal) }
-                            if !participant.isSelf { Button(role: .destructive) { participants.removeAll { $0.id == participant.id } } label: { Image(systemName: "minus.circle") }.accessibilityLabel("Hapus \(participant.name)") }
+                            if !participant.isSelf { Button(role: .destructive) { participants.removeAll { $0.id == participant.id }; if payerID == participant.id { payerID = "self" } } label: { Image(systemName: "minus.circle") }.accessibilityLabel("Hapus \(participant.name)") }
                         }
                     }.frame(minHeight: 44)
                 }
-                Button("Tambah peserta") { if participants.count < 20 { participants.append(ParticipantDraft(id: UUID().uuidString, name: "Peserta \(participants.count)", isSelf: false, included: true, amountText: "", percentText: "0")) } }
+                HStack {
+                    Text("Peserta").foregroundStyle(.secondary)
+                    Spacer()
+                    Button {
+                        participants.append(ParticipantDraft(id: UUID().uuidString, name: "", isSelf: false, included: true, amountText: "", percentText: "0"))
+                    } label: {
+                        Image(systemName: "plus").font(.body.weight(.semibold))
+                            .frame(width: DesignTokens.minimumTouch, height: DesignTokens.minimumTouch)
+                    }
+                    .buttonStyle(.borderless)
+                    .accessibilityLabel("Tambah peserta")
+                    .accessibilityIdentifier("split.addParticipant")
+                    .disabled(participants.count >= 20)
+                }
                 Button(calculating ? "Menghitung…" : "Hitung pembagian") { Task { await calculate() } }.disabled(parsedTotal == nil || calculating)
                 HStack { Text("Jumlah"); Spacer(); Text(amountSum.idr).monospacedDigit(); Text(amountSum == parsedTotal ? "Tepat" : "Selisih \((parsedTotal ?? 0) - amountSum)").font(.caption).foregroundStyle(amountSum == parsedTotal ? Color.danarapiIncome : Color.danarapiExpense) }
             }.disabled(structureLocked)

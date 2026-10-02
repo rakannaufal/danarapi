@@ -5,6 +5,73 @@ import SwiftUI
 @testable import Danarapi
 
 final class PlanningTests: XCTestCase {
+    @MainActor
+    func testDemoShowsOnboardingOnEveryEntryWithoutCompletingAccountTour() async throws {
+        let suiteName = "demo-onboarding-tests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let app = AppModel(defaults: defaults, offlineStore: try OfflineStore(inMemory: true))
+        await app.startDemo()
+        XCTAssertFalse(app.onboardingCompleted)
+        app.completeOnboarding()
+        XCTAssertTrue(app.onboardingCompleted)
+        XCTAssertFalse(app.hasCompletedOnboarding(userID: "first"))
+        await app.startDemo()
+        XCTAssertFalse(app.onboardingCompleted)
+    }
+
+    @MainActor
+    func testOnboardingCompletionIsScopedToAccount() throws {
+        let suiteName = "onboarding-tests-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set(true, forKey: "onboardingCompleted")
+        let app = AppModel(defaults: defaults, offlineStore: try OfflineStore(inMemory: true))
+        XCTAssertFalse(app.hasCompletedOnboarding(userID: "first"))
+        XCTAssertFalse(app.hasCompletedOnboarding(userID: "second"))
+        defaults.set(true, forKey: "onboardingCompleted.first")
+        XCTAssertTrue(app.hasCompletedOnboarding(userID: "first"))
+        XCTAssertFalse(app.hasCompletedOnboarding(userID: "second"))
+        app.completeOnboarding()
+        XCTAssertFalse(app.hasCompletedOnboarding(userID: "second"))
+    }
+
+    func testProductCatalogContainsSameLegalAndHelpContentAsWeb() throws {
+        let catalog = try XCTUnwrap(ProductCatalog.bundled)
+        XCTAssertEqual(catalog.version, "2026-10-02")
+        XCTAssertEqual(catalog.owner, "Rakan Naufal")
+        XCTAssertEqual(Set(catalog.pages.map(\.id)), ["about", "privacy", "terms", "delete-account"])
+        XCTAssertGreaterThanOrEqual(catalog.faq.count, 10)
+        XCTAssertEqual(Set(catalog.faq.map(\.id)).count, catalog.faq.count)
+    }
+    func testAccountTimezoneDefinesCalendarBoundaries() throws {
+        let prior = UserDefaults.standard.string(forKey: "financeTimezone")
+        defer { if let prior { UserDefaults.standard.set(prior, forKey: "financeTimezone") } else { UserDefaults.standard.removeObject(forKey: "financeTimezone") } }
+        let boundary = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-09-30T16:00:00Z"))
+        UserDefaults.standard.set("Asia/Makassar", forKey: "financeTimezone")
+        XCTAssertEqual(MonthPeriod.dateKey(boundary), "2026-10-01")
+        XCTAssertEqual(MonthPeriod.dateKey(boundary.addingTimeInterval(-1)), "2026-09-30")
+        UserDefaults.standard.set("Asia/Jakarta", forKey: "financeTimezone")
+        XCTAssertEqual(MonthPeriod.dateKey(boundary), "2026-09-30")
+        XCTAssertTrue(MonthPeriod.display(boundary, template: "d MMM yyyy").contains("30"))
+    }
+    @MainActor
+    func testReportCashAndExportUseExclusivePeriodBoundary() async throws {
+        let repo = DemoRepository(), start = MonthPeriod.start(.now), end = MonthPeriod.end(.now)
+        let before = try await repo.report(since: start, until: end)
+        try await repo.saveTransaction(TransactionDraft(id: nil, kind: .expense, amount: 12345, accountID: "cash", categoryID: "food", occurredAt: start, merchant: "=Unsafe", note: nil, source: "manual", expectedVersion: nil))
+        try await repo.saveTransaction(TransactionDraft(id: nil, kind: .expense, amount: 99999, accountID: "cash", categoryID: "food", occurredAt: end, merchant: "Outside", note: nil, source: "manual", expectedVersion: nil))
+        let result = try await repo.report(since: start, until: end)
+        let cash = try XCTUnwrap(result.cashAccounts?.first { $0.accountID == "cash" })
+        XCTAssertEqual(cash.outgoing, (before.cashAccounts?.first { $0.accountID == "cash" }?.outgoing ?? 0) + 12345)
+        XCTAssertEqual(cash.net, cash.incoming - cash.outgoing)
+        let snapshot = try await repo.dashboard()
+        let url = try ExportService.createReportCSV(result, snapshot: snapshot, start: start, end: end)
+        defer { try? FileManager.default.removeItem(at: url) }
+        let content = try String(contentsOf: url, encoding: .utf8)
+        XCTAssertTrue(content.contains("kas_keluar"))
+        XCTAssertTrue(content.contains("periode_akhir"))
+    }
     func testSharedVisualTokensUseNeutralPalette() {
         XCTAssertEqual(DesignTokens.version, "1.2.0")
         XCTAssertEqual(DesignTokenCatalog.bundled?.hex("canvas", theme: "light"), 0xF5F5F7)

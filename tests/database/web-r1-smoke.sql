@@ -63,6 +63,14 @@ begin
   if (select count(*) from public.ledger_entries) <> before_ledger then raise exception 'duplicate merge created ledger event'; end if;
   select coalesce(sum(cash_amount),0) into before_cash from public.ledger_entries where account_id = account_a and reversed_at is null;
   if before_cash <> after_cash then raise exception 'duplicate merge changed cash'; end if;
+  insert into public.review_items(id,source) values ('a2000000-0000-4000-8000-000000000003','pasted_text');
+  if not exists(select 1 from public.review_items where id='a2000000-0000-4000-8000-000000000003' and user_id=auth.uid()) then raise exception 'review owner default missing'; end if;
+  insert into public.budgets(category_id,month,limit_amount) values (category_id,'2027-01-01',50000);
+  if not exists(select 1 from public.budgets where user_id=auth.uid() and month='2027-01-01') then raise exception 'budget owner default missing'; end if;
+  insert into public.merchant_rules(match_type,normalized_pattern,category_id) values ('contains','uji default pemilik',category_id);
+  if not exists(select 1 from public.merchant_rules where normalized_pattern='uji default pemilik' and user_id=auth.uid()) then raise exception 'merchant rule owner default missing'; end if;
+  insert into public.attachments(review_item_id,storage_key,mime,size_bytes,sha256) values ('a2000000-0000-4000-8000-000000000003','15000000-0000-4000-8000-000000000001/default-owner.png','image/png',12,repeat('2',64));
+  if not exists(select 1 from public.attachments where storage_key='15000000-0000-4000-8000-000000000001/default-owner.png' and user_id=auth.uid()) then raise exception 'attachment owner default missing'; end if;
 end;
 $$;
 rollback;

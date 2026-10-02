@@ -47,7 +47,7 @@ jobs:
       - run: npm run check:json
       - run: npm run test:cloud
       - run: npm run test:contracts
-      - run: deno check supabase/functions/ledger/index.ts supabase/functions/ios-data/index.ts supabase/functions/export-data/index.ts supabase/functions/review-retention/index.ts
+      - run: deno check supabase/functions/ledger/index.ts supabase/functions/ios-data/index.ts supabase/functions/export-data/index.ts supabase/functions/review-retention/index.ts supabase/functions/receipt-scan/index.ts supabase/functions/product-info/index.ts
       - run: npm run check:secrets
 
   database:
@@ -61,6 +61,9 @@ jobs:
       - run: supabase start
       - run: supabase db reset --local
       - run: supabase test db
+      - run: psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -v ON_ERROR_STOP=1 -f tests/database/smoke.sql
+      - run: psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -v ON_ERROR_STOP=1 -f tests/database/backdated-entries-smoke.sql
+      - run: psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -v ON_ERROR_STOP=1 -f tests/database/product-readiness-smoke.sql
       - run: psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -v ON_ERROR_STOP=1 -f tests/database/retention-smoke.sql
       - run: DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:54322/postgres sh tests/database/concurrency.sh
       - if: always()

@@ -1,0 +1,7 @@
+{
+  "images": [
+    { "filename": "danarapi_text-light.png", "idiom": "universal" },
+    { "filename": "danarapi_text-dark.png", "idiom": "universal", "appearances": [{ "appearance": "luminosity", "value": "dark" }] }
+  ],
+  "info": { "author": "xcode", "version": 1 }
+}

@@ -9,20 +9,35 @@ struct ReportsView: View {
     @State private var newBudget = false
     @State private var report = ReportSummary.zero
     @State private var trends: [MonthlyReportTrend] = []
+    @State private var yearly = false
+    @State private var year = MonthPeriod.calendar.component(.year, from: .now)
+    @State private var loading = true
+    @State private var loadError: String?
+    @State private var reportExport: URL?
+    @State private var exportError: String?
 
-    private var startDate: Date { MonthPeriod.start(month) }
+    private var startDate: Date { yearly ? MonthPeriod.calendar.date(from: DateComponents(year: year, month: 1, day: 1))! : MonthPeriod.start(month) }
+    private var endDate: Date { yearly ? MonthPeriod.calendar.date(byAdding: .year, value: 1, to: startDate)! : MonthPeriod.end(startDate) }
+    private var reportKey: String { "\(startDate.timeIntervalSince1970)-\(endDate.timeIntervalSince1970)-\(app.timezone)" }
+    private var periodBudgets: [Budget] { app.snapshot.budgets.filter { $0.month >= startDate && $0.month < endDate } }
+    private var reportBudgets: [Budget] {
+        guard yearly else { return periodBudgets }
+        return Dictionary(grouping: periodBudgets, by: \.categoryID).map { categoryID, rows in
+            Budget(id: categoryID, categoryID: categoryID, month: startDate, limitAmount: rows.reduce(0) { $0 + $1.limitAmount }, spentAmount: rows.reduce(0) { $0 + $1.spentAmount })
+        }.sorted { $0.categoryID < $1.categoryID }
+    }
 
     private var allocationRows: [ReportAllocation] {
         if let allocations = report.allocations { return allocations }
         var remaining = Dictionary(uniqueKeysWithValues: report.categories.map { ($0.categoryID, $0.amount) })
         var goalAmounts: [String: Int64] = [:]
-        for transaction in app.snapshot.transactions where !transaction.deleted && transaction.kind == .expense && transaction.occurredAt >= startDate && transaction.occurredAt < MonthPeriod.end(startDate) {
+        for transaction in app.snapshot.transactions where !transaction.deleted && transaction.kind == .expense && transaction.occurredAt >= startDate && transaction.occurredAt < endDate {
             if let goalID = transaction.goalID {
                 goalAmounts[goalID, default: 0] += transaction.amount
                 remaining[transaction.categoryID, default: 0] -= transaction.amount
             }
         }
-        let budgetIDs = Set(app.snapshot.budgets.filter { MonthPeriod.calendar.isDate($0.month, equalTo: month, toGranularity: .month) }.map(\.categoryID))
+        let budgetIDs = Set(app.snapshot.budgets.filter { $0.month >= startDate && $0.month < endDate }.map(\.categoryID))
         var rows = goalAmounts.map { goalID, amount in ReportAllocation(id: "goal:\(goalID)", name: "Target · \(app.snapshot.goals?.first(where: { $0.id == goalID })?.name ?? "Target")", amount: amount) }
         rows += remaining.filter { $0.value > 0 }.map { categoryID, amount in
             let name = app.snapshot.categories.first(where: { $0.id == categoryID })?.name ?? "Kategori"
@@ -41,14 +56,27 @@ struct ReportsView: View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: 22) {
-                    MonthPicker(month: $month)
+                    Picker("Periode", selection: $yearly) { Text("Bulanan").tag(false); Text("Tahunan").tag(true) }.pickerStyle(.segmented)
+                    if yearly {
+                        HStack { Button { year -= 1 } label: { Image(systemName: "chevron.left").frame(width: 44, height: 44) }.accessibilityLabel("Tahun sebelumnya"); Spacer(); Text(String(year)).font(.headline); Spacer(); Button { year += 1 } label: { Image(systemName: "chevron.right").frame(width: 44, height: 44) }.accessibilityLabel("Tahun berikutnya") }
+                    } else { MonthPicker(month: $month) }
+                    if loading { ProgressView("Memuat laporan…").frame(maxWidth: .infinity, minHeight: 160) }
+                    else if let loadError { VStack(spacing: 14) { Text(loadError).font(.subheadline).foregroundStyle(.secondary); Button("Coba lagi") { Task { await loadReport() } }.buttonStyle(.bordered) }.frame(maxWidth: .infinity, minHeight: 160) }
+                    else {
                     overview
                     ReportDonut(title: "Alokasi pengeluaran", rows: allocationRows)
                     ReportDonut(title: "Pemasukan & pengeluaran", rows: [ReportAllocation(id: "income", name: "Pemasukan", amount: report.personalIncome), ReportAllocation(id: "expense", name: "Pengeluaran", amount: report.personalExpense)])
                     comparisonChart
                     categoryChart
                     budgetSection
+                    cashSection
+                    Button("Ekspor laporan CSV", systemImage: "square.and.arrow.up") {
+                        do { reportExport = try ExportService.createReportCSV(report, snapshot: app.snapshot, start: startDate, end: endDate); exportError = nil } catch { exportError = error.localizedDescription }
+                    }.buttonStyle(.bordered)
+                    if let reportExport { ShareLink(item: reportExport) { Label("Bagikan laporan", systemImage: "square.and.arrow.up") } }
+                    if let exportError { Text(exportError).foregroundStyle(Color.danarapiExpense).font(.caption) }
                     cashExplanation
+                    }
                 }
                 .padding(DesignTokens.gutter)
             }
@@ -56,7 +84,8 @@ struct ReportsView: View {
             .navigationTitle("Laporan")
             .navigationBarTitleDisplayMode(.inline)
             .refreshable { await app.refresh(); await loadReport() }
-            .task(id: startDate) { report = .zero; await loadReport() }
+            .task(id: reportKey) { await loadReport() }
+            .onChange(of: reportKey) { _, _ in reportExport = nil; exportError = nil }
             .sheet(item: $editingBudget) { BudgetEditorView(budget: $0) }
             .sheet(isPresented: $newBudget) { BudgetEditorView(budget: nil, initialMonth: month) }
         }
@@ -110,14 +139,14 @@ struct ReportsView: View {
 
     private var comparisonChart: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Perbandingan tiga bulan").font(.title3.bold())
+            Text(yearly ? "Perbandingan tiga tahun" : "Perbandingan tiga bulan").font(.title3.bold())
             Chart(trends) { row in
                 BarMark(x: .value("Bulan", row.name), y: .value("Nominal", row.income))
                     .foregroundStyle(by: .value("Jenis", "Pemasukan")).position(by: .value("Jenis", "Pemasukan"))
                 BarMark(x: .value("Bulan", row.name), y: .value("Nominal", row.expense))
                     .foregroundStyle(by: .value("Jenis", "Pengeluaran")).position(by: .value("Jenis", "Pengeluaran"))
-            }.chartForegroundStyleScale(["Pemasukan": Color.danarapiIncome, "Pengeluaran": Color.danarapiExpense])
-                .chartYAxis(.hidden).frame(height: 190).accessibilityLabel("Perbandingan pemasukan dan pengeluaran tiga bulan")
+            }.chartForegroundStyleScale(["Pemasukan": Color.danarapiChartIncome, "Pengeluaran": Color.danarapiChartExpense])
+                .chartYAxis(.hidden).frame(height: 190).accessibilityLabel(yearly ? "Perbandingan pemasukan dan pengeluaran tiga tahun" : "Perbandingan pemasukan dan pengeluaran tiga bulan")
                 .accessibilityHidden(app.hideAmounts)
             ForEach(trends) { row in
                 HStack { Text(row.name).font(.caption); Spacer(); MoneyText(amount: row.income, style: .caption, color: .danarapiIncome); MoneyText(amount: row.expense, style: .caption, color: .danarapiExpense) }
@@ -130,16 +159,32 @@ struct ReportsView: View {
             .danarapiCard()
     }
 
+    private var cashSection: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Arus kas per akun").font(.title3.bold())
+            if let rows = report.cashAccounts, !rows.isEmpty {
+                ForEach(rows) { account in
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(app.snapshot.accounts.first(where: { $0.id == account.accountID })?.name ?? "Akun").font(.headline)
+                        LabeledContent("Masuk") { MoneyText(amount: account.incoming, color: .danarapiIncome) }
+                        LabeledContent("Keluar") { MoneyText(amount: account.outgoing, color: .danarapiExpense) }
+                        LabeledContent("Arus bersih") { MoneyText(amount: account.net) }
+                    }
+                }
+            } else { EmptyRow(icon: "wallet.bifold", text: "Belum ada arus kas pada periode ini.") }
+        }.danarapiCard()
+    }
+
     private var budgetSection: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
                 Text("Anggaran").font(.title3.bold())
                 Spacer()
-                Button("Tambah") { newBudget = true }
+                if !yearly { Button("Tambah") { newBudget = true } }
             }
-            if app.snapshot.budgets.isEmpty { EmptyRow(icon: "gauge.with.dots.needle.33percent", text: "Belum ada anggaran bulanan.") }
-            ForEach(app.snapshot.budgets.filter { MonthPeriod.calendar.isDate($0.month, equalTo: month, toGranularity: .month) }) { budget in
-                Button { editingBudget = budget } label: {
+            if reportBudgets.isEmpty { EmptyRow(icon: "gauge.with.dots.needle.33percent", text: "Belum ada anggaran periode ini.") }
+            ForEach(reportBudgets) { budget in
+                Button { if !yearly { editingBudget = budget } } label: {
                     VStack(alignment: .leading, spacing: 7) {
                         HStack {
                             Text(app.snapshot.categories.first(where: { $0.id == budget.categoryID })?.name ?? "Kategori").font(.headline)
@@ -153,25 +198,33 @@ struct ReportsView: View {
                     }
                 }
                 .buttonStyle(.plain)
-                .accessibilityHint("Ubah limit anggaran")
+                .disabled(yearly)
+                .accessibilityHint(yearly ? "Total anggaran tahunan" : "Ubah limit anggaran")
             }
         }
         .danarapiCard(.danarapiSun)
     }
 
     private func loadReport() async {
-        let requested = startDate
-        guard let value = await app.report(since: requested, until: MonthPeriod.end(requested)), !Task.isCancelled, startDate == requested else { return }
-        report = value
-        var collected: [MonthlyReportTrend] = []
-        for offset in -2...0 {
-            guard let date = MonthPeriod.calendar.date(byAdding: .month, value: offset, to: requested) else { continue }
-            let result: ReportSummary?
-            if offset == 0 { result = value } else { result = await app.report(since: date, until: MonthPeriod.end(date)) }
-            guard !Task.isCancelled, startDate == requested else { return }
-            if let result { collected.append(MonthlyReportTrend(id: MonthPeriod.key(date), name: date.formatted(.dateTime.month(.abbreviated).locale(Locale(identifier: "id_ID"))), income: result.personalIncome, expense: result.personalExpense)) }
-        }
-        trends = collected
+        let requestedKey = reportKey, requestedStart = startDate, requestedEnd = endDate, requestedYearly = yearly
+        loading = true; loadError = nil
+        defer { if reportKey == requestedKey { loading = false } }
+        do {
+            let value = try await app.reportResult(since: requestedStart, until: requestedEnd)
+            try Task.checkCancellation()
+            var collected: [MonthlyReportTrend] = []
+            for offset in -2...0 {
+                let component: Calendar.Component = requestedYearly ? .year : .month
+                guard let date = MonthPeriod.calendar.date(byAdding: component, value: offset, to: requestedStart), let end = MonthPeriod.calendar.date(byAdding: component, value: 1, to: date) else { continue }
+                let result = offset == 0 ? value : try await app.reportResult(since: date, until: end)
+                try Task.checkCancellation()
+                let formatter = DateFormatter(); formatter.timeZone = MonthPeriod.calendar.timeZone; formatter.locale = Locale(identifier: "id_ID"); formatter.dateFormat = requestedYearly ? "yyyy" : "MMM yy"
+                collected.append(MonthlyReportTrend(id: MonthPeriod.key(date), name: formatter.string(from: date), income: result.personalIncome, expense: result.personalExpense))
+            }
+            guard reportKey == requestedKey else { return }
+            report = value; trends = collected
+        } catch is CancellationError { }
+        catch { if reportKey == requestedKey { loadError = error.localizedDescription; trends = [] } }
     }
 }
 
@@ -187,7 +240,12 @@ private struct ReportDonut: View {
     let title: String
     let rows: [ReportAllocation]
     private var visible: [ReportAllocation] { rows.filter { $0.amount > 0 } }
-    private let colors: [Color] = [.danarapiPrimary, .danarapiIncome, Color(light: 0x9471B4, dark: 0xB99AD9), Color(light: 0xC49A22, dark: 0xFFD60A), .danarapiExpense, .gray]
+    private let colors = Color.danarapiChartColors
+    private func color(for row: ReportAllocation, index: Int) -> Color {
+        if row.id == "income" { return .danarapiChartIncome }
+        if row.id == "expense" { return .danarapiChartExpense }
+        return colors[index % colors.count]
+    }
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(title).font(.title3.bold())
@@ -196,12 +254,12 @@ private struct ReportDonut: View {
                 Chart(visible) { row in
                     SectorMark(angle: .value("Nominal", row.amount), innerRadius: .ratio(0.7), angularInset: 1)
                         .foregroundStyle(by: .value("Alokasi", row.id))
-                }.chartForegroundStyleScale(domain: visible.map(\.id), range: visible.indices.map { colors[$0 % colors.count] })
+                }.chartForegroundStyleScale(domain: visible.map(\.id), range: visible.enumerated().map { color(for: $0.element, index: $0.offset) })
                     .chartLegend(.hidden).frame(height: 220)
                     .accessibilityLabel("Diagram \(title)").accessibilityHidden(app.hideAmounts)
                     .chartBackground { _ in VStack(spacing: 4) { Text("Total").font(.caption).foregroundStyle(Color.danarapiMuted); MoneyText(amount: visible.reduce(0) { $0 + $1.amount }, style: .subheadline.bold()) } }
                 ForEach(Array(visible.enumerated()), id: \.element.id) { index, row in
-                    HStack(spacing: 10) { Circle().fill(colors[index % colors.count]).frame(width: 8, height: 8); Text(row.name).font(.subheadline); Spacer(); MoneyText(amount: row.amount, style: .subheadline.weight(.medium)) }
+                    HStack(spacing: 10) { Circle().fill(color(for: row, index: index)).frame(width: 8, height: 8); Text(row.name).font(.subheadline); Spacer(); MoneyText(amount: row.amount, style: .subheadline.weight(.medium)) }
                 }
             }
         }.danarapiCard()
@@ -225,6 +283,7 @@ struct BudgetEditorView: View {
     @State private var month = Date.now
     @State private var newCategory = ""
     @State private var saving = false
+    @FocusState private var focusedField: String?
 
     var body: some View {
         NavigationStack {
@@ -244,11 +303,15 @@ struct BudgetEditorView: View {
                 Section {
                     Picker("Kategori", selection: $categoryID) { Text(newCategory.isEmpty ? "Pilih kategori" : newCategory).tag(""); ForEach(app.expenseCategories) { Text($0.name).tag($0.id) } }.disabled(budget != nil)
                     MonthPicker(month: $month)
-                    MoneyField(title: "Limit bulanan", value: $limit).listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
+                    MoneyField(title: "Limit bulanan", value: $limit, focus: $focusedField, focusID: "limit").listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                 }
                 if budget == nil {
                     Section("Kategori khusus") {
-                        TextField("Nama kategori baru", text: $newCategory).onChange(of: newCategory) { _, name in if name.nilIfBlank != nil { categoryID = "" } }
+                        TextField("Nama kategori baru", text: $newCategory)
+                            .focused($focusedField, equals: "category")
+                            .submitLabel(.done)
+                            .onSubmit { focusedField = nil }
+                            .onChange(of: newCategory) { _, name in if name.nilIfBlank != nil { categoryID = "" } }
                         Button("Buat kategori dan pilih") {
                             Task {
                                 guard let name = newCategory.nilIfBlank, await app.createCategory(name: name, kind: .expense) else { return }
@@ -290,7 +353,7 @@ struct MonthPicker: View {
         HStack {
             Button { month = MonthPeriod.calendar.date(byAdding: .month, value: -1, to: month)! } label: { Image(systemName: "chevron.left").frame(width: 44, height: 44) }.accessibilityLabel("Bulan sebelumnya")
             Spacer()
-            Text(month.formatted(.dateTime.month(.wide).year().locale(Locale(identifier: "id_ID")))).font(.headline)
+            Text(MonthPeriod.display(month, template: "MMMM yyyy")).font(.headline)
             Spacer()
             Button { month = MonthPeriod.calendar.date(byAdding: .month, value: 1, to: month)! } label: { Image(systemName: "chevron.right").frame(width: 44, height: 44) }.accessibilityLabel("Bulan berikutnya")
         }.foregroundStyle(Color.danarapiPrimary).padding(6).background(Color.danarapiSky, in: RoundedRectangle(cornerRadius: 22))
@@ -302,6 +365,7 @@ struct BudgetListView: View {
     @State private var month = MonthPeriod.start(.now)
     @State private var editing: Budget?
     @State private var adding = false
+    @State private var confirmCopy = false
     private var rows: [Budget] { app.snapshot.budgets.filter { MonthPeriod.calendar.isDate($0.month, equalTo: month, toGranularity: .month) } }
     var body: some View {
         ScrollView {
@@ -309,7 +373,7 @@ struct BudgetListView: View {
                 MonthPicker(month: $month)
                 VStack(alignment: .leading, spacing: 8) { Text("Total anggaran").font(.subheadline); MoneyText(amount: rows.reduce(0) { $0 + $1.limitAmount }, style: .title.bold()); Text("Limit per kategori, bukan uang yang dipindahkan.").font(.caption).foregroundStyle(Color.danarapiMuted) }.frame(maxWidth: .infinity, alignment: .leading).danarapiCard(.danarapiSky)
                 ForEach(rows) { budget in
-                    Button { editing = budget } label: {
+                    NavigationLink { BudgetDetailView(budgetID: budget.id) } label: {
                         VStack(alignment: .leading, spacing: 10) {
                             Text(app.snapshot.categories.first(where: { $0.id == budget.categoryID })?.name ?? "Kategori").font(.headline)
                             ProgressView(value: min(budget.ratio, 1)).tint(budget.progressColor)
@@ -318,10 +382,36 @@ struct BudgetListView: View {
                     }.buttonStyle(.plain)
                 }
                 if rows.isEmpty { EmptyRow(icon: "chart.pie", text: "Belum ada anggaran bulan ini.") }
+                if !rows.isEmpty { Button("Salin ke bulan berikutnya") { confirmCopy = true }.buttonStyle(.bordered) }
                 Button("Tambah anggaran", systemImage: "plus") { adding = true }.buttonStyle(PrimaryButtonStyle())
             }.padding(DesignTokens.gutter)
         }.background(Color.danarapiCanvas).navigationTitle("Anggaran").navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $adding) { BudgetEditorView(budget: nil, initialMonth: month) }
         .sheet(item: $editing) { BudgetEditorView(budget: $0) }
+        .confirmationDialog("Salin limit ke bulan berikutnya? Anggaran yang sudah ada tidak ditimpa. Saldo tidak berubah.", isPresented: $confirmCopy, titleVisibility: .visible) { Button("Salin anggaran") { Task { if let next = MonthPeriod.calendar.date(byAdding: .month, value: 1, to: month), await app.copyBudgets(from: month, to: next) { month = next } } } }
+    }
+}
+
+struct BudgetDetailView: View {
+    @Environment(AppModel.self) private var app
+    let budgetID: String
+    @State private var editing = false
+    private var budget: Budget? { app.snapshot.budgets.first { $0.id == budgetID } }
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                if let budget {
+                    VStack(alignment: .leading, spacing: 14) {
+                        Text(MonthPeriod.display(budget.month, template: "MMMM yyyy")).font(.subheadline).foregroundStyle(.secondary)
+                        HStack { MoneyText(amount: budget.spentAmount, style: .title2.bold()); Text("dari").foregroundStyle(.secondary); MoneyText(amount: budget.limitAmount, style: .subheadline) }
+                        ProgressView(value: min(budget.ratio, 1)).tint(budget.progressColor)
+                        Text(budget.status == "over" ? "Melebihi batas" : budget.status == "warning" ? "Hampir penuh" : "Aman").font(.subheadline.bold())
+                        Button("Ubah limit") { editing = true }.buttonStyle(.bordered)
+                    }.frame(maxWidth: .infinity, alignment: .leading).danarapiCard()
+                    PlanningHistoryView(request: PlanningHistoryRequest(categoryID: budget.categoryID, startDate: MonthPeriod.start(budget.month), endDate: MonthPeriod.end(budget.month)))
+                } else { ContentUnavailableView("Anggaran tidak tersedia", systemImage: "chart.pie") }
+            }.padding(DesignTokens.gutter)
+        }.background(Color.danarapiCanvas).navigationTitle(budget.flatMap { value in app.snapshot.categories.first { $0.id == value.categoryID }?.name } ?? "Anggaran").navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $editing) { if let budget { BudgetEditorView(budget: budget) } }
     }
 }

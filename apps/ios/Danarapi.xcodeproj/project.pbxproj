@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+        D900B173B7E048A598008C11 = {isa = PBXBuildFile; fileRef = D900B173B7E048A598008C12; };
+        D900B173B7E048A598008C13 = {isa = PBXBuildFile; fileRef = D900B173B7E048A598008C14; };
+        D900B173B7E048A598008C07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D900B173B7E048A598008C08 /* Assets.xcassets */; };
 		D900B173B7E048A598008C01 /* GoogleSignInLogo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D900B173B7E048A598008C02 /* GoogleSignInLogo@3x.png */; };
 		D900B173B7E048A598008C03 /* GoogleSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D900B173B7E048A598008C04 /* GoogleSans-Medium.ttf */; };
 		D900B173B7E048A598008C05 /* Google-Sans-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = D900B173B7E048A598008C06 /* Google-Sans-OFL.txt */; };
@@ -78,6 +81,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+        D900B173B7E048A598008C12 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanarapiApp/UI/ProductViews.swift; sourceTree = "<group>"; };
+        D900B173B7E048A598008C14 = {isa = PBXFileReference; lastKnownFileType = text.json; name = "product-content.json"; path = "../../contracts/product-content.json"; sourceTree = "<group>"; };
+        D900B173B7E048A598008C08 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = DanarapiApp/Assets.xcassets; sourceTree = "<group>"; };
 		D900B173B7E048A598008C02 /* GoogleSignInLogo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DanarapiApp/Resources/GoogleSignInLogo@3x.png"; sourceTree = "<group>"; };
 		D900B173B7E048A598008C04 /* GoogleSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DanarapiApp/Resources/GoogleSans-Medium.ttf"; sourceTree = "<group>"; };
 		D900B173B7E048A598008C06 /* Google-Sans-OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "../../apps/web/public/licenses/Google-Sans-OFL.txt"; sourceTree = "<group>"; };
@@ -169,6 +175,8 @@
 				D900B173B7E048A598008C06 /* Google-Sans-OFL.txt */,
 				67E051D041D8FBF67D50DEDD /* PrivacyInfo.xcprivacy */,
 				B6D041F843B409D3B8CBD5FC /* design-tokens.json */,
+                D900B173B7E048A598008C12,
+                D900B173B7E048A598008C14,
 				3B35AF210FAFD8D42554F39B /* demo-seed-v1.json */,
 				D56C91222CDE38E20950DF44 /* import-v1.json */,
 				2BE81CC3546AFFEBACF2B9F7 /* ledger-v1.json */,
@@ -202,6 +210,7 @@
 				D307205550B4048E1EB64299 /* Application */,
 				EE70320C4375E126DD1A01A0 /* Tests */,
 				18380A43016D941093750172 /* Shared Resources */,
+				D900B173B7E048A598008C08 /* Assets.xcassets */,
 			);
 			sourceTree = "<group>";
 		};
@@ -360,10 +369,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D900B173B7E048A598008C01 /* GoogleSignInLogo@3x.png in Resources */,
+				D900B173B7E048A598008C07 /* Assets.xcassets in Resources */,
 				D900B173B7E048A598008C03 /* GoogleSans-Medium.ttf in Resources */,
 				D900B173B7E048A598008C05 /* Google-Sans-OFL.txt in Resources */,
 				747D0161BDE221F961D91DC0 /* PrivacyInfo.xcprivacy in Resources */,
 				55B7044EAC01913871CEC464 /* design-tokens.json in Resources */,
+                D900B173B7E048A598008C13,
 				37224FE7AB21F0D31F756DE7 /* demo-seed-v1.json in Resources */,
 				ED0CBB6051EC12CA081DD7DA /* import-v1.json in Resources */,
 				20BA2C37FB48A156282007D0 /* ledger-v1.json in Resources */,
@@ -393,6 +404,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE4D2D40C7BB4F3DA490616E /* AppModel.swift in Sources */,
+                D900B173B7E048A598008C11,
 				DA9BB8BB1A59A17C3EFEDAAB /* DanarapiApp.swift in Sources */,
 				6D8AD9B6A282B459BE8B8C0C /* KeychainSessionStore.swift in Sources */,
 				5D2DFA6B51A7E7200ECDF020 /* NetworkMonitor.swift in Sources */,

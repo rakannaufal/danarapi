@@ -1,0 +1,383 @@
+{
+  "version": "2026-10-02",
+  "owner": "Rakan Naufal",
+  "name": "Danarapi",
+  "welcome": {
+    "headline": "Keuangan rapi,\nhari lebih tenang.",
+    "subtitle": "Catat, rencanakan, dan bagi tagihan dengan mudah.",
+    "signInTitle": "Mulai dengan akunmu",
+    "signInSubtitle": "Catatanmu tersimpan, rencanamu berlanjut.",
+    "reauthenticationMessage": "Masuk kembali dengan akun yang sama untuk melanjutkan catatanmu.",
+    "disclaimer": "Pencatat keuangan, bukan layanan pembayaran."
+  },
+  "onboarding": [
+    { "id": "receipt", "image": "onboarding_1", "title": "Struk jadi catatan", "description": "Pindai struk, periksa rinciannya, lalu simpan sebagai transaksi." },
+    { "id": "planning", "image": "onboarding_2", "title": "Rencana lebih terarah", "description": "Atur anggaran dan target. Pantau progres dari setiap catatan." },
+    { "id": "split", "image": "onboarding_3", "title": "Bagi tagihan, tanpa ribet", "description": "Pilih pesanan tiap orang. Service dan pajak terbagi proporsional." }
+  ],
+  "pages": [
+    {
+      "id": "about",
+      "title": "Tentang Danarapi",
+      "subtitle": "Keuangan pribadi, lebih sederhana.",
+      "sections": [
+        {
+          "title": "Catatan, bukan rekening bank",
+          "paragraphs": [
+            "Danarapi membantu mencatat aktivitas keuangan, merencanakan anggaran dan target, membaca bukti, serta membagi tagihan.",
+            "Danarapi bukan bank, dompet elektronik, atau layanan pembayaran. Saldo berasal dari catatan Anda; aplikasi tidak membaca saldo rekening bank secara otomatis."
+          ]
+        },
+        {
+          "title": "Satu akun, dua perangkat",
+          "paragraphs": [
+            "Masuk dengan Google untuk menggunakan catatan yang sama pada web dan iOS. Mode Demo berisi data contoh, terpisah dari akun nyata.",
+            "Danarapi dikelola oleh Rakan Naufal. Panduan, kebijakan, dan laporan masalah tersedia pada Tentang & bantuan."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "privacy",
+      "title": "Kebijakan privasi",
+      "subtitle": "Data Anda, kendali Anda.",
+      "sections": [
+        {
+          "title": "Data yang digunakan",
+          "paragraphs": [
+            "Kami menggunakan identitas akun Google, email, preferensi, akun keuangan, transaksi, kategori, anggaran, target, dan tagihan bersama untuk menyediakan pencatatan dan sinkronisasi.",
+            "Foto, PDF, teks bukti, koreksi hasil scan, dan laporan masalah disimpan atau diproses ketika Anda memilih fitur terkait. Lampiran akun disimpan privat. Jangan unggah nomor kartu lengkap, kata sandi, atau informasi rahasia pihak lain."
+          ]
+        },
+        {
+          "title": "Layanan pendukung",
+          "paragraphs": [
+            "Login menggunakan Google. Data akun dan lampiran disimpan serta disinkronkan melalui layanan cloud. Aplikasi web berjalan melalui layanan hosting. Pembacaan struk menggunakan layanan AI eksternal.",
+            "Sebelum pengiriman foto atau halaman PDF ke AI, kami meminta persetujuan terpisah. Penggunaan data oleh penyedia bergantung paket dan ketentuan layanan yang berlaku; jangan menganggap layanan AI selalu tanpa penyimpanan atau penggunaan untuk peningkatan model. Persetujuan dapat dicabut di pengaturan. Isi manual dan pembacaan QRIS lokal tetap tersedia."
+          ]
+        },
+        {
+          "title": "Penyimpanan dan sinkronisasi",
+          "paragraphs": [
+            "Sesi web disimpan per tab. Menutup tab tidak otomatis mencabut sesi server. Preferensi tampilan disimpan pada perangkat. Draft dan perubahan offline dipisahkan menurut akun; perangkat bersama tetap perlu dilindungi.",
+            "iOS menyimpan sesi dalam Keychain dan dapat menyimpan cache atau antrean perubahan. Gunakan pengunci perangkat. Angka yang belum tersinkron bukan bukti saldo server telah berubah."
+          ]
+        },
+        {
+          "title": "Retensi",
+          "paragraphs": [
+            "Bukti ditolak memenuhi syarat pembersihan setelah 30 hari. Bukti pending setelah 90 hari hanya dibersihkan jika pemberitahuan kebijakan telah tercatat, dengan tenggang minimal 7 hari. Bukti yang terkait transaksi atau tagihan tidak ikut pembersihan draft.",
+            "Pembersihan memerlukan jadwal operator. Penyimpanan cadangan mengikuti konfigurasi penyedia; penghapusan akun tidak menjamin seluruh salinan cadangan langsung hilang. Data tidak dipertahankan untuk pemasaran oleh aplikasi."
+          ]
+        },
+        {
+          "title": "Hak dan pilihan Anda",
+          "paragraphs": [
+            "Anda dapat melihat, memperbaiki, mengekspor, dan menghapus catatan; mencabut persetujuan AI; serta meminta bantuan melalui Kontak & bantuan.",
+            "Penghapusan akun memerlukan autentikasi ulang Google dan konfirmasi HAPUS. Proses selesai hanya setelah server mengonfirmasi. Pengelola dapat memperbarui kebijakan; perubahan pengiriman AI memerlukan persetujuan versi baru."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "terms",
+      "title": "Syarat penggunaan",
+      "subtitle": "Gunakan sebagai pencatat, bukan alat pembayaran.",
+      "sections": [
+        {
+          "title": "Layanan dan akun",
+          "paragraphs": [
+            "Gunakan akun yang Anda kendalikan. Lindungi akses Google dan perangkat Anda. Jangan mengakses data orang lain, menyalahgunakan layanan, atau mengunggah materi yang tidak berhak Anda gunakan.",
+            "Pencatatan QRIS tidak melakukan pembayaran. Transfer dalam Danarapi hanya mencatat perpindahan saldo antarcatatan akun. Pengguna tetap melakukan transaksi nyata melalui penyedia pembayaran masing-masing."
+          ]
+        },
+        {
+          "title": "Periksa sebelum menyimpan",
+          "paragraphs": [
+            "Hasil scan AI dapat keliru. Periksa nama menu, jumlah, harga, biaya, diskon, pembulatan, dan total sebelum mengonfirmasi. Anda bertanggung jawab atas catatan dan pembagian yang disetujui.",
+            "Laporan menggambarkan data yang tercatat. Danarapi tidak memberikan jaminan saldo bank, nasihat investasi, atau kepastian pencatatan pajak. Jangan memasukkan aktivitas yang sudah tercakup dalam saldo awal dua kali."
+          ]
+        },
+        {
+          "title": "Ketersediaan dan perubahan",
+          "paragraphs": [
+            "Layanan dapat mengalami gangguan atau pembatasan kuota. Perubahan belum tersimpan jika server belum mengonfirmasi atau status masih pending. Simpan ekspor berkala dan tinjau status sinkronisasi.",
+            "Penyalahgunaan dapat mengakibatkan pembatasan akses. Pertanyaan, koreksi, dan keluhan dapat dikirim melalui Kontak & bantuan. Anda dapat berhenti menggunakan layanan dan meminta penghapusan akun."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "delete-account",
+      "title": "Cara menghapus akun",
+      "subtitle": "Instruksi dapat dibaca tanpa masuk.",
+      "sections": [
+        {
+          "title": "Langkah penghapusan",
+          "paragraphs": [
+            "1. Masuk menggunakan akun Google yang ingin dihapus.",
+            "2. Buka Pengaturan → Keamanan & data atau Data & privasi → Hapus akun.",
+            "3. Konfirmasi akun melalui Google, ketik HAPUS, lalu setujui penghapusan permanen.",
+            "4. Tunggu konfirmasi server. Jangan menganggap keluar akun atau menghapus aplikasi sebagai penghapusan akun."
+          ]
+        },
+        {
+          "title": "Data yang terpengaruh",
+          "paragraphs": [
+            "Identitas akun aplikasi, catatan keuangan, tagihan, target, anggaran, lampiran, persetujuan, dan laporan masalah milik akun dihapus sesuai proses server. Sinkronkan atau ekspor perubahan lokal sebelum melanjutkan.",
+            "Penghapusan tidak dapat diurungkan. Retensi cadangan penyedia tidak berarti penghapusan instan dari seluruh backup. Jika akses Google hilang, pulihkan akun melalui Google; informasi kanal bantuan tersedia di Kontak & bantuan."
+          ]
+        }
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "id": "start",
+      "topic": "Mulai",
+      "question": "Bagaimana memulai tanpa menggandakan saldo?",
+      "answer": "Tambahkan akun dengan saldo awal yang Anda tentukan, lalu catat aktivitas setelah titik awal tersebut. Transaksi sebelum tanggal pembukaan tetap dapat dicatat; pastikan aktivitas yang sudah termasuk saldo awal tidak dihitung dua kali."
+    },
+    {
+      "id": "demo",
+      "topic": "Mulai",
+      "question": "Apakah data Demo masuk ke akun saya?",
+      "answer": "Tidak. Demo memakai data contoh, bukan data akun server. Masuk ke akun Google untuk menyimpan catatan nyata. Tur Demo ditampilkan kembali setiap kali Anda masuk ke Demo."
+    },
+    {
+      "id": "google",
+      "topic": "Login",
+      "question": "Mengapa perlu memilih akun Google yang sama?",
+      "answer": "Catatan cloud dan perubahan perangkat terikat pada pemilik akun. Saat sesi berakhir, masuk kembali dengan akun sebelumnya. Jika login belum selesai, batalkan dan coba lagi; jangan membagikan token atau kode login kepada siapa pun."
+    },
+    {
+      "id": "balance",
+      "topic": "Saldo",
+      "question": "Mengapa saldo berbeda dari rekening saya?",
+      "answer": "Saldo dihitung dari saldo awal dan catatan yang Anda simpan. Danarapi tidak membaca rekening bank. Periksa akun, tanggal, transaksi terlewat, dan pengeluaran yang tercatat dua kali."
+    },
+    {
+      "id": "opening",
+      "topic": "Saldo",
+      "question": "Apakah saldo awal termasuk pemasukan?",
+      "answer": "Tidak. Saldo awal adalah titik awal catatan akun. Jangan mencatat kembali aktivitas yang sudah dihitung dalam saldo awal."
+    },
+    {
+      "id": "backdate",
+      "topic": "Transaksi",
+      "question": "Bisakah mencatat transaksi sebelum akun dibuat?",
+      "answer": "Bisa. Transaksi lama memengaruhi saldo sesuai ledger tanpa mengubah tanggal pembukaan akun. Hindari menggandakan aktivitas yang sudah termasuk saldo awal."
+    },
+    {
+      "id": "goal",
+      "topic": "Target",
+      "question": "Apakah progres target mengurangi saldo?",
+      "answer": "Kontribusi dari akun dicatat sebagai pengeluaran kategori Target. Progres berasal dari transaksi tersebut; mengubah target bukan transaksi baru. Penghapusan atau koreksi kontribusi mengubah progres dan saldo."
+    },
+    {
+      "id": "budget",
+      "topic": "Anggaran",
+      "question": "Apakah membuat anggaran mengurangi saldo?",
+      "answer": "Tidak. Anggaran adalah limit per kategori dan bulan. Pengeluaran nyata menentukan realisasi. Bar kuning mulai 70%; merah ketika melewati limit."
+    },
+    {
+      "id": "qris",
+      "topic": "Scan",
+      "question": "Apakah scan QRIS langsung membayar?",
+      "answer": "Tidak. QRIS hanya membantu mengisi catatan. Pembayaran dilakukan melalui aplikasi pembayaran Anda; pastikan benar-benar dibayar sebelum menyimpan sebagai pengeluaran."
+    },
+    {
+      "id": "scan",
+      "topic": "Scan",
+      "question": "Apa yang dilakukan ketika struk tidak terbaca?",
+      "answer": "Gunakan foto utuh, terang, dan tidak miring. Periksa atau koreksi hasil sebelum menyimpan. Anda dapat membatalkan, memilih berkas lain, atau mengisi manual tanpa persetujuan AI."
+    },
+    {
+      "id": "split",
+      "topic": "Split bill",
+      "question": "Bagaimana menu bersama, pajak, dan service dibagi?",
+      "answer": "Menu dibagi rata kepada pemesan yang dipilih. Pajak dan service dihitung proporsional. Pembulatan dibagikan tanpa selisih total. Menu tanpa pemesan harus diselesaikan sebelum menyimpan."
+    },
+    {
+      "id": "settlement",
+      "topic": "Split bill",
+      "question": "Apakah pelunasan dihitung sebagai pemasukan lagi?",
+      "answer": "Tidak. Pelunasan mengurangi piutang atau utang dan mengubah kas, tanpa menggandakan pemasukan atau pengeluaran pribadi."
+    },
+    {
+      "id": "sync",
+      "topic": "Sinkronisasi",
+      "question": "Mengapa perubahan belum muncul di perangkat lain?",
+      "answer": "Periksa internet dan status sinkronisasi. Muat ulang setelah perubahan tersimpan. Catatan pending atau konflik belum diterima server; jangan mencatatnya lagi pada perangkat lain."
+    },
+    {
+      "id": "offline",
+      "topic": "Sinkronisasi",
+      "question": "Apa yang tersedia saat offline?",
+      "answer": "iOS dapat mengantrekan perubahan tertentu. Web menyimpan draft bila Anda mengaktifkannya, tetapi pengiriman transaksi memerlukan internet. Scan AI selalu memerlukan jaringan. Status pending bukan konfirmasi server."
+    },
+    {
+      "id": "export",
+      "topic": "Data",
+      "question": "Bagaimana mengekspor data?",
+      "answer": "Buka Pengaturan → Data & privasi. Ekspor penuh berisi catatan dan lampiran; laporan juga menyediakan ekspor sesuai periode. Simpan file di tempat aman karena berisi informasi pribadi."
+    },
+    {
+      "id": "delete",
+      "topic": "Data",
+      "question": "Apakah menghapus aplikasi menghapus akun?",
+      "answer": "Tidak. Gunakan tindakan Hapus akun, autentikasi ulang Google, dan konfirmasi HAPUS. Instruksi lengkap tersedia di Cara menghapus akun."
+    },
+    {
+      "id": "camera",
+      "topic": "Scan",
+      "question": "Apa perbedaan Struk dan QRIS?",
+      "answer": "Struk membaca daftar barang, jumlah, harga, dan biaya tambahan dengan AI setelah persetujuan. QRIS membaca kode untuk membantu mengisi pengeluaran kategori QRIS. Keduanya menghasilkan draft yang perlu diperiksa; tidak menjalankan pembayaran."
+    },
+    {
+      "id": "transfer",
+      "topic": "Transaksi",
+      "question": "Apakah transfer antar akun dihitung sebagai pemasukan?",
+      "answer": "Tidak. Transfer memindahkan kas di antara akun Anda, tanpa menambah pemasukan atau pengeluaran pribadi. Akun sumber dan tujuan berubah sesuai nominal transfer."
+    },
+    {
+      "id": "period",
+      "topic": "Laporan",
+      "question": "Mengapa laporan berubah ketika periode atau zona waktu diganti?",
+      "answer": "Laporan mengelompokkan catatan menurut tanggal dan zona waktu akun. Saldo akun adalah posisi keseluruhan; pemasukan dan pengeluaran laporan hanya mencakup periode yang dipilih. Transfer dan pelunasan dapat mengubah arus kas tanpa dihitung sebagai pemasukan pribadi."
+    },
+    {
+      "id": "conflict",
+      "topic": "Sinkronisasi",
+      "question": "Apa yang dilakukan jika perubahan mengalami konflik?",
+      "answer": "Muat data terbaru dan periksa versi catatan sebelum mengubahnya kembali. Pada iOS, tinjau antrean perubahan perangkat dan pilih tindakan pemulihan yang tersedia. Jangan menggandakan catatan atau membuang perubahan yang belum Anda periksa."
+    }
+  ],
+  "links": [
+    {
+      "id": "about",
+      "title": "Tentang"
+    },
+    {
+      "id": "faq",
+      "title": "Bantuan"
+    },
+    {
+      "id": "contact",
+      "title": "Kontak"
+    },
+    {
+      "id": "privacy",
+      "title": "Kebijakan privasi"
+    },
+    {
+      "id": "terms",
+      "title": "Syarat penggunaan"
+    },
+    {
+      "id": "delete-account",
+      "title": "Cara menghapus akun"
+    }
+  ],
+  "features": [
+    {
+      "id": "wallet",
+      "title": "Akun keuangan",
+      "description": "Kelola tunai, bank, dan dompet elektronik. Saldo mengikuti saldo awal, transaksi, transfer, dan pelunasan."
+    },
+    {
+      "id": "transactions",
+      "title": "Transaksi",
+      "description": "Catat pemasukan dan pengeluaran, atur kategori, cari riwayat, dan koreksi catatan tanpa menggandakan transaksi."
+    },
+    {
+      "id": "budget",
+      "title": "Anggaran",
+      "description": "Atur limit bulanan dengan 10 kategori siap pakai atau kategori sendiri. Bar kuning mulai 70%; merah ketika melewati limit."
+    },
+    {
+      "id": "target",
+      "title": "Target tabungan",
+      "description": "Buat target, nominal, dan tenggat. Kontribusi dicatat sebagai pengeluaran kategori Target dan memperbarui progres serta saldo."
+    },
+    {
+      "id": "review",
+      "title": "Scan struk & QRIS",
+      "description": "Gunakan kamera, galeri, PDF struk, atau teks. Tinjau dan koreksi draft sebelum menyimpan. QRIS membantu pencatatan, bukan pembayaran."
+    },
+    {
+      "id": "split",
+      "title": "Split bill",
+      "description": "Bagi menu sesuai pemesan, termasuk menu bersama, service, dan pajak. Pembulatan mempertahankan jumlah akhir tanpa selisih."
+    },
+    {
+      "id": "reports",
+      "title": "Laporan",
+      "description": "Lihat pemasukan, pengeluaran, alokasi dana, tren bulanan atau tahunan, dan arus kas per akun. Ekspor laporan sesuai periode."
+    },
+    {
+      "id": "reset",
+      "title": "Sinkronisasi & ekspor",
+      "description": "Gunakan akun Google yang sama pada web dan iOS. Periksa status sinkronisasi dan unduh arsip catatan beserta lampiran."
+    }
+  ],
+  "help": {
+    "title": "Bantuan",
+    "subtitle": "Panduan singkat untuk catatan yang lebih rapi.",
+    "searchPlaceholder": "Cari bantuan",
+    "allTopics": "Semua",
+    "emptyTitle": "Tidak ada jawaban yang cocok",
+    "emptyMessage": "Coba kata lain atau buka Kontak untuk melaporkan masalah.",
+    "gettingStartedTitle": "Mulai menggunakan Danarapi",
+    "gettingStarted": [
+      {
+        "id": "accounts",
+        "title": "Tambahkan akun",
+        "description": "Tambahkan akun tunai, bank, atau dompet elektronik beserta saldo awal. Saldo awal bukan pemasukan."
+      },
+      {
+        "id": "transactions",
+        "title": "Catat aktivitas",
+        "description": "Pilih pemasukan atau pengeluaran, tentukan akun dan kategori, lalu simpan. Periksa draft hasil scan sebelum menjadikannya transaksi."
+      },
+      {
+        "id": "planning",
+        "title": "Atur rencana",
+        "description": "Buat anggaran bulanan dan target dengan tenggat. Pantau realisasi, progres, dan laporan sesuai periode."
+      }
+    ],
+    "contactTitle": "Kontak & bantuan",
+    "contactIntro": "Kirim masalah melalui laporan privat. Balasan tersedia pada riwayat laporan akun yang sama.",
+    "supportPrivacy": "Jangan sertakan kata sandi, token, atau nomor kartu. Data keuangan tidak dilampirkan otomatis.",
+    "signInMessage": "Masuk untuk mengirim laporan privat dan melihat balasan.",
+    "messagePlaceholder": "Apa yang terjadi? Apa yang Anda harapkan?",
+    "requestLabel": "ID permintaan",
+    "submitLabel": "Kirim laporan"
+  },
+  "supportTopics": [
+    {
+      "id": "login",
+      "title": "Login"
+    },
+    {
+      "id": "scan",
+      "title": "Scan struk"
+    },
+    {
+      "id": "saldo",
+      "title": "Saldo dan transaksi"
+    },
+    {
+      "id": "sinkronisasi",
+      "title": "Sinkronisasi"
+    },
+    {
+      "id": "privasi",
+      "title": "Privasi dan akun"
+    },
+    {
+      "id": "lainnya",
+      "title": "Lainnya"
+    }
+  ]
+}

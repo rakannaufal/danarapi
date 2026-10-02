@@ -52,7 +52,7 @@ export async function readBounded(response: Pick<Response, 'headers' | 'body'>, 
   const reader = response.body?.getReader();
   if (!reader) throw new Error('empty_body');
   const chunks: Uint8Array[] = []; let size = 0;
-  try { while (true) { const { done, value } = await reader.read(); if (done) break; size += value.length; if (size > maximum) throw new Error('size_limit'); chunks.push(value); } }
+  try { while (true) { const { done, value } = await reader.read(); if (done) break; size += value.length; if (size > maximum) throw new Error('size_limit'); chunks.push(value.slice()); } }
   finally { await reader.cancel().catch(() => {}); reader.releaseLock(); }
   const bytes = new Uint8Array(size); let offset = 0;
   for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }

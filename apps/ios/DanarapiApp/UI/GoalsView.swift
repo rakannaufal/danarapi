@@ -10,6 +10,7 @@ struct GoalsView: View {
             VStack(spacing: 18) {
                 ForEach(app.snapshot.goals ?? []) { goal in
                     GoalCard(goal: goal, onProgress: { progressGoal = goal }, onEdit: { editing = goal })
+                    NavigationLink("Lihat rincian", destination: GoalDetailView(goalID: goal.id)).font(.subheadline).frame(maxWidth: .infinity, alignment: .trailing)
                 }
                 if (app.snapshot.goals ?? []).isEmpty { EmptyRow(icon: "target", text: "Apa yang ingin Anda capai atau beli?") }
                 Button("Tambah target", systemImage: "plus") { adding = true }.buttonStyle(PrimaryButtonStyle())
@@ -19,6 +20,68 @@ struct GoalsView: View {
         .sheet(isPresented: $adding) { GoalEditorView(goal: nil) }
         .sheet(item: $editing) { GoalEditorView(goal: $0) }
         .sheet(item: $progressGoal) { goal in NavigationStack { TransactionFormView(kind: .expense, initialGoal: goal) }.presentationDragIndicator(.visible) }
+    }
+}
+
+struct GoalDetailView: View {
+    @Environment(AppModel.self) private var app
+    let goalID: String
+    @State private var editing = false
+    @State private var progress = false
+    private var goal: SavingsGoal? { app.snapshot.goals?.first { $0.id == goalID } }
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                if let goal {
+                    GoalCard(goal: goal, onProgress: { progress = true }, onEdit: { editing = true })
+                    PlanningHistoryView(request: PlanningHistoryRequest(goalID: goalID))
+                } else { ContentUnavailableView("Target tidak tersedia", systemImage: "target") }
+            }.padding(DesignTokens.gutter)
+        }.background(Color.danarapiCanvas).navigationTitle(goal?.name ?? "Target").navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $editing) { if let goal { GoalEditorView(goal: goal) } }
+        .sheet(isPresented: $progress) { if let goal { NavigationStack { TransactionFormView(kind: .expense, initialGoal: goal) } } }
+    }
+}
+
+struct PlanningHistoryView: View {
+    @Environment(AppModel.self) private var app
+    var request: PlanningHistoryRequest
+    @State private var entries: [PlanningEntry] = []
+    @State private var cursor: TransactionCursor?
+    @State private var loading = true
+    @State private var error: String?
+    private var key: String { "\(request.goalID ?? request.categoryID ?? "")-\(request.startDate?.timeIntervalSince1970 ?? 0)-\(app.timezone)-\(app.snapshot.syncedAt?.timeIntervalSince1970 ?? 0)-\(app.snapshot.transactions.map { "\($0.id):\($0.version)" }.joined(separator: ","))" }
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text(request.goalID == nil ? "Pengeluaran pembentuk realisasi" : "Riwayat kontribusi").font(.headline)
+            if loading && entries.isEmpty { ProgressView("Memuat riwayat…") }
+            if let error { Text(error).font(.subheadline).foregroundStyle(.secondary); Button("Coba lagi") { Task { await load(more: !entries.isEmpty) } } }
+            if !loading && error == nil && entries.isEmpty { EmptyRow(icon: "tray", text: "Belum ada catatan.") }
+            ForEach(entries) { entry in
+                if entry.kind == "transaction" { NavigationLink { TransactionDetailView(itemID: entry.sourceID) } label: { row(entry) }.buttonStyle(.plain) }
+                else if let bill = app.snapshot.splitBills.first(where: { $0.id == entry.sourceID || $0.resolutions.contains(where: { $0.id == entry.sourceID }) }) { NavigationLink { SplitBillDetailView(billID: bill.id) } label: { row(entry) }.buttonStyle(.plain) }
+                else { row(entry) }
+            }
+            if cursor != nil { Button(loading ? "Memuat…" : "Muat lagi") { Task { await load(more: true) } }.disabled(loading) }
+        }.frame(maxWidth: .infinity, alignment: .leading).danarapiCard()
+        .task(id: key) { await load() }
+    }
+    private func row(_ entry: PlanningEntry) -> some View {
+        HStack(alignment: .top) { VStack(alignment: .leading, spacing: 4) { Text(entry.merchant ?? (entry.kind == "transaction" ? "Kontribusi" : "Porsi split bill")).font(.subheadline.weight(.medium)); Text(MonthPeriod.display(entry.occurredAt)).font(.caption).foregroundStyle(.secondary); if let note = entry.note, !note.isEmpty { Text(note).font(.caption).foregroundStyle(.secondary) } }; Spacer(); MoneyText(amount: entry.amount, style: .subheadline.bold()) }.padding(.vertical, 10).frame(minHeight: 44).foregroundStyle(Color.danarapiInk)
+    }
+    private func load(more: Bool = false) async {
+        let requestedKey = key
+        loading = true; error = nil
+        if !more { entries = []; cursor = nil }
+        defer { if requestedKey == key { loading = false } }
+        do {
+            var filter = request; filter.cursor = more ? cursor : nil
+            let result = try await app.planningHistory(filter)
+            try Task.checkCancellation()
+            guard requestedKey == key else { return }
+            entries = more ? entries + result.items.filter { value in !entries.contains { $0.id == value.id } } : result.items
+            cursor = result.nextCursor
+        } catch is CancellationError {} catch { if requestedKey == key { self.error = error.localizedDescription } }
     }
 }
 
@@ -37,7 +100,7 @@ struct GoalCard: View {
             ProgressView(value: goal.progress).tint(Color.danarapiPrimary)
             HStack { MoneyText(amount: goal.savedAmount, style: .subheadline.bold()); Text("dari").foregroundStyle(Color.danarapiMuted); MoneyText(amount: goal.targetAmount, style: .subheadline, color: .danarapiMuted) }
             TimelineView(.periodic(from: .now, by: 60)) { context in
-                HStack { Text(goal.countdown(asOf: context.date)).font(.caption.bold()).foregroundStyle(goal.progress >= 1 ? Color.danarapiPrimary : Color.danarapiMuted); Spacer(); if let date = goal.targetDate { Text(date.formatted(.dateTime.day().month(.abbreviated).year().locale(Locale(identifier: "id_ID")))).font(.caption).foregroundStyle(Color.danarapiMuted) } }
+                HStack { Text(goal.countdown(asOf: context.date)).font(.caption.bold()).foregroundStyle(goal.progress >= 1 ? Color.danarapiPrimary : Color.danarapiMuted); Spacer(); if let date = goal.targetDate { Text(MonthPeriod.display(date)).font(.caption).foregroundStyle(Color.danarapiMuted) } }
             }
             HStack { if let onProgress { Button("Tambah progres", systemImage: "plus", action: onProgress).buttonStyle(.bordered).accessibilityIdentifier("goal.progress.\(goal.id)") }; Spacer(); if let onEdit { Button("Ubah target", action: onEdit).font(.subheadline) } }
         }.danarapiCard()

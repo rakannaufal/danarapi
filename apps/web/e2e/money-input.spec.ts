@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.beforeEach(async ({ page }) => {
   await page.route('**/__local/receipt-scan', route => route.fulfill({ json: { configured: false } }));
   await page.goto('/');
-  await page.getByRole('button', { name: /Coba Demo/ }).click();
+  await page.getByRole('button', { name: /Coba Demo/ }).click(); await page.getByRole('dialog').getByRole('button', { name: 'Lewati tur', exact: true }).click();
 });
 
 test('rupiah formatting, caret, deletion, pasted values, canonical saving', async ({ page }, info) => {

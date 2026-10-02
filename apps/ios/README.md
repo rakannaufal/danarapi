@@ -92,7 +92,7 @@ Untuk breakpoint, aktifkan kembali **Product → Scheme → Edit Scheme → Run 
 
 ## Alur yang tersedia
 
-- Onboarding, Demo satu langkah, signup/OTP/kirim ulang, login, recovery OTP dan kata sandi baru, serta login ulang akun yang sama ketika sesi habis.
+- Onboarding setelah login pertama per akun, Demo satu langkah, signup/OTP/kirim ulang, login, recovery OTP dan kata sandi baru, serta login ulang akun yang sama ketika sesi habis. Penyelesaian tur disimpan per ID akun pada perangkat (web: browser), bukan di Supabase. Akun lama tanpa penanda juga mendapat tur; selesai atau lewati tur agar tidak muncul lagi pada perangkat yang sama. Perangkat/browser baru menampilkan tur kembali. Tidak memerlukan migration.
 - Beranda, akun/kategori/aturan merchant, transaksi/transfer, split bill/pelunasan/penghapusan kewajiban/reversal, Perlu Ditinjau dan deteksi kandidat duplikat.
 - QRIS kamera/Foto, ambil foto bukti, OCR gambar lokal serta impor PDF/teks; seluruh hasil tetap draft, tidak ada pembayaran.
 - Anggaran, laporan, CSV tampilan, ZIP penuh, Share Sheet, reset Demo, penghapusan akun, tema, sembunyikan nominal, dan pengunci perangkat.

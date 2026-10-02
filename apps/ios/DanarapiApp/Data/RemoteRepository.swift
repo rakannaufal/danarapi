@@ -17,12 +17,32 @@ actor RemoteRepository: FinanceRepository {
     func transactionPage(after cursor: TransactionCursor) async throws -> TransactionPage {
         try await client.request(path: "/functions/v1/ios-data/transactions", body: TransactionPageRequest(cursor: cursor))
     }
+    func transaction(id: String) async throws -> FinanceTransaction {
+        try await client.request(path: "/functions/v1/ios-data/transaction", body: ["id": id])
+    }
+    func planningHistory(_ request: PlanningHistoryRequest) async throws -> PlanningHistoryPage {
+        try await client.request(path: "/functions/v1/ios-data/planning-history", body: request)
+    }
+    func copyBudgets(from: Date, to: Date) async throws { try await dataAction("copy_budgets", payload: ["from": MonthPeriod.key(from), "to": MonthPeriod.key(to)]) }
 
     func report(since startDate: Date, until endDate: Date?) async throws -> ReportSummary {
         try await client.request(path: "/functions/v1/ios-data/report", body: ReportRequest(startDate: startDate, endDate: endDate))
     }
 
     func resetDemo() async throws {}
+    func aiConsentState() async throws -> AIConsentState {
+        try await client.request(path: "/functions/v1/ios-data/consent", body: Optional<NoPayload>.none)
+    }
+    func setAIConsent(granted: Bool, policyVersion: String) async throws { try await dataAction("set_ai_consent", payload: ["granted": granted, "policyVersion": policyVersion]) }
+    func setTimezone(_ timezone: String) async throws { try await dataAction("set_timezone", payload: ["timezone": timezone]) }
+    func acknowledgeRetention() async throws { try await dataAction("acknowledge_retention", payload: [:]) }
+    func supportTickets() async throws -> [SupportTicket] {
+        let result: SupportTickets = try await client.request(path: "/functions/v1/ios-data/support", body: Optional<NoPayload>.none)
+        return result.items
+    }
+    func sendSupportTicket(id: String, topic: String, description: String, requestID: String?) async throws {
+        try await dataAction("create_support_ticket", payload: ["id": id, "topic": topic, "description": description, "platform": "ios", "appVersion": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0", "requestID": requestID.map { $0 as Any } ?? NSNull()])
+    }
     func scanReceipt(images: [ReceiptScanImage]) async throws -> ReceiptScanResponse {
         try await client.request(path: "/functions/v1/receipt-scan", body: ReceiptScanRequest(images: images), timeout: 110)
     }

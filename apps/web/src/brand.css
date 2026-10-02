@@ -1,0 +1,51 @@
+:root { --brand-background: url('/brand/danarapi/background-light.webp'); }
+:root[data-theme="dark"] { --brand-background: url('/brand/danarapi/background-dark.webp'); }
+.brand-dark { display: none; }
+:root[data-theme="dark"] .brand-light { display: none; }
+:root[data-theme="dark"] .brand-dark { display: block; }
+.brand-lockup { --brand-logo-size: 38px; --brand-wordmark-size: 126px; display: inline-flex; align-items: center; gap: 10px; max-width: 100%; }
+.brand-logo { width: var(--brand-logo-size); height: var(--brand-logo-size); object-fit: contain; flex-shrink: 0; }
+.brand-wordmark { width: var(--brand-wordmark-size); height: auto; max-width: calc(100% - var(--brand-logo-size) - 10px); }
+.brand-artwork { display: flex; align-items: center; justify-content: center; }
+.brand-artwork img { width: 100%; height: 100%; object-fit: contain; }
+.sidebar .brand { margin-bottom: 30px; min-height: 44px; }
+.auth-screen { background: var(--canvas) var(--brand-background) center / cover no-repeat; }
+.auth-layout { min-height: 90dvh; background: transparent; align-items: center; }
+.auth-story { min-height: 0; display: grid; gap: 28px; }
+.auth-story .brand { margin: 0; }
+.auth-story .brand-lockup { --brand-logo-size: 56px; --brand-wordmark-size: 180px; }
+.auth-story h1 { white-space: pre-line; overflow-wrap: anywhere; font-size: clamp(2.125rem, 4.2vw, 3.5rem); line-height: 1.15; }
+.auth-story > div > p { max-width: 34ch; margin-top: 16px; }
+.auth-illustration { width: min(100%, 260px); aspect-ratio: 1; justify-self: start; }
+.auth-story > .fine-print { margin: 0; }
+.auth-card { width: 100%; max-width: 420px; justify-self: end; padding: 32px; }
+.auth-card h2 { font-size: 1.5rem; }
+.brand-onboarding { max-width: min(540px, calc(100% - 24px)); }
+.brand-onboarding .modal-header { align-items: center; }
+.brand-onboarding .modal-header h2 { font-size: 1.375rem; }
+.brand-onboarding .modal-body { display: grid; gap: 20px; background: var(--canvas) var(--brand-background) center / cover no-repeat; }
+.brand-onboarding .brand-artwork { width: min(100%, 240px); height: clamp(140px, 28dvh, 240px); margin-inline: auto; }
+.brand-step-label { margin: 0; justify-self: center; padding: 6px 12px; border-radius: 999px; background: var(--mint); color: var(--primary); font-size: .75rem; font-weight: 600; }
+.brand-step-description { max-width: 40ch; margin: 0 auto; text-align: center; line-height: 1.65; color: var(--muted); }
+.brand-step-dots { display: flex; justify-content: center; align-items: center; gap: 8px; }
+.brand-step-dots span { width: 8px; height: 8px; border-radius: 999px; background: var(--border); }
+.brand-step-dots span.active { width: 24px; background: var(--primary); }
+.brand-step-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.brand-step-actions button { flex: 1 1 140px; }
+.brand-step-skip { justify-self: center; }
+@media (max-width: 960px) {
+  .auth-layout { gap: 36px; }
+  .auth-story .brand-lockup { --brand-logo-size: 48px; --brand-wordmark-size: 160px; }
+}
+@media (max-width: 700px) {
+  .auth-layout { min-height: 0; padding: 40px 20px 24px; gap: 28px; }
+  .auth-story { gap: 24px; }
+  .auth-story .brand { justify-self: center; }
+  .auth-story h1, .auth-story > div > p, .auth-story > .fine-print { text-align: center; }
+  .auth-story > div > p { margin: 12px auto 0; font-size: .9375rem; }
+  .auth-story > .fine-print { display: none; }
+  .auth-illustration { display: none; }
+  .auth-card { max-width: 480px; justify-self: center; padding: 26px 24px; }
+  .brand-onboarding .modal-body { padding: 20px; gap: 16px; }
+  .brand-onboarding .modal-header { padding: 16px 20px; }
+}

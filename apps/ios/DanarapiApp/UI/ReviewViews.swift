@@ -97,7 +97,7 @@ struct ReviewDetailView: View {
     @State private var confirmMismatch = false
     @State private var showReread = false
 
-    private var item: ReviewItem? { app.snapshot.reviewItems.first(where: { $0.id == itemID }) }
+    private var item: ReviewItem? { app.snapshot.reviewItems.first(where: { $0.matchesID(itemID) }) }
     private var valid: Bool {
         guard let value = Int64(amount), value > 0, value <= Money.maximum else { return false }
         return !accountID.isEmpty && !categoryID.isEmpty

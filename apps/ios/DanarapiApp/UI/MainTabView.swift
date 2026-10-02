@@ -6,6 +6,8 @@ struct MainTabView: View {
     @State private var visitedTabs: Set<Int> = [0]
     @State private var showAdd = false
     @State private var showScan = false
+    private let navigationHeight: CGFloat = 68
+    private let scanLift: CGFloat = 18
 
     var body: some View {
         VStack(spacing: 0) {
@@ -19,8 +21,8 @@ struct MainTabView: View {
                 tabContent(3) { ReportsView() }
                 tabContent(4) { SettingsView() }
             }
-            bottomNavigation
         }
+        .safeAreaInset(edge: .bottom, spacing: 0) { bottomNavigation }
         .tint(.danarapiPrimary)
         .sheet(isPresented: $showAdd) { AddMenuView().presentationDragIndicator(.visible).presentationCornerRadius(24) }
         .fullScreenCover(isPresented: $showScan) { ScanHubView() }
@@ -44,18 +46,22 @@ struct MainTabView: View {
                     Text("Scan").font(.caption2.weight(.medium)).foregroundStyle(Color.danarapiPrimary)
                 }
                 .padding(.bottom, 8)
-                .frame(maxWidth: .infinity, minHeight: 84, alignment: .bottom)
+                .frame(maxWidth: .infinity, minHeight: navigationHeight + scanLift, alignment: .bottom)
+                .contentShape(Rectangle())
             }
             .buttonStyle(.plain).accessibilityLabel("Scan struk atau QRIS").accessibilityIdentifier("nav.scan")
             navigationItem("Laporan", icon: "chart.bar", selectedIcon: "chart.bar.fill", tag: 3)
             navigationItem("Pengaturan", icon: "gearshape", selectedIcon: "gearshape.fill", tag: 4)
         }
         .padding(.horizontal, 8)
-        .background(alignment: .bottom) {
-            Color.danarapiSurface
-                .frame(height: 68)
-                .overlay(alignment: .top) { Divider() }
+        .background {
+            VStack(spacing: 0) {
+                Color.clear.frame(height: scanLift)
+                Color.danarapiSurface
+                    .overlay(alignment: .top) { Rectangle().fill(Color.danarapiBorder).frame(height: 0.5) }
+            }
                 .ignoresSafeArea(edges: .bottom)
+                .allowsHitTesting(false)
         }
     }
 
@@ -72,13 +78,14 @@ struct MainTabView: View {
 
     private func navigationItem(_ title: String, icon: String, selectedIcon: String, tag: Int) -> some View {
         Button { selection = tag } label: {
-            VStack(spacing: 6) {
-                Image(systemName: selection == tag ? selectedIcon : icon).font(.system(size: 21, weight: .regular)).frame(height: 24)
-                Text(title).font(.caption2.weight(selection == tag ? .semibold : .regular)).lineLimit(1)
+            VStack(spacing: 4) {
+                Image(systemName: selection == tag ? selectedIcon : icon).font(.system(size: 21, weight: .regular)).frame(height: 28)
+                Text(title).font(.caption2.weight(selection == tag ? .semibold : .regular)).lineLimit(1).minimumScaleFactor(0.85)
             }
             .foregroundStyle(selection == tag ? Color.danarapiPrimary : Color.danarapiMuted)
             .padding(.bottom, 8)
-            .frame(maxWidth: .infinity, minHeight: 68, alignment: .bottom)
+            .frame(maxWidth: .infinity, minHeight: navigationHeight, alignment: .bottom)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain).accessibilityLabel(title).accessibilityIdentifier("nav.\(tag)")
         .accessibilityAddTraits(selection == tag ? .isSelected : [])

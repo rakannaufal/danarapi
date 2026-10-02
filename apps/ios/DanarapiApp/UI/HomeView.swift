@@ -55,25 +55,34 @@ struct HomeView: View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack { Label("Saldo akun", systemImage: "wallet.pass"); Spacer(); Image(systemName: "chevron.right").font(.caption.weight(.semibold)) }.font(.subheadline.weight(.semibold)).foregroundStyle(Color.danarapiMuted)
                 MoneyText(amount: app.snapshot.overview.accountBalance, style: .largeTitle.bold())
-                if let syncedAt = app.snapshot.syncedAt { Text("Diperbarui \(syncedAt.formatted(date: .omitted, time: .shortened))").font(.caption2).foregroundStyle(Color.danarapiMuted) }
+                if let syncedAt = app.snapshot.syncedAt { Text("Diperbarui \(MonthPeriod.display(syncedAt, template: "HHmm"))").font(.caption2).foregroundStyle(Color.danarapiMuted) }
             }.danarapiCard().contentShape(RoundedRectangle(cornerRadius: DesignTokens.cornerCard))
         }.buttonStyle(.plain).accessibilityIdentifier("home.accounts")
     }
 
     private var metrics: some View {
-        LazyVGrid(columns: dynamicTypeSize >= .xxxLarge ? [GridItem(.flexible())] : [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-            NavigationLink { TransactionsView(initialKind: .income, currentMonth: true, embedded: true) } label: { metric("Pemasukan", app.monthlyReport.personalIncome, "arrow.down.left", .danarapiSurface, .danarapiPrimary) }.buttonStyle(.plain).accessibilityIdentifier("home.income")
-            NavigationLink { TransactionsView(initialKind: .expense, currentMonth: true, embedded: true) } label: { metric("Pengeluaran", app.monthlyReport.personalExpense, "arrow.up.right", .danarapiSurface, .danarapiInk) }.buttonStyle(.plain).accessibilityIdentifier("home.expense")
-            NavigationLink { GoalsView() } label: { metric("Target terkumpul", (app.snapshot.goals ?? []).reduce(0) { $0 + $1.savedAmount }, "target", .danarapiSky, .danarapiPrimary) }.buttonStyle(.plain).accessibilityIdentifier("home.goals")
-            NavigationLink { BudgetListView() } label: { metric("Total anggaran bulan ini", currentBudgets.reduce(0) { $0 + $1.limitAmount }, "chart.pie", .danarapiSky, .danarapiPrimary) }.buttonStyle(.plain).accessibilityIdentifier("home.budgets")
+        VStack(spacing: 12) {
+            LazyVGrid(columns: dynamicTypeSize >= .xxxLarge ? [GridItem(.flexible())] : [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+                NavigationLink { TransactionsView(initialKind: .income, currentMonth: true, embedded: true) } label: { metric("Pemasukan", app.monthlyReport?.personalIncome, "arrow.down.left", .danarapiSurface, .danarapiPrimary) }.buttonStyle(.plain).accessibilityIdentifier("home.income")
+                NavigationLink { TransactionsView(initialKind: .expense, currentMonth: true, embedded: true) } label: { metric("Pengeluaran", app.monthlyReport?.personalExpense, "arrow.up.right", .danarapiSurface, .danarapiInk) }.buttonStyle(.plain).accessibilityIdentifier("home.expense")
+                NavigationLink { GoalsView() } label: { metric("Target terkumpul", (app.snapshot.goals ?? []).reduce(0) { $0 + $1.savedAmount }, "target", .danarapiSky, .danarapiPrimary) }.buttonStyle(.plain).accessibilityIdentifier("home.goals")
+                NavigationLink { BudgetListView() } label: { metric("Total anggaran bulan ini", currentBudgets.reduce(0) { $0 + $1.limitAmount }, "chart.pie", .danarapiSky, .danarapiPrimary) }.buttonStyle(.plain).accessibilityIdentifier("home.budgets")
+            }
+            if app.monthlyReportError != nil {
+                Button("Muat ringkasan", systemImage: "arrow.clockwise") { Task { await app.refresh() } }
+                    .font(.subheadline.weight(.medium))
+                    .frame(minHeight: DesignTokens.minimumTouch)
+                    .accessibilityIdentifier("home.retryReport")
+            }
         }
     }
 
-    private func metric(_ title: String, _ amount: Int64, _ icon: String, _ background: Color, _ color: Color) -> some View {
+    private func metric(_ title: String, _ amount: Int64?, _ icon: String, _ background: Color, _ color: Color) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack { Image(systemName: icon).foregroundStyle(color); Spacer(); Image(systemName: "chevron.right").font(.caption2.weight(.semibold)).foregroundStyle(Color.danarapiMuted) }
             Text(title).font(.caption).foregroundStyle(Color.danarapiMuted)
-            MoneyText(amount: amount, style: .headline, color: color)
+            if let amount { MoneyText(amount: amount, style: .headline, color: color) }
+            else { Text("—").font(.headline).foregroundStyle(Color.danarapiMuted).accessibilityLabel("Belum dimuat") }
         }.frame(maxWidth: .infinity, alignment: .leading).danarapiCard(background)
             .contentShape(RoundedRectangle(cornerRadius: DesignTokens.cornerCard, style: .continuous))
     }

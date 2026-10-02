@@ -1,6 +1,10 @@
 # Supabase cloud — web dan iOS
 
-## Status 1 Oktober 2026
+## Verifikasi 2 Oktober 2026
+
+Proyek sudah memiliki migrasi 1–20, provider Google aktif, dan lima fungsi aplikasi. Uji akun sintetis membuktikan fetch, penyimpanan transaksi, saldo, target, anggaran, laporan, konflik edit dan ekspor. Scan AI struk sintetis menghasilkan total Rp 23.000 dan qty 2. Login Google pengguna, foto struk nyata, jaringan seluler dan rollout penegakan persetujuan AI tetap belum diselesaikan. Hasil terbaru serta gerbang rilis: `docs/production-readiness.md`.
+
+## Riwayat pemeriksaan awal — 1 Oktober 2026
 
 - Klien web dan iOS menggunakan proyek `zoccosfjulasqxczhvfm` melalui HTTPS dan publishable key yang diberikan. Key ini adalah konfigurasi publik, bukan akses administrator.
 - Supabase Auth merespons. Provider Google masih nonaktif pada pemeriksaan awal; status terbaru diperiksa melalui `npm run cloud:check`.
@@ -22,7 +26,9 @@ CLI dapat meminta password database ketika menghubungkan proyek. Gunakan prompt 
 
 ## 2. Database: gunakan migrations yang sudah ada
 
-Ya. Gunakan **seluruh 14 file dalam `supabase/migrations` sesuai urutan nama**, dari `202609300001_core_schema.sql` sampai `202610010014_goal_transactions.sql`. Migrasi membuat tabel, RLS, Storage privat, RPC ledger, rincian split bill, cache/kuota scan, target dan QRIS.
+Untuk proyek baru, gunakan **seluruh 20 file dalam `supabase/migrations` sesuai urutan nama**, dari `202609300001_core_schema.sql` sampai `202610020020_product_access_hardening.sql`. Migrasi membuat tabel, RLS, Storage privat, RPC ledger, rincian split bill, cache/kuota scan, target, QRIS, persetujuan AI, tiket bantuan, zona waktu, riwayat target/anggaran dan penolakan akses anonim. Jangan memasukkan fixture atau seed ke produksi.
+
+Proyek `zoccosfjulasqxczhvfm` sudah memiliki migrations 1–20; migrasi 18–20 diterapkan pada 2 Oktober 2026 melalui CLI tanpa seed atau reset. Jangan menyalin ulang SQL awal ke proyek ini. Verifikasi riwayat remote dengan CLI sebelum deployment berikutnya.
 
 Disarankan CLI karena menyimpan riwayat migration dan hanya menjalankan file yang belum diterapkan. Tidak perlu menyalin tes ke database. Jangan menggunakan `db reset`, `--include-seed`, `supabase/seed.sql`, `supabase/tests/*.sql`, atau bootstrap `tests/database` pada produksi: berkas tersebut digunakan untuk database pengujian dan fixture sintetis.
 
@@ -39,7 +45,7 @@ npm run cloud:check
 ```
 
 - `cloud:plan`: validasi akses model dan batas scan, hubungkan proyek, tampilkan migration yang akan diterapkan. Tidak mengubah database, secret cloud, atau fungsi. Metadata koneksi CLI lokal tetap dibuat.
-- `cloud:deploy`: jalankan migrations yang belum diterapkan, kirim hanya secret scan/CORS yang diizinkan, deploy keempat fungsi, periksa backend. Tidak menjalankan seed, reset, tes akun, atau menghapus fungsi lain.
+- `cloud:deploy`: jalankan migrations yang belum diterapkan, kirim hanya secret scan/CORS yang diizinkan, deploy lima fungsi (ledger, ios-data, export-data, product-info, receipt-scan), periksa backend. Tidak menjalankan seed, reset, tes akun, atau menghapus fungsi lain. Pastikan web dan iOS mendukung persetujuan AI sebelum mengaktifkan penegakan scan; klien lama perlu diperbarui.
 - Secret sementara berizin `0600`, dihapus setelah command selesai. Key AI tidak dicetak; konfigurasi `SUPABASE_*` server bawaan tidak ditimpa.
 - JWT verification tetap aktif. Scan juga memvalidasi sesi ke Supabase Auth sebelum parsing gambar, pemakaian kuota, atau panggilan AI. Publishable key dikirim sebagai `apikey`; `Authorization` berisi access token pengguna, bukan publishable key.
 - Kuota default: 50 scan/pengguna/hari, jeda panggilan model 4 detik. Cache per pengguna dan pembatasan retry mengikuti implementasi existing. Kuota penyedia/billing tetap berlaku.
@@ -121,4 +127,4 @@ Setelah konfigurasi dashboard/deploy selesai:
 5. Uji sesi kedaluwarsa, provider nonaktif, gambar tidak valid, kuota, dan gangguan jaringan. Tidak boleh menghasilkan transaksi palsu atau posting ganda.
 6. Uji isolasi dua akun pada staging, bukan dengan tes penghapusan terhadap akun pengguna produksi.
 
-Login produksi masih menunggu provider dan callback; scan produksi masih menunggu database, fungsi, secret server terdeploy serta uji struk nyata. Tidak ada klaim seluruh layanan cloud sudah berjalan hanya karena URL/key klien sudah terisi.
+Proyek ini sudah mengaktifkan Google, callback iOS, lima fungsi backend, secret scan server dan CORS untuk Vercel serta pengembangan lokal. Migrasi 1–20 sudah diterapkan. Pembaruan `ios-data`, `export-data`, dan `product-info` sudah terdeploy; penegakan persetujuan AI pada sumber `receipt-scan` menunggu rollout klien yang kompatibel. Uji akun sintetis membuktikan fetch dashboard, transaksi/idempotensi, saldo, target, anggaran, laporan, ekspor dan ekstraksi struk sintetis. Login Google akun pengguna dan foto struk nyata tetap perlu diuji ulang di perangkat. Rincian perbaikan ada di `docs/cloud-login-repair.md`; gerbang rilis dan hasil pengujian terbaru ada di `docs/production-readiness.md`.

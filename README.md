@@ -8,6 +8,8 @@ Monorepo Danarapi v3.3: backend Supabase/PostgreSQL, kontrak data v1, fixture em
 
 Konfigurasi cloud web/iOS sudah menunjuk proyek Supabase pengguna. Setup migrations, login Google, secret scan dan deployment: `docs/supabase-cloud-setup.md`. Gunakan `npm run cloud:check` untuk membedakan konfigurasi klien dari kesiapan layanan server. Jangan menjalankan seed atau tes database pada produksi.
 
+Status implementasi, bukti pengujian terbaru, rollout yang belum dilakukan dan gerbang rilis: [kesiapan produksi](docs/production-readiness.md). Pengujian dilanjutkan atas izin pengguna; hasil otomatis tidak menggantikan verifikasi akun nyata dan belum menyatakan rilis siap produksi.
+
 ```text
 apps/ios/                 aplikasi SwiftUI iOS 17, Xcode project, XCTest/UI test
 apps/web/                 Vue 3, TypeScript, Vite; UI responsif dan adapter web R1

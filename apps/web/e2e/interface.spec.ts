@@ -4,7 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.route('**/__local/receipt-scan', route => route.fulfill({ json: { configured: false } }));
-  await page.goto('/'); await page.getByRole('button', { name: /Coba Demo/ }).click();
+  await page.goto('/'); await page.getByRole('button', { name: /Coba Demo/ }).click(); await page.getByRole('dialog').getByRole('button', { name: 'Lewati tur', exact: true }).click();
 });
 
 for (const width of [390, 1440]) for (const theme of ['light', 'dark']) {

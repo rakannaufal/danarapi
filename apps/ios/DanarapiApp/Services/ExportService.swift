@@ -1,6 +1,25 @@
 import Foundation
 
 enum ExportService {
+    static func createReportCSV(_ report: ReportSummary, snapshot: DashboardSnapshot, start: Date, end: Date) throws -> URL {
+        var rows = [row(["periode_mulai", "periode_akhir", "jenis", "nama", "nominal"])]
+        let period = [MonthPeriod.dateKey(start), MonthPeriod.dateKey(end)]
+        rows.append(row(period + ["pemasukan", "Total", String(report.personalIncome)], numericColumns: [4]))
+        rows.append(row(period + ["pengeluaran", "Total", String(report.personalExpense)], numericColumns: [4]))
+        for category in report.categories { rows.append(row(period + ["kategori", categoryName(category.categoryID, snapshot), String(category.amount)], numericColumns: [4])) }
+        for allocation in report.allocations ?? [] { rows.append(row(period + ["alokasi", allocation.name, String(allocation.amount)], numericColumns: [4])) }
+        for account in report.cashAccounts ?? [] {
+            let name = accountName(account.accountID, snapshot)
+            rows.append(row(period + ["kas_masuk", name, String(account.incoming)], numericColumns: [4]))
+            rows.append(row(period + ["kas_keluar", name, String(account.outgoing)], numericColumns: [4]))
+            rows.append(row(period + ["kas_bersih", name, String(account.net)], numericColumns: [4]))
+        }
+        let url = FileManager.default.temporaryDirectory.appending(path: "Danarapi-Laporan-\(UUID().uuidString).csv")
+        try csvData(csv(rows)).write(to: url, options: [.atomic, .completeFileProtection])
+        var values = URLResourceValues(); values.isExcludedFromBackup = true
+        var protectedURL = url; try protectedURL.setResourceValues(values)
+        return url
+    }
     static func exportCSVs(snapshot: DashboardSnapshot) -> [String: String] {
         [
             "personal_expenses.csv": "\u{FEFF}" + personalExpensesCSV(snapshot),

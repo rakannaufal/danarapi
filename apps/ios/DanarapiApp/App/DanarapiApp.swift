@@ -9,8 +9,10 @@ struct DanarapiApp: App {
         WindowGroup {
             RootView()
                 .environment(app)
+                .tint(Color.danarapiPrimary)
+                .scrollContentBackground(.hidden)
                 .preferredColorScheme(app.colorScheme)
-                .environment(\.timeZone, TimeZone(identifier: "Asia/Jakarta")!)
+                .environment(\.timeZone, TimeZone(identifier: app.timezone) ?? TimeZone(identifier: "Asia/Jakarta")!)
                 .environment(\.locale, Locale(identifier: "id_ID"))
                 .overlay {
                     if app.privacyCoverVisible {
@@ -22,13 +24,17 @@ struct DanarapiApp: App {
                 .task { await app.start() }
                 .onChange(of: scenePhase) { _, phase in
                     switch phase {
-                    case .background, .inactive:
+                    case .background:
                         app.privacyCoverVisible = true
                         app.pauseOutboxRetry()
                         app.lockIfNeeded()
+                    case .inactive:
+                        app.privacyCoverVisible = true
+                        app.pauseOutboxRetry()
+                        if !app.isAuthenticating { app.lockIfNeeded() }
                     case .active:
                         app.privacyCoverVisible = false
-                        Task { await app.refresh() }
+                        if !app.isStarting { Task { await app.refresh() } }
                     @unknown default: break
                     }
                 }
@@ -41,13 +47,8 @@ private struct PrivacyCoverView: View {
         ZStack {
             Color.danarapiCanvas.ignoresSafeArea()
             VStack(spacing: 16) {
-                Image(systemName: "lock.shield.fill")
-                    .font(.system(size: 42, weight: .semibold, design: .rounded))
-                    .foregroundStyle(Color.danarapiPrimary)
-                Text("Danarapi")
-                    .font(.largeTitle.bold())
-                    .fontDesign(.rounded)
-                    .foregroundStyle(Color.danarapiInk)
+                Image("AppLogo").renderingMode(.original).resizable().scaledToFit().frame(width: 96, height: 96)
+                Image("danarapi_text").renderingMode(.original).resizable().scaledToFit().frame(width: 180, height: 42)
             }
         }
     }

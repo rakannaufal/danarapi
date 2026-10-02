@@ -4,7 +4,10 @@ import tokens from '../../../contracts/design-tokens.json';
 import './style.css';
 import './tokens.css';
 import './planning.css';
+import './dashboard.css';
+import './product.css';
 import './interface.css';
+import './brand.css';
 
 for (const [theme, values] of Object.entries(tokens.color)) {
   const style = document.createElement('style');

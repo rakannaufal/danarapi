@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": ">=22"
+    "node": "22.x"
   },
   "scripts": {
     "test": "npm run test:contracts",
@@ -21,6 +21,7 @@
     "web:e2e": "npm run test:e2e --prefix apps/web --",
     "test:edge": "deno test --allow-env supabase/tests/web_transport_test.ts supabase/tests/retention_test.ts supabase/tests/cloud_test.ts",
     "cloud:check": "node --experimental-strip-types scripts/check-cloud.mjs",
+    "web:verify-deployment": "node scripts/verify-web-deployment.mjs",
     "cloud:plan": "sh scripts/deploy-supabase.sh plan",
     "cloud:deploy": "sh scripts/deploy-supabase.sh apply",
     "test:cloud": "node --experimental-strip-types --test tests/cloud/*.test.mjs",

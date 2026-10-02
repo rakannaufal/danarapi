@@ -112,7 +112,7 @@ struct ItemSplitFormView: View {
     init(seedTitle: String = "", receiptLines: [ReceiptLine] = [], receipt: ScannedReceipt? = nil, reviewItemID: String? = nil, editing: SplitBill? = nil, onSaved: @escaping () -> Void = {}) {
         self.reviewItemID = reviewItemID; self.editing = editing; self.onSaved = onSaved
         _title = State(initialValue: editing?.title ?? seedTitle)
-        _participants = State(initialValue: editing?.members.sorted { $0.sortOrder < $1.sortOrder }.map { DiningParticipant(id: $0.id, name: $0.displayName, isSelf: $0.isSelf) } ?? [DiningParticipant(id: UUID().uuidString, name: "Saya", isSelf: true), DiningParticipant(id: UUID().uuidString, name: "Ani", isSelf: false), DiningParticipant(id: UUID().uuidString, name: "Budi", isSelf: false)])
+        _participants = State(initialValue: editing?.members.sorted { $0.sortOrder < $1.sortOrder }.map { DiningParticipant(id: $0.id, name: $0.displayName, isSelf: $0.isSelf) } ?? [DiningParticipant(id: UUID().uuidString, name: "Saya", isSelf: true)])
         _draft = State(initialValue: editing?.itemSplit ?? ItemSplit(items: receiptLines.isEmpty ? [ReceiptLine(name: "", quantity: 1, unitPrice: "")] : receiptLines, settings: ReceiptSettings()))
         if editing == nil, let receipt {
             let base = receipt.subtotal ?? receipt.items.reduce(0) { $0 + Int64($1.qty) * ($1.unitPrice ?? 0) }
@@ -138,48 +138,7 @@ struct ItemSplitFormView: View {
             }
             participantsSection.disabled(locked)
             if !locked { importSection }
-            Section("2. Menu yang dipesan") {
-                if draft.settings != nil {
-                    Picker("Cara memilih pemesan", selection: $assignmentMode) { Text("Per menu").tag("menu"); Text("Per orang").tag("person") }.pickerStyle(.segmented)
-                    if assignmentMode == "person" { Picker("Pilih pemesan", selection: $selectedPerson) { ForEach(participants) { Text($0.name).tag($0.id) } } }
-                }
-                ForEach($draft.items) { $item in
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            TextField("Nama menu", text: $item.name).font(.headline).focused($focusedField, equals: "menu.\(item.id)")
-                            Button(role: .destructive) { draft.items.removeAll { $0.id == item.id } } label: { Image(systemName: "trash").frame(minWidth: DesignTokens.minimumTouch, minHeight: DesignTokens.minimumTouch) }.buttonStyle(.borderless).accessibilityLabel("Hapus menu \(item.name)")
-                        }
-                        HStack { Text("Jumlah dibeli (0–999.999)"); Spacer(); TextField("Jumlah dibeli", value: $item.quantity, format: .number.grouping(.never)).keyboardType(.numberPad).multilineTextAlignment(.trailing) }
-                        HStack { Text("Harga satuan"); Spacer(); RupiahTextField("Harga satuan", text: $item.unitPrice, focus: $focusedField, focusID: "price.\(item.id)").keyboardType(.numberPad).multilineTextAlignment(.trailing).frame(maxWidth: 150) }
-                        if draft.settings != nil {
-                            ForEach(participants.filter { assignmentMode == "menu" || $0.id == selectedPerson }) { person in
-                                Toggle(person.name, isOn: ownerBinding(itemID: item.id, memberID: person.id))
-                                    .toggleStyle(.switch).tint(receiptAccent)
-                                    .accessibilityLabel("\(person.name), pemesan \(item.name)")
-                            }
-                            Text(item.allocations.isEmpty ? "Belum ada pemesan" : "Dibagi rata ke \(item.allocations.count) orang")
-                                .font(.caption).foregroundStyle(item.allocations.isEmpty ? Color.danarapiExpense : receiptAccent)
-                        } else {
-                        ForEach(participants) { person in
-                            HStack {
-                                Text(person.name).font(.subheadline)
-                                Spacer()
-                                let count = quantity(item: item, memberID: person.id)
-                                Button { allocationBinding(itemID: item.id, memberID: person.id).wrappedValue = max(0, count - 1) } label: { Image(systemName: "minus").frame(width: 44, height: 44).background(Color.danarapiSky, in: Circle()) }
-                                    .buttonStyle(.borderless).disabled(count == 0).accessibilityLabel("Kurangi jumlah \(item.name) untuk \(person.name)")
-                                Text("\(count)").font(.headline.monospacedDigit()).frame(minWidth: 24).accessibilityLabel("\(person.name) mendapat \(count) \(item.name)")
-                                Button { allocationBinding(itemID: item.id, memberID: person.id).wrappedValue = min(item.quantity, count + 1) } label: { Image(systemName: "plus").frame(width: 44, height: 44).background(Color.danarapiSky, in: Circle()) }
-                                    .buttonStyle(.borderless).disabled(count >= item.quantity).accessibilityLabel("Tambah jumlah \(item.name) untuk \(person.name)").accessibilityIdentifier("allocation.plus.\(item.name).\(person.name)")
-                            }
-                        }
-                        let assigned = item.allocations.reduce(0) { $0 + $1.quantity }
-                        Text(assigned == item.quantity ? "Semua jumlah sudah dibagikan" : "Dibagikan \(assigned) dari \(item.quantity); harus tepat")
-                            .font(.caption).foregroundStyle(assigned == item.quantity ? Color.danarapiPrimary : Color.danarapiExpense)
-                        }
-                    }.padding(.vertical, 6)
-                }
-                Button("Tambah menu", systemImage: "plus") { if draft.items.count < 100 { draft.items.append(ReceiptLine(name: "", quantity: 1, unitPrice: "")) } }
-            }.disabled(locked)
+            menusSection.disabled(locked)
             Section("3. Biaya tambahan") {
                 if draft.settings != nil {
                     HStack { Text("Service (%)"); Spacer(); TextField("5", value: rateBinding(service: true), format: .number).keyboardType(.decimalPad).multilineTextAlignment(.trailing).frame(maxWidth: 100) }
@@ -224,7 +183,7 @@ struct ItemSplitFormView: View {
         }
         .scrollContentBackground(.hidden).background(receiptCanvas).tint(receiptAccent).navigationTitle("Split bill").navigationBarTitleDisplayMode(.inline)
         .scrollDismissesKeyboard(.interactively)
-        .toolbar { ToolbarItemGroup(placement: .keyboard) { Spacer(); Button("Selesai") { focusedField = nil } } }
+        .toolbar { ToolbarItemGroup(placement: .keyboard) { Spacer(); Button("Selesai") { focusedField = nil }.accessibilityLabel("Tutup keyboard").accessibilityIdentifier("split.keyboardDone") } }
         .onAppear {
             selectedPerson = participants.first?.id ?? ""
             categoryID = editing?.categoryID ?? app.expenseCategories.first?.id ?? ""
@@ -253,6 +212,60 @@ struct ItemSplitFormView: View {
         .onDisappear { cancelScan() }
     }
 
+    private var menusSection: some View {
+        Section("2. Menu yang dipesan") {
+            if draft.settings != nil {
+                Picker("Cara memilih pemesan", selection: $assignmentMode) { Text("Per menu").tag("menu"); Text("Per orang").tag("person") }.pickerStyle(.segmented)
+                if assignmentMode == "person" { Picker("Pilih pemesan", selection: $selectedPerson) { ForEach(participants) { Text($0.name).tag($0.id) } } }
+            }
+            ForEach($draft.items) { item in menuRow(item) }
+            Button("Tambah menu", systemImage: "plus") { if draft.items.count < 100 { draft.items.append(ReceiptLine(name: "", quantity: 1, unitPrice: "")) } }
+        }
+    }
+
+    private func menuRow(_ binding: Binding<ReceiptLine>) -> some View {
+        let item = binding.wrappedValue
+        return VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                TextField("Nama menu", text: binding.name).font(.headline).focused($focusedField, equals: "menu.\(item.id)")
+                Button(role: .destructive) { draft.items.removeAll { $0.id == item.id } } label: { Image(systemName: "trash").frame(minWidth: DesignTokens.minimumTouch, minHeight: DesignTokens.minimumTouch) }.buttonStyle(.borderless).accessibilityLabel("Hapus menu \(item.name)")
+            }
+            HStack { Text("Jumlah dibeli (0–999.999)"); Spacer(); TextField("Jumlah dibeli", value: binding.quantity, format: .number.grouping(.never)).keyboardType(.numberPad).multilineTextAlignment(.trailing) }
+            HStack { Text("Harga satuan"); Spacer(); RupiahTextField("Harga satuan", text: binding.unitPrice, focus: $focusedField, focusID: "price.\(item.id)").keyboardType(.numberPad).multilineTextAlignment(.trailing).frame(maxWidth: 150) }
+            owners(for: item)
+        }.padding(.vertical, 6)
+    }
+
+    @ViewBuilder private func owners(for item: ReceiptLine) -> some View {
+        if draft.settings != nil {
+            ForEach(participants.filter { assignmentMode == "menu" || $0.id == selectedPerson }) { person in
+                Toggle(person.name, isOn: ownerBinding(itemID: item.id, memberID: person.id))
+                    .toggleStyle(.switch).tint(receiptAccent)
+                    .accessibilityLabel("\(person.name), pemesan \(item.name)")
+            }
+            Text(item.allocations.isEmpty ? "Belum ada pemesan" : "Dibagi rata ke \(item.allocations.count) orang")
+                .font(.caption).foregroundStyle(item.allocations.isEmpty ? Color.danarapiExpense : receiptAccent)
+        } else {
+            ForEach(participants) { person in allocationRow(item: item, person: person) }
+            let assigned = item.allocations.reduce(0) { $0 + $1.quantity }
+            Text(assigned == item.quantity ? "Semua jumlah sudah dibagikan" : "Dibagikan \(assigned) dari \(item.quantity); harus tepat")
+                .font(.caption).foregroundStyle(assigned == item.quantity ? Color.danarapiPrimary : Color.danarapiExpense)
+        }
+    }
+
+    private func allocationRow(item: ReceiptLine, person: DiningParticipant) -> some View {
+        let count = quantity(item: item, memberID: person.id)
+        return HStack {
+            Text(person.name).font(.subheadline)
+            Spacer()
+            Button { allocationBinding(itemID: item.id, memberID: person.id).wrappedValue = max(0, count - 1) } label: { Image(systemName: "minus").frame(width: 44, height: 44).background(Color.danarapiSky, in: Circle()) }
+                .buttonStyle(.borderless).disabled(count == 0).accessibilityLabel("Kurangi jumlah \(item.name) untuk \(person.name)")
+            Text("\(count)").font(.headline.monospacedDigit()).frame(minWidth: 24).accessibilityLabel("\(person.name) mendapat \(count) \(item.name)")
+            Button { allocationBinding(itemID: item.id, memberID: person.id).wrappedValue = min(item.quantity, count + 1) } label: { Image(systemName: "plus").frame(width: 44, height: 44).background(Color.danarapiSky, in: Circle()) }
+                .buttonStyle(.borderless).disabled(count >= item.quantity).accessibilityLabel("Tambah jumlah \(item.name) untuk \(person.name)").accessibilityIdentifier("allocation.plus.\(item.name).\(person.name)")
+        }
+    }
+
     private var participantsSection: some View {
         Section("1. Siapa saja yang ikut?") {
             ForEach($participants) { $person in
@@ -261,7 +274,17 @@ struct ItemSplitFormView: View {
                     if !person.isSelf { Button(role: .destructive) { removeParticipant(person.id) } label: { Image(systemName: "minus.circle").frame(minWidth: DesignTokens.minimumTouch, minHeight: DesignTokens.minimumTouch) }.buttonStyle(.borderless).accessibilityLabel("Hapus peserta \(person.name)") }
                 }
             }
-            HStack { TextField("Nama orang", text: $newName).onSubmit(addParticipant); Button("Tambah orang", action: addParticipant).disabled(newName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || participants.count >= 20) }
+            HStack(spacing: 12) {
+                TextField("Nama orang", text: $newName).focused($focusedField, equals: "newPerson").submitLabel(.done).onSubmit(addParticipant)
+                Button(action: addParticipant) {
+                    Image(systemName: "plus").font(.body.weight(.semibold))
+                        .frame(width: DesignTokens.minimumTouch, height: DesignTokens.minimumTouch)
+                }
+                .buttonStyle(.borderless)
+                .accessibilityLabel("Tambah orang")
+                .accessibilityIdentifier("split.addPerson")
+                .disabled(newName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || participants.count >= 20)
+            }
         }.listRowBackground(receiptCard)
     }
 
@@ -272,6 +295,10 @@ struct ItemSplitFormView: View {
                 ForEach(calculation.rows) { row in
                     VStack(alignment: .leading, spacing: 8) {
                         HStack { Text(participants.first { $0.id == row.id }?.name ?? "").font(.headline); Spacer(); MoneyText(amount: row.total, style: .headline, color: receiptAccent) }
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityLabel(participants.first { $0.id == row.id }?.name ?? "Peserta")
+                            .accessibilityValue(app.hideAmounts ? "Nominal disembunyikan" : row.total.idrAccessibility)
+                            .accessibilityIdentifier("split.share.\(participants.first { $0.id == row.id }?.name ?? row.id)")
                         ViewThatFits(in: .horizontal) {
                             HStack(spacing: 16) { receiptAmount("Pesanan", row.subtotal); receiptAmount("Diskon", row.discount); receiptAmount("Service", row.service); receiptAmount("Pajak", row.tax); receiptAmount("Pembulatan", row.rounding) }
                             VStack(alignment: .leading, spacing: 8) { receiptAmount("Pesanan", row.subtotal); receiptAmount("Diskon", row.discount); receiptAmount("Service", row.service); receiptAmount("Pajak", row.tax); receiptAmount("Pembulatan", row.rounding) }
@@ -372,7 +399,6 @@ struct ItemSplitFormView: View {
         })
     }
     private func removeParticipant(_ id: String) {
-        guard draft.settings != nil || participants.count > 2 else { app.errorMessage = "Split bill memerlukan minimal dua peserta."; return }
         participants.removeAll { $0.id == id }
         if selectedPerson == id { selectedPerson = participants.first?.id ?? "" }
         for index in draft.items.indices { draft.items[index].allocations.removeAll { $0.memberID == id } }

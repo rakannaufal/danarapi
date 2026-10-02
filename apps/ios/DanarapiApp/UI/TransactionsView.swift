@@ -161,7 +161,7 @@ private struct TransferRow: View {
             Image(systemName: "arrow.left.arrow.right").frame(width: 40, height: 40).background(Color.danarapiSky, in: Circle())
             VStack(alignment: .leading, spacing: 3) {
                 Text("\(account(item.fromAccountID)) ke \(account(item.toAccountID))").font(.headline)
-                HStack { Text(item.occurredAt.formatted(date: .abbreviated, time: .omitted)); if item.pendingSync { Text("Belum tersinkron") } }.font(.caption).foregroundStyle(Color.danarapiMuted)
+                HStack { Text(MonthPeriod.display(item.occurredAt)); if item.pendingSync { Text("Belum tersinkron") } }.font(.caption).foregroundStyle(Color.danarapiMuted)
             }
             Spacer(); MoneyText(amount: item.amount, style: .subheadline.bold())
         }.frame(minHeight: 48)
@@ -178,7 +178,7 @@ private struct TransferDetailView: View {
         Group {
             if let item {
                 List {
-                    Section { LabeledContent("Nominal") { MoneyText(amount: item.amount, style: .title3.bold()) }; LabeledContent("Dari", value: account(item.fromAccountID)); LabeledContent("Ke", value: account(item.toAccountID)); LabeledContent("Tanggal", value: item.occurredAt.formatted(date: .long, time: .shortened)) }
+                    Section { LabeledContent("Nominal") { MoneyText(amount: item.amount, style: .title3.bold()) }; LabeledContent("Dari", value: account(item.fromAccountID)); LabeledContent("Ke", value: account(item.toAccountID)); LabeledContent("Tanggal", value: MonthPeriod.display(item.occurredAt, template: "d MMMM yyyy HHmm")) }
                     Section { LabeledContent("Catatan", value: item.note ?? "—") }
                     Section { Button("Ubah transfer") { edit = true }; Button("Hapus transfer", role: .destructive) { Task { _ = await app.deleteTransfer(item) } } }
                 }
@@ -199,7 +199,7 @@ struct TransactionRow: View {
                 .frame(width: 40, height: 40).background(item.kind == .income ? Color.danarapiMint : Color.danarapiPeach, in: Circle())
             VStack(alignment: .leading, spacing: 3) {
                 Text(item.goalID.flatMap { identifier in app.snapshot.goals?.first { $0.id == identifier }?.name } ?? item.merchant ?? app.snapshot.categories.first(where: { $0.id == item.categoryID })?.name ?? item.kind.title).font(.headline).lineLimit(1)
-                HStack { Text(item.occurredAt.formatted(date: .abbreviated, time: .omitted)); if item.pendingSync { Label("Belum tersinkron", systemImage: "clock.arrow.circlepath") } }.font(.caption).foregroundStyle(Color.danarapiMuted)
+                HStack { Text(MonthPeriod.display(item.occurredAt)); if item.pendingSync { Label("Belum tersinkron", systemImage: "clock.arrow.circlepath") } }.font(.caption).foregroundStyle(Color.danarapiMuted)
             }
             Spacer()
             MoneyText(amount: item.amount, style: .subheadline.bold(), color: item.kind == .income ? .danarapiIncome : .danarapiExpense)
@@ -207,12 +207,14 @@ struct TransactionRow: View {
     }
 }
 
-private struct TransactionDetailView: View {
+struct TransactionDetailView: View {
     @Environment(AppModel.self) private var app
     let itemID: String
     @State private var edit = false
     @State private var convertToSplit = false
     @State private var deletedItem: FinanceTransaction?
+    @State private var loading = true
+    @State private var loadError: String?
 
     var item: FinanceTransaction? { app.snapshot.transactions.first(where: { $0.id == itemID }) }
 
@@ -220,7 +222,7 @@ private struct TransactionDetailView: View {
         Group {
             if let item {
                 List {
-                    Section { LabeledContent("Nominal") { MoneyText(amount: item.amount, style: .title3.bold()) }; LabeledContent("Jenis", value: item.kind.title); LabeledContent("Tanggal", value: item.occurredAt.formatted(date: .long, time: .shortened)) }
+                    Section { LabeledContent("Nominal") { MoneyText(amount: item.amount, style: .title3.bold()) }; LabeledContent("Jenis", value: item.kind.title); LabeledContent("Tanggal", value: MonthPeriod.display(item.occurredAt, template: "d MMMM yyyy HHmm")) }
                     Section { LabeledContent("Merchant", value: item.merchant ?? "—"); LabeledContent("Catatan", value: item.note ?? "—") }
                     if let goalID = item.goalID, let goal = app.snapshot.goals?.first(where: { $0.id == goalID }) {
                         Section { LabeledContent("Target", value: goal.name) }
@@ -234,10 +236,16 @@ private struct TransactionDetailView: View {
                 .navigationTitle("Detail transaksi")
                 .sheet(isPresented: $edit) { TransactionFormView(kind: item.kind, editing: item) { edit = false } }
                 .sheet(isPresented: $convertToSplit) { NavigationStack { SplitBillFormView(convertingTransaction: item) { convertToSplit = false } } }
-            } else { ContentUnavailableView("Transaksi tidak tersedia", systemImage: "tray") }
+            } else if loading { ProgressView("Memuat transaksi…") }
+            else { ContentUnavailableView { Label("Transaksi tidak tersedia", systemImage: "tray") } description: { Text(loadError ?? "Catatan sudah dihapus.") } actions: { Button("Coba lagi") { Task { await load() } } } }
         }
         .safeAreaInset(edge: .bottom) {
             if let deletedItem { HStack { Text("Transaksi dihapus"); Spacer(); Button("Urungkan") { Task { _ = await app.restoreTransaction(deletedItem); self.deletedItem = nil } } }.padding().background(.regularMaterial).task { try? await Task.sleep(for: .seconds(10)); self.deletedItem = nil } }
         }
+        .task(id: itemID) { await load() }
+    }
+    private func load() async {
+        loading = true; loadError = nil; defer { loading = false }
+        do { try await app.ensureTransaction(id: itemID) } catch { loadError = error.localizedDescription }
     }
 }

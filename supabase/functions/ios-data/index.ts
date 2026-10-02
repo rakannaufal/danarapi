@@ -3,6 +3,7 @@ import { normalizeReceipt, storeReceipt } from "../_shared/receipt.ts";
 import { allocationBreakdown } from "../_shared/planning.ts";
 import { hasRecentOAuth } from "../_shared/oauth.ts";
 import { corsFor } from "../_shared/cors.ts";
+import { calendarDate } from "../_shared/calendar.ts";
 
 type Json = Record<string, unknown>;
 
@@ -18,9 +19,30 @@ Deno.serve(async (request) => {
     const url = new URL(request.url);
     if (url.pathname.endsWith("/dashboard-full")) return Response.json(await dashboard(authorization, true), { headers: corsHeaders });
     if (url.pathname.endsWith("/dashboard")) return Response.json(await dashboard(authorization, false), { headers: corsHeaders });
+    if (url.pathname.endsWith("/consent")) {
+      const rows = await rest("ai_consents?select=granted,policy_version,updated_at&limit=1", authorization) as Json[];
+      return Response.json(rows[0] ? { granted: rows[0].granted, policyVersion: rows[0].policy_version, updatedAt: rows[0].updated_at } : { granted: false, policyVersion: null, updatedAt: null }, { headers: corsHeaders });
+    }
+    if (url.pathname.endsWith("/support")) {
+      const rows = await rest("support_tickets?select=id,topic,description,status,reply,created_at&order=created_at.desc&limit=20", authorization) as Json[];
+      return Response.json({ items: rows.map(row => ({ id: row.id, topic: row.topic, description: row.description, status: row.status, reply: row.reply, createdAt: row.created_at })) }, { headers: corsHeaders });
+    }
+    if (url.pathname.endsWith("/planning-history")) {
+      const body = await request.json() as Json;
+      const records = await rpc("api_planning_history", { p_goal_id: body.goalID ?? null, p_category_id: body.categoryID ?? null, p_start: body.startDate ?? null, p_end: body.endDate ?? null, p_cursor_at: (body.cursor as Json)?.occurredAt ?? null, p_cursor_id: (body.cursor as Json)?.id ?? null }, authorization) as Json[];
+      const items = records.slice(0,30);
+      return Response.json({ items, nextCursor: records.length > 30 ? { occurredAt: items.at(-1)?.occurredAt, id: items.at(-1)?.id } : null }, { headers: corsHeaders });
+    }
     if (url.pathname.endsWith("/transactions")) {
       const body = await request.json() as { cursor?: { occurredAt?: string; id?: string } };
       return Response.json(await transactionPage(authorization, body.cursor), { headers: corsHeaders });
+    }
+    if (url.pathname.endsWith("/transaction")) {
+      const body = await request.json() as Json;
+      if (typeof body.id !== 'string' || !/^[0-9a-f-]{36}$/i.test(body.id)) throw { code: 'VALIDATION', message: 'ID transaksi tidak valid.' };
+      const records = await rest(`transactions?id=eq.${encodeURIComponent(body.id)}&deleted_at=is.null&select=*&limit=1`, authorization) as Json[];
+      if (!records.length) throw { code: 'NOT_FOUND', message: 'Transaksi tidak tersedia.' };
+      return Response.json(transactionDTO(records[0]), { headers: corsHeaders });
     }
     if (url.pathname.endsWith("/report")) {
       const body = await request.json() as { startDate?: string; endDate?: string };
@@ -115,11 +137,12 @@ async function dashboard(authorization: string, fullTransactions: boolean) {
     splitBills: billRows,
     reviewItems: reviews.map((row) => ({ id: row.id, source: row.source, status: row.status, ...(row.extracted_fields as Json), rawReference: row.raw_reference, duplicateCandidateID: row.duplicate_of ?? row.duplicate_bill_id ?? null, attachmentName: attachmentByReview.get(String(row.id)) ?? null, createdAt: row.created_at })),
     merchantRules: merchantRules.map((row) => ({ id: row.id, matchType: row.match_type, normalizedPattern: row.normalized_pattern, categoryID: row.category_id, priority: row.priority, version: row.version })),
-    goals: goals.map((row) => ({ id: row.id, name: row.name, targetAmount: String(row.target_amount), savedAmount: String(row.progress_amount), openingAmount: String(row.saved_amount), targetDate: row.target_date ? `${row.target_date}T00:00:00+07:00` : null, version: row.version })),
-    budgets: budgets.map((row) => ({ id: row.id, categoryID: row.category_id, month: `${String(row.month)}T00:00:00Z`, limitAmount: String(row.limit_amount), spentAmount: budgetSpent(row, ledger, String(profiles[0]?.timezone ?? "Asia/Jakarta")).toString() })),
+    goals: goals.map((row) => ({ id: row.id, name: row.name, targetAmount: String(row.target_amount), savedAmount: String(row.progress_amount), openingAmount: String(row.saved_amount), targetDate: row.target_date ? calendarDate(String(row.target_date), String(profiles[0]?.timezone ?? "Asia/Jakarta")) : null, version: row.version })),
+    budgets: budgets.map((row) => ({ id: row.id, categoryID: row.category_id, month: calendarDate(String(row.month), String(profiles[0]?.timezone ?? "Asia/Jakarta")), monthKey: String(row.month), limitAmount: String(row.limit_amount), spentAmount: budgetSpent(row, ledger, String(profiles[0]?.timezone ?? "Asia/Jakarta")).toString() })),
     overview: { accountBalance: accountBalance.toString(), receivables: receivables.toString(), payables: payables.toString(), netPosition: (accountBalance + receivables - payables).toString(), personalIncome: income.toString(), personalExpense: expense.toString() },
     nextTransactionCursor: !fullTransactions && transactions.length > 30 ? { occurredAt: visibleTransactions.at(-1)?.occurred_at, id: visibleTransactions.at(-1)?.id } : null,
-    syncedAt: new Date().toISOString()
+    syncedAt: new Date().toISOString(),
+    timezone: String(profiles[0]?.timezone ?? "Asia/Jakarta")
   };
 }
 
@@ -140,14 +163,21 @@ async function report(authorization: string, startDate?: string, endDate?: strin
   if (!startDate || Number.isNaN(Date.parse(startDate))) throw { code: "VALIDATION", message: "Awal periode laporan tidak valid." };
   if (endDate && (Number.isNaN(Date.parse(endDate)) || Date.parse(endDate) <= Date.parse(startDate))) throw { code: "VALIDATION", message: "Akhir periode harus setelah awal periode." };
   const endFilter = endDate ? `&occurred_at=lt.${encodeURIComponent(endDate)}` : "";
-  const ledger = await restAll(`ledger_entries?select=category_id,personal_income_amount,personal_expense_amount&reversed_at=is.null&occurred_at=gte.${encodeURIComponent(startDate)}${endFilter}&order=id.asc`, authorization);
+  const ledger = await restAll(`ledger_entries?select=account_id,cash_amount,category_id,personal_income_amount,personal_expense_amount&reversed_at=is.null&occurred_at=gte.${encodeURIComponent(startDate)}${endFilter}&order=id.asc`, authorization);
   let personalIncome = 0n, personalExpense = 0n;
   const categoryTotals = new Map<string, bigint>();
+  const cashTotals = new Map<string, { incoming: bigint; outgoing: bigint }>();
   for (const row of ledger) {
     const income = integer(row.personal_income_amount), expense = integer(row.personal_expense_amount);
     personalIncome += income;
     personalExpense += expense;
     if (expense > 0n && row.category_id) categoryTotals.set(String(row.category_id), (categoryTotals.get(String(row.category_id)) ?? 0n) + expense);
+    if (row.account_id) {
+      const identifier = String(row.account_id), amount = integer(row.cash_amount);
+      const totals = cashTotals.get(identifier) ?? { incoming: 0n, outgoing: 0n };
+      if (amount > 0n) totals.incoming += amount; else totals.outgoing -= amount;
+      cashTotals.set(identifier, totals);
+    }
   }
   const [goalTransactions, goalNames, categoryNames, budgetRows, profiles] = await Promise.all([
     restAll(`transactions?select=goal_id,category_id,amount&goal_id=not.is.null&type=eq.expense&deleted_at=is.null&occurred_at=gte.${encodeURIComponent(startDate)}${endFilter}&order=id.asc`, authorization),
@@ -170,12 +200,18 @@ async function report(authorization: string, startDate?: string, endDate?: strin
     personalIncome: personalIncome.toString(),
     personalExpense: personalExpense.toString(),
     categories: Array.from(categoryTotals, ([categoryID, amount]) => ({ categoryID, amount: amount.toString() })),
-    allocations
+    allocations,
+    cashAccounts: Array.from(cashTotals, ([accountID, value]) => ({ accountID, incoming: value.incoming.toString(), outgoing: value.outgoing.toString(), net: (value.incoming - value.outgoing).toString() }))
   };
 }
 
 async function action(operation: string, payload: Json, authorization: string) {
   switch (operation) {
+    case "set_ai_consent": await rpc("api_set_ai_consent", { p_granted: payload.granted, p_policy_version: payload.policyVersion }, authorization); return;
+    case "set_timezone": await rpc("api_set_timezone", { p_timezone: payload.timezone }, authorization); return;
+    case "acknowledge_retention": await rpc("acknowledge_retention_policy", {}, authorization); return;
+    case "copy_budgets": await rpc("api_copy_budgets", { p_from: payload.from, p_to: payload.to }, authorization); return;
+    case "create_support_ticket": await rpc("api_create_support_ticket", { p_id: payload.id, p_topic: payload.topic, p_description: payload.description, p_platform: payload.platform, p_app_version: payload.appVersion, p_request_id: payload.requestID ?? null }, authorization); return;
     case "update_account":
       await patch("accounts", String(payload.id), Number(payload.version), { name: payload.name, kind: payload.kind, opening_balance: payload.openingBalance, opened_at: payload.openedAt }, authorization); return;
     case "archive_account":
@@ -214,8 +250,11 @@ async function action(operation: string, payload: Json, authorization: string) {
       const transaction = payload.transaction as Json;
       await rpc("api_confirm_review_item", { p_client_mutation_id: payload.id, p_review_item_id: payload.id, p_type: transaction.kind, p_amount: transaction.amount, p_account_id: transaction.accountID, p_category_id: transaction.categoryID, p_occurred_at: transaction.occurredAt, p_merchant: transaction.merchant ?? null, p_note: transaction.note ?? null }, authorization); return;
     }
-    case "upsert_budget":
-      await rest("budgets?on_conflict=user_id,category_id,month", authorization, { method: "POST", headers: { prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ category_id: payload.category_id, month: String(payload.month).slice(0, 10).replace(/-\d\d$/, "-01"), limit_amount: payload.limit_amount }) }); return;
+    case "upsert_budget": {
+      const month = String(payload.month ?? "");
+      if (!/^\d{4}-(0[1-9]|1[0-2])(?:-01)?$/.test(month)) throw { code: "VALIDATION", message: "Pilih bulan anggaran yang valid." };
+      await rest("budgets?on_conflict=user_id,category_id,month", authorization, { method: "POST", headers: { prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ category_id: payload.category_id, month: `${month.slice(0, 7)}-01`, limit_amount: payload.limit_amount }) }); return;
+    }
     case "request_account_deletion": await deleteAccount(String(payload.password ?? ""), authorization, payload.expected_user_id ? String(payload.expected_user_id) : undefined); return;
     default: throw { code: "VALIDATION", message: "Operasi data tidak didukung." };
   }

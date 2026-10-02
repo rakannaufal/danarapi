@@ -1,0 +1,7 @@
+{
+  "images": [
+    { "filename": "onboarding_3-light.png", "idiom": "universal" },
+    { "filename": "onboarding_3-dark.png", "idiom": "universal", "appearances": [{ "appearance": "luminosity", "value": "dark" }] }
+  ],
+  "info": { "author": "xcode", "version": 1 }
+}

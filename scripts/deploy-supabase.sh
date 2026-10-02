@@ -4,7 +4,7 @@ set -eu
 root="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
 cd "$root"
 mode="${1:-plan}"
-origin="${2:-http://127.0.0.1:5173}"
+origin="${2:-https://danarapi.vercel.app}"
 env_file="${3:-supabase/.env}"
 project_ref=zoccosfjulasqxczhvfm
 case "$mode" in plan|apply) ;; *) echo 'Gunakan plan atau apply.' >&2; exit 2 ;; esac
@@ -33,8 +33,8 @@ fi
 
 cli db push --linked --skip-vault
 cli secrets set --project-ref "$project_ref" --env-file "$secrets"
-for function in ledger ios-data export-data receipt-scan; do
+for function in ledger ios-data export-data product-info receipt-scan; do
   cli functions deploy "$function" --project-ref "$project_ref" --use-api
 done
-node --experimental-strip-types scripts/check-cloud.mjs --backend-only
-echo 'Backend terdeploy. Lengkapi provider Google/Apple serta redirect URL di Dashboard, kemudian jalankan npm run cloud:check.'
+node --experimental-strip-types scripts/check-cloud.mjs --backend-only --origin "$origin"
+echo 'Backend terdeploy. Lengkapi provider Google serta redirect URL web dan id.danarapi.app://auth/callback di Dashboard, kemudian jalankan npm run cloud:check.'

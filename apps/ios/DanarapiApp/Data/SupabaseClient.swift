@@ -17,24 +17,77 @@ enum OAuthPKCE {
 }
 
 @MainActor
+protocol OAuthBrowserSession: AnyObject {
+    var presentationContextProvider: (any ASWebAuthenticationPresentationContextProviding)? { get set }
+    func start() -> Bool
+    func cancel()
+}
+
+extension ASWebAuthenticationSession: OAuthBrowserSession {}
+
+@MainActor
 final class OAuthPresenter: NSObject, ASWebAuthenticationPresentationContextProviding {
-    private var session: ASWebAuthenticationSession?
+    typealias SessionFactory = (URL, String?, @escaping (URL?, Error?) -> Void) -> any OAuthBrowserSession
+    private var session: (any OAuthBrowserSession)?
     private var anchor: UIWindow?
+    private var continuation: CheckedContinuation<URL, Error>?
+    private var attemptID: UUID?
+    private var timeoutTask: Task<Void, Never>?
+    private let timeout: Duration
+    private let makeSession: SessionFactory
+
+    init(timeout: Duration = .seconds(120), makeSession: @escaping SessionFactory = { url, scheme, callback in ASWebAuthenticationSession(url: url, callbackURLScheme: scheme, completionHandler: callback) }) {
+        self.timeout = timeout
+        self.makeSession = makeSession
+        super.init()
+    }
+
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor { anchor ?? UIWindow() }
-    func authenticate(url: URL) async throws -> URL {
-        guard session == nil, let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first(where: { $0.activationState == .foregroundActive })?.windows.first(where: \.isKeyWindow) else { throw AppError.validation("Login belum dapat dibuka.") }
-        anchor = window
-        defer { session = nil; anchor = nil }
-        return try await withCheckedThrowingContinuation { continuation in
-            let browser = ASWebAuthenticationSession(url: url, callbackURLScheme: OAuthPKCE.scheme) { callback, error in
-                if let callback { continuation.resume(returning: callback) }
-                else if let failure = error as? ASWebAuthenticationSessionError, failure.code == .canceledLogin { continuation.resume(throwing: CancellationError()) }
-                else { continuation.resume(throwing: AppError.validation("Login belum berhasil. Silakan coba kembali.")) }
+    func authenticate(url: URL, presentationWindow: UIWindow? = nil) async throws -> URL {
+        try Task.checkCancellation()
+        guard session == nil, let window = presentationWindow ?? UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first(where: { $0.activationState == .foregroundActive })?.windows.first(where: \.isKeyWindow) else { throw AppError.validation("Login belum dapat dibuka. Tutup dialog lalu coba lagi.") }
+        let identifier = UUID()
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                self.anchor = window
+                self.continuation = continuation
+                self.attemptID = identifier
+                let browser = makeSession(url, OAuthPKCE.scheme) { [weak self] callback, error in
+                    Task { @MainActor [weak self] in
+                        if let callback { self?.complete(identifier: identifier, result: .success(callback)) }
+                        else if let failure = error as? ASWebAuthenticationSessionError, failure.code == .canceledLogin { self?.complete(identifier: identifier, result: .failure(CancellationError())) }
+                        else { self?.complete(identifier: identifier, result: .failure(AppError.validation("Login belum berhasil. Silakan coba kembali."))) }
+                    }
+                }
+                browser.presentationContextProvider = self
+                session = browser
+                timeoutTask = Task { [weak self, timeout] in
+                    do { try await Task.sleep(for: timeout) } catch { return }
+                    self?.complete(identifier: identifier, result: .failure(AppError(code: "TIMEOUT", message: "Login melewati batas waktu. Silakan coba kembali.", requestID: nil, details: [:])))
+                }
+                if !browser.start() { complete(identifier: identifier, result: .failure(AppError.validation("Login belum dapat dimulai. Silakan coba kembali."))) }
             }
-            browser.presentationContextProvider = self
-            session = browser
-            if !browser.start() { continuation.resume(throwing: AppError.validation("Login belum dapat dimulai.")) }
+        } onCancel: {
+            Task { @MainActor [weak self] in self?.complete(identifier: identifier, result: .failure(CancellationError())) }
         }
+    }
+
+    func cancel() {
+        guard let attemptID else { return }
+        complete(identifier: attemptID, result: .failure(CancellationError()))
+    }
+
+    private func complete(identifier: UUID, result: Result<URL, Error>) {
+        guard attemptID == identifier, let continuation else { return }
+        let browser = session
+        self.continuation = nil
+        attemptID = nil
+        session = nil
+        anchor = nil
+        timeoutTask?.cancel()
+        timeoutTask = nil
+        browser?.cancel()
+        continuation.resume(with: result)
     }
 }
 
@@ -161,10 +214,14 @@ actor SupabaseHTTPClient {
     }
 
     private func decodeError(data: Data, status: Int) -> AppError {
+        if status == 404,
+           let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+           object["code"] as? String == "NOT_FOUND" {
+            return AppError(code: "CLOUD_UNAVAILABLE", message: "Layanan cloud belum tersedia. Hubungi pengelola aplikasi.", requestID: nil, details: [:])
+        }
         if let error = try? JSONDecoder().decode(AppError.self, from: data) { return error }
         if let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
            let message = object["message"] as? String {
-            if status == 404, object["code"] as? String == "NOT_FOUND" { return AppError.validation("Layanan cloud belum tersedia. Hubungi pengelola aplikasi.") }
             if let nested = message.data(using: .utf8), let error = try? JSONDecoder().decode(AppError.self, from: nested) { return error }
             return AppError(code: status == 401 ? "UNAUTHORIZED" : "INTERNAL", message: message, requestID: nil, details: [:])
         }
@@ -199,7 +256,7 @@ actor AuthService {
 
     func oauthURL(provider: String, verifier: String) throws -> URL {
         guard provider == "google", verifier.count >= 43, configuration.url.scheme == "https", var components = URLComponents(url: try configuration.endpoint("/auth/v1/authorize"), resolvingAgainstBaseURL: false) else { throw AppError.validation("Konfigurasi login tidak valid.") }
-        components.queryItems = [URLQueryItem(name: "provider", value: provider), URLQueryItem(name: "redirect_to", value: OAuthPKCE.redirect), URLQueryItem(name: "code_challenge", value: OAuthPKCE.challenge(verifier)), URLQueryItem(name: "code_challenge_method", value: "s256")]
+        components.queryItems = [URLQueryItem(name: "provider", value: provider), URLQueryItem(name: "redirect_to", value: OAuthPKCE.redirect), URLQueryItem(name: "code_challenge", value: OAuthPKCE.challenge(verifier)), URLQueryItem(name: "code_challenge_method", value: "s256"), URLQueryItem(name: "prompt", value: "select_account")]
         guard let url = components.url else { throw AppError.validation("Alamat login tidak valid.") }
         return url
     }
@@ -209,6 +266,7 @@ actor AuthService {
         let envelope: AuthEnvelope = try await authRequest(path: "/auth/v1/token?grant_type=pkce", body: ["auth_code": code, "code_verifier": verifier])
         let value = try authSession(envelope: envelope, fallbackEmail: nil)
         guard expectedUserID == nil || value.userID == expectedUserID else { throw AppError.validation("Masuk kembali dengan akun yang sama agar perubahan perangkat tidak berpindah pemilik.") }
+        try Task.checkCancellation()
         try sessionStore.save(value)
         return value
     }

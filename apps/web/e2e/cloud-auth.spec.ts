@@ -55,6 +55,7 @@ test('enabled Google starts PKCE with the application callback', async ({ page }
   await page.route('**/auth/v1/authorize?**', async route => {
     const url = new URL(route.request().url());
     expect(url.searchParams.get('provider')).toBe('google');
+    expect(url.searchParams.get('prompt')).toBe('select_account');
     expect(url.searchParams.get('code_challenge_method')).toBe('s256');
     expect(url.searchParams.get('code_challenge')).toBeTruthy();
     expect(url.searchParams.get('redirect_to')).toBe(new URL('/', test.info().project.use.baseURL).href);

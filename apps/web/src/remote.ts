@@ -1,6 +1,7 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { assertDecimalPayload, type Snapshot, type Report } from './domain.ts';
 import { resolveCloudConfiguration } from './cloud.ts';
+import { transportError } from './transport.ts';
 
 export const cloudConfiguration = resolveCloudConfiguration(import.meta.env);
 
@@ -9,7 +10,7 @@ export function authClient(): SupabaseClient | null {
   const { url, key } = cloudConfiguration;
   return createClient(url, key, { auth: { storage: sessionStorage, storageKey: 'danarapi.auth', persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, flowType: 'pkce' } });
 }
-export const dataOperations = new Set(['update_account', 'archive_account', 'update_category', 'archive_category', 'add_review_item', 'update_review_item', 'reject_review_item', 'restore_review_item', 'merge_review_item', 'clear_review_duplicate', 'confirm_review_item', 'upsert_budget', 'request_account_deletion', 'save_merchant_rule', 'delete_merchant_rule']);
+export const dataOperations = new Set(['copy_budgets', 'set_ai_consent', 'set_timezone', 'create_support_ticket', 'update_account', 'archive_account', 'update_category', 'archive_category', 'add_review_item', 'update_review_item', 'reject_review_item', 'restore_review_item', 'merge_review_item', 'clear_review_duplicate', 'confirm_review_item', 'upsert_budget', 'request_account_deletion', 'save_merchant_rule', 'delete_merchant_rule']);
 export class RemoteRepository {
   private mutations = new Map<string, string>();
   constructor(readonly client: SupabaseClient) {}
@@ -21,12 +22,14 @@ export class RemoteRepository {
     const response = await fetch(`${cloudConfiguration.url}/functions/v1/${path}`, {
       method: 'POST', headers: { apikey: cloudConfiguration.key, authorization: `Bearer ${session.access_token}`, 'content-type': 'application/json', ...headers },
       body: body instanceof Blob ? body : JSON.stringify(body ?? {}), signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(110000)]) : AbortSignal.timeout(45000),
-    });
+    }).catch(cause => { throw transportError(cause); });
     if (!response.ok) { const error = await response.json().catch(() => ({})); if (response.status === 404 && error.code === 'NOT_FOUND') throw new Error('Layanan cloud belum tersedia. Hubungi pengelola aplikasi.'); throw new Error(`${error.message ?? 'Permintaan gagal.'}${error.code ? ` (${error.code})` : ''}${error.request_id ? ` · ${error.request_id}` : ''}`); }
     return binary ? response.blob() : response.json();
   }
   async snapshot(): Promise<Snapshot> {
     const data = await this.request('ios-data/dashboard');
+    for (const budget of data.budgets) if (budget.monthKey) budget.month = budget.monthKey;
+    for (const goal of data.goals ?? []) if (goal.targetDate) goal.targetDate = new Intl.DateTimeFormat('sv-SE', { timeZone: data.timezone ?? 'Asia/Jakarta' }).format(new Date(goal.targetDate));
     let cursor = data.nextTransactionCursor;
     const seen = new Set<string>(data.transactions.map((row: { id: string }) => row.id));
     while (cursor) {

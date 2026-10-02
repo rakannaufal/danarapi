@@ -4,6 +4,95 @@ import XCTest
 @testable import Danarapi
 
 final class DanarapiAppTests: XCTestCase {
+    func testReviewIdentityMatchesUUIDCasingWithoutFoldingOpaqueIDs() {
+        var item = ImportService.reviewFromText("TOKO\nTotal: Rp75.000")
+        XCTAssertEqual(item.id, item.id.lowercased())
+        XCTAssertTrue(item.matchesID(item.id.uppercased()))
+        XCTAssertFalse(item.matchesID(UUID().uuidString))
+        item = ReviewItem(id: "demo-Review", source: item.source, status: item.status, amount: item.amount, merchant: item.merchant, date: item.date, createdAt: item.createdAt)
+        XCTAssertTrue(item.matchesID("demo-Review"))
+        XCTAssertFalse(item.matchesID("demo-review"))
+    }
+
+    func testAcknowledgedReviewFallbackRetainsServerDraftAndAvoidsDuplicates() async throws {
+        var snapshot = try await DemoRepository().dashboard()
+        let item = ImportService.reviewFromText("TOKO\nTotal: Rp75.000")
+        var serverItem = ReviewItem(id: item.id.uppercased(), source: item.source, status: item.status, amount: item.amount, merchant: item.merchant, date: item.date, createdAt: item.createdAt)
+        serverItem.merchant.value = "Nama dari server"
+        snapshot.reviewItems = [serverItem]
+        XCTAssertFalse(snapshot.reconcileAcknowledgedReview(item))
+        XCTAssertEqual(snapshot.reviewItems.count, 1)
+        XCTAssertEqual(snapshot.reviewItems.first?.merchant.value, "Nama dari server")
+        XCTAssertTrue(snapshot.reviewItems.first?.matchesID(item.id) == true)
+    }
+
+    @MainActor
+    func testAcknowledgedReviewIsCachedWithoutAnotherDashboardRefresh() async throws {
+        var snapshot = try await DemoRepository().dashboard()
+        snapshot.reviewItems = []
+        var item = ImportService.reviewFromText("TOKO\nTotal: Rp75.000")
+        let store = try OfflineStore(inMemory: true)
+        XCTAssertTrue(snapshot.reconcileAcknowledgedReview(item))
+        try store.cache(snapshot, ownerID: "review-owner")
+        let cached = try XCTUnwrap(store.cachedSnapshot(ownerID: "review-owner"))
+        XCTAssertNotNil(cached.reviewItems.first { $0.matchesID(item.id.uppercased()) })
+        XCTAssertNil(try store.cachedSnapshot(ownerID: "another-owner"))
+        item.amount.value = "80000"
+        XCTAssertTrue(snapshot.reconcileAcknowledgedReview(item, replacingExisting: true))
+        XCTAssertEqual(snapshot.reviewItems.count, 1)
+        XCTAssertEqual(snapshot.reviewItems.first?.amount.value, "80000")
+    }
+
+    @MainActor
+    func testNewReviewAvailableImmediatelyAfterSave() async throws {
+        let suite = "id.danarapi.review.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let app = AppModel(defaults: defaults, sessionStore: KeychainSessionStore(service: suite), offlineStore: try OfflineStore(inMemory: true))
+        XCTAssertNil(app.monthlyReport)
+        await app.startDemo()
+        XCTAssertNotNil(app.monthlyReport)
+        let item = ImportService.reviewFromText("DRAFT LANGSUNG\nTotal: Rp75.000")
+        let saved = await app.addReview(item)
+        XCTAssertTrue(saved)
+        let visible = try XCTUnwrap(app.snapshot.reviewItems.first { $0.matchesID(item.id.uppercased()) })
+        XCTAssertEqual(visible.amount.value, item.amount.value)
+        XCTAssertEqual(visible.receipt, item.receipt)
+    }
+
+    @MainActor
+    func testKeyboardDismissalSkipsInputsAndRemovesWindowGesture() throws {
+        let input = UITextField(), child = UIView(), textView = UITextView()
+        input.addSubview(child)
+        XCTAssertTrue(KeyboardDismissalAnchor.isEditableTarget(input))
+        XCTAssertTrue(KeyboardDismissalAnchor.isEditableTarget(child))
+        XCTAssertTrue(KeyboardDismissalAnchor.isEditableTarget(textView))
+        XCTAssertFalse(KeyboardDismissalAnchor.isEditableTarget(UIButton()))
+        XCTAssertFalse(KeyboardDismissalAnchor.isEditableTarget(nil))
+        let container = UIView(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
+        container.clipsToBounds = true
+        input.frame = CGRect(x: 20, y: 100, width: 300, height: 44)
+        container.addSubview(input)
+        container.addSubview(UIView(frame: input.frame))
+        XCTAssertTrue(KeyboardDismissalAnchor.isEditableTarget(at: CGPoint(x: 100, y: 120), in: container))
+        XCTAssertFalse(KeyboardDismissalAnchor.isEditableTarget(at: CGPoint(x: 100, y: 40), in: container))
+        input.isHidden = true
+        XCTAssertFalse(KeyboardDismissalAnchor.isEditableTarget(at: CGPoint(x: 100, y: 120), in: container))
+        input.isHidden = false
+        input.frame.origin.y = -60
+        XCTAssertFalse(KeyboardDismissalAnchor.isEditableTarget(at: CGPoint(x: 100, y: -40), in: container))
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
+        let existing = window.gestureRecognizers?.count ?? 0
+        let anchor = KeyboardDismissalAnchor(frame: .zero)
+        window.addSubview(anchor)
+        XCTAssertEqual(window.gestureRecognizers?.count ?? 0, existing + 1)
+        let tap = try XCTUnwrap(window.gestureRecognizers?.last as? UITapGestureRecognizer)
+        XCTAssertFalse(tap.cancelsTouchesInView)
+        XCTAssertFalse(tap.delaysTouchesBegan)
+        anchor.removeFromSuperview()
+        XCTAssertEqual(window.gestureRecognizers?.count ?? 0, existing)
+    }
+
     func testDevelopmentScannerRequiresPrivateIPv4TLSAndStrongPairingMaterial() {
         let token = String(repeating: "a", count: 64), hash = String(repeating: "b", count: 64)
         let configuration = DevelopmentReceiptScanConfiguration(host: "192.168.1.20", port: "5174", token: token, certificateHash: hash)

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onBeforeUnmount } from 'vue';
+import { ref, computed, nextTick, onBeforeUnmount } from 'vue';
 import { state, demo, client, mutate, attachments, upload, message, scanReceiptImages } from '../store.ts';
 import { parseFile, parseText, fingerprint, sanitizeImage } from '../import.ts';
 import { duplicateCandidates, money, type Review } from '../domain.ts';
@@ -18,6 +18,14 @@ const receiptDetails = computed(() => Object.fromEntries(reviews.value.filter(re
   return [review.id, { validation: validateReceipt(receipt) }];
 })));
 const fileInput = ref<HTMLInputElement>();
+const cameraInput = ref<HTMLInputElement>();
+const scanMode = ref<'receipt' | 'qris'>('receipt');
+const fileAccept = ref('image/jpeg,image/png,application/pdf');
+async function chooseSource(source: 'gallery' | 'pdf') {
+  fileAccept.value = source === 'pdf' ? 'application/pdf' : 'image/jpeg,image/png';
+  await nextTick();
+  fileInput.value?.click();
+}
 const phase = ref('Membaca berkas…');
 let controller: AbortController | undefined;
 function clearPreview() { if (preview.value) URL.revokeObjectURL(preview.value.url); preview.value = undefined; }
@@ -67,6 +75,7 @@ async function importFile(event: Event) {
   importing.value = true; error.value = ''; phase.value = 'Membaca berkas…';
   try {
     let review = await parseFile(file);
+    if (scanMode.value === 'qris' && review.source !== 'qris') throw new Error('Kode QRIS belum terbaca. Pilih foto QRIS yang utuh dan jelas.');
     const existing = reviews.value.find(row => row.fingerprint === review.fingerprint);
     if (existing?.receipt) { error.value = 'Sumber yang sama sudah ada di Perlu Ditinjau.'; return; }
     if (needsReceiptScan(review)) review = await extract(file, existing ?? review);
@@ -116,11 +125,13 @@ async function attachmentFile(review: Review): Promise<File> {
 </script>
 <template>
   <section class="import-panel card">
-    <div class="section-heading"><div><h2>Impor bukti</h2></div><span class="icon-tile sun"><Icon name="upload" /></span></div>
-    <div class="segmented compact"><button :class="{ active: tab === 'file' }" :disabled="importing" @click="tab = 'file'">Unggah berkas</button><button :class="{ active: tab === 'text' }" :disabled="importing" @click="tab = 'text'">Tempel teks</button></div>
+    <div class="section-heading"><div><h2>Impor bukti</h2></div><div class="segmented compact scan-mode" aria-label="Jenis scan"><button :class="{ active: scanMode === 'receipt' }" :aria-pressed="scanMode === 'receipt'" :disabled="importing" @click="scanMode = 'receipt'; error = ''"><Icon name="file" :size="17" />Struk</button><button :class="{ active: scanMode === 'qris' }" :aria-pressed="scanMode === 'qris'" :disabled="importing" @click="scanMode = 'qris'; tab = 'file'; error = ''"><Icon name="qris" :size="17" />QRIS</button></div></div>
+    <div v-if="scanMode === 'receipt'" class="segmented compact import-source-tabs"><button :class="{ active: tab === 'file' }" :aria-pressed="tab === 'file'" :disabled="importing" @click="tab = 'file'">Unggah berkas</button><button :class="{ active: tab === 'text' }" :aria-pressed="tab === 'text'" :disabled="importing" @click="tab = 'text'">Tempel teks</button></div>
     <template v-if="tab === 'file'">
-      <input ref="fileInput" class="sr-only" type="file" accept="image/jpeg,image/png,application/pdf" aria-label="Unggah gambar atau PDF" @change="importFile">
-      <button class="upload-zone" :disabled="importing" @click="fileInput?.click()"><Icon name="upload" :size="28" /><strong>{{ importing ? phase : 'Pilih gambar atau PDF' }}</strong><span>JPEG, PNG, PDF · Maks. 5 MB</span></button>
+      <input ref="fileInput" class="sr-only" type="file" :accept="fileAccept" aria-label="Unggah gambar atau PDF" @change="importFile">
+      <input ref="cameraInput" class="sr-only" type="file" accept="image/jpeg,image/png" capture="environment" aria-label="Ambil foto struk atau QRIS" @change="importFile">
+      <div class="scan-source-grid" :class="{ 'qris-sources': scanMode === 'qris' }"><button class="scan-source scan-source-camera" :disabled="importing" @click="cameraInput?.click()"><span class="icon-tile sky"><Icon name="camera" :size="25" /></span><strong>Ambil foto</strong><span>Kamera perangkat</span></button><button class="scan-source" :disabled="importing" @click="chooseSource('gallery')"><span class="icon-tile sky"><Icon name="gallery" :size="25" /></span><strong>Galeri</strong><span>JPEG atau PNG</span></button><button v-if="scanMode === 'receipt'" class="scan-source" :disabled="importing" @click="chooseSource('pdf')"><span class="icon-tile sky"><Icon name="file" :size="25" /></span><strong>PDF</strong><span>Pilih berkas struk</span></button></div>
+      <p class="scan-file-hint fine-print">{{ scanMode === 'receipt' ? 'JPEG, PNG, PDF' : 'Foto QRIS · JPEG, PNG' }} · Maks. 5 MB</p>
     </template>
     <form v-else class="entry-form" @submit.prevent="importText"><label>Teks bukti<textarea v-model="text" rows="4" maxlength="200000" required placeholder="TOKO DEMO&#10;Total: Rp75.000&#10;30/09/2026"></textarea></label><button class="secondary" :disabled="importing || !text.trim()">{{ importing ? 'Membaca…' : 'Masukkan ke Perlu Ditinjau' }}</button></form>
     <p v-if="importing" role="status">{{ phase }} <button v-if="controller" class="text-button" @click="controller.abort()">Batalkan scan</button></p>

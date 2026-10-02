@@ -39,7 +39,8 @@ struct RupiahTextField: UIViewRepresentable {
     func updateUIView(_ field: UITextField, context: Context) {
         context.coordinator.parent = self
         field.isEnabled = isEnabled
-        field.placeholder = placeholder
+        field.textColor = .label
+        field.attributedPlaceholder = NSAttributedString(string: placeholder, attributes: [.foregroundColor: UIColor.secondaryLabel])
         field.accessibilityLabel = accessibilityName ?? placeholder
         field.accessibilityIdentifier = accessibilityID
         let keyboardType: UIKeyboardType = signed ? .numbersAndPunctuation : .numberPad
@@ -62,7 +63,11 @@ struct RupiahTextField: UIViewRepresentable {
         func textFieldDidBeginEditing(_ textField: UITextField) { if let focusID = parent.focusID { parent.focus?.wrappedValue = focusID } }
         func textFieldDidEndEditing(_ textField: UITextField) {
             textField.text = MoneyInputFormat.display(parent.text, signed: parent.signed)
-            if parent.focus?.wrappedValue == parent.focusID { parent.focus?.wrappedValue = nil }
+            let focusID = parent.focusID
+            DispatchQueue.main.async { [weak self, weak textField] in
+                guard let self, let textField, !textField.isFirstResponder, self.parent.focus?.wrappedValue == focusID else { return }
+                self.parent.focus?.wrappedValue = nil
+            }
         }
 
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -89,19 +94,29 @@ struct RupiahTextField: UIViewRepresentable {
 struct MoneyField: View {
     let title: String
     @Binding var value: String
+    var focus: FocusState<String?>.Binding? = nil
+    var focusID = "amount"
+    @FocusState private var focusedField: String?
+    private var activeFocus: FocusState<String?>.Binding { focus ?? $focusedField }
     var body: some View {
         VStack(alignment: .leading, spacing: 7) {
-            Text(title).font(.caption.weight(.semibold)).foregroundStyle(Color.danarapiMuted)
+            Text(title).font(.subheadline.weight(.semibold)).foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
             HStack(alignment: .firstTextBaseline, spacing: 6) {
                 Text("Rp").font(.title2.bold()).foregroundStyle(Color.danarapiMuted)
-                RupiahTextField("0", text: $value, large: true, accessibilityName: title, accessibilityID: "money.\(title)")
+                RupiahTextField("0", text: $value, large: true, focus: activeFocus, focusID: focusID, accessibilityName: title, accessibilityID: "money.\(title)")
+                    .focused(activeFocus, equals: focusID)
                     .keyboardType(.numberPad)
                     .font(.system(.largeTitle, design: .default).bold().monospacedDigit())
                     .accessibilityLabel(title)
                     .accessibilityIdentifier("money.\(title)")
             }
-            .padding(16).background(Color.danarapiSurface, in: RoundedRectangle(cornerRadius: 16))
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color.danarapiSurface, in: RoundedRectangle(cornerRadius: 16))
+        .contentShape(RoundedRectangle(cornerRadius: 16))
+        .onTapGesture { activeFocus.wrappedValue = focusID }
     }
 }
 

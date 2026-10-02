@@ -64,8 +64,9 @@ struct SettingsView: View {
                     Label("Danarapi tidak memproses pembayaran", systemImage: "shield.lefthalf.filled")
                     Text("Saldo adalah catatan Anda. Bukti impor perlu diperiksa sebelum disimpan.")
                         .font(.caption).foregroundStyle(Color.danarapiMuted)
-                    LabeledContent("Zona waktu", value: "Asia/Jakarta")
+                    Picker("Zona waktu", selection: Binding(get: { app.timezone }, set: { value in Task { _ = await app.updateTimezone(value) } })) { ForEach(["Asia/Jakarta", "Asia/Makassar", "Asia/Jayapura", "UTC"], id: \.self) { Text($0).tag($0) } }
                 }
+                Section("Tentang & bantuan") { ForEach(ProductCatalog.links, id: \.0) { identifier, title in NavigationLink(title) { ProductPageView(pageID: identifier) } } }
                 Section {
                     Button(app.mode == .demo ? "Keluar dari Demo" : "Keluar akun", role: .destructive) { showLogout = true }
                 }

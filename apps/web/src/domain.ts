@@ -18,7 +18,7 @@ export interface Budget { id: string; categoryID: string; month: string; limitAm
 export interface SavingsGoal { id: string; name: string; targetAmount: string; savedAmount: string; openingAmount?: string; targetDate: string | null; version: number }
 export interface MerchantRule { id: string; matchType: string; normalizedPattern: string; categoryID: string; priority: number; version: number }
 export interface Overview { accountBalance: string; receivables: string; payables: string; netPosition: string; personalIncome: string; personalExpense: string }
-export interface Snapshot { accounts: Account[]; categories: Category[]; transactions: Transaction[]; transfers: Transfer[]; splitBills: Bill[]; reviewItems: Review[]; budgets: Budget[]; goals?: SavingsGoal[]; merchantRules: MerchantRule[]; overview: Overview; syncedAt?: string | null }
+export interface Snapshot { accounts: Account[]; categories: Category[]; transactions: Transaction[]; transfers: Transfer[]; splitBills: Bill[]; reviewItems: Review[]; budgets: Budget[]; goals?: SavingsGoal[]; merchantRules: MerchantRule[]; overview: Overview; syncedAt?: string | null; timezone?: string }
 export interface Report { personalIncome: string; personalExpense: string; categories: { categoryID: string; amount: string }[]; allocations?: { id: string; name: string; amount: string }[] }
 export interface Filter { query: string; kind: string; account: string; category: string; from: string; to: string }
 export interface ListRow { id: string; kind: string; amount: string; accountID: string; categoryID: string; goalID?: string | null; occurredAt: string; merchant?: string; note?: string; version: number }

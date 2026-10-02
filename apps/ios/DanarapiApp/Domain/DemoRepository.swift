@@ -84,11 +84,25 @@ actor DemoRepository: FinanceRepository {
             let name = categories.first(where: { $0.id == categoryID })?.name ?? "Kategori"
             return ReportAllocation(id: "category:\(categoryID)", name: budgetIDs.contains(categoryID) ? "Anggaran · \(name)" : name, amount: amount)
         }
+        var cash: [String: (incoming: Int64, outgoing: Int64)] = [:]
+        func addCash(_ accountID: String, _ amount: Int64, _ date: Date) {
+            guard date >= startDate && date < end else { return }
+            var totals = cash[accountID] ?? (0, 0)
+            if amount > 0 { totals.incoming += amount } else { totals.outgoing -= amount }
+            cash[accountID] = totals
+        }
+        for transaction in transactions where !transaction.deleted { addCash(transaction.accountID, transaction.kind == .income ? transaction.amount : -transaction.amount, transaction.occurredAt) }
+        for transfer in transfers where !transfer.deleted { addCash(transfer.fromAccountID, -transfer.amount, transfer.occurredAt); addCash(transfer.toAccountID, transfer.amount, transfer.occurredAt) }
+        for bill in splitBills where !bill.deleted {
+            if case let .selfPaid(accountID) = bill.payer { addCash(accountID, -bill.total, bill.occurredAt) }
+            for event in bill.settlements where !event.reversed { addCash(event.accountID, event.direction == .incoming ? event.amount : -event.amount, event.occurredAt) }
+        }
         return ReportSummary(
             personalIncome: ordinaryIncome + forgiveness,
             personalExpense: personalExpense,
             categories: categoryTotals.map { ReportCategoryAmount(categoryID: $0.key, amount: $0.value) },
-            allocations: allocations.sorted { $0.amount == $1.amount ? $0.id < $1.id : $0.amount > $1.amount }
+            allocations: allocations.sorted { $0.amount == $1.amount ? $0.id < $1.id : $0.amount > $1.amount },
+            cashAccounts: accounts.map { account in let totals = cash[account.id] ?? (0, 0); return ReportAccountCash(accountID: account.id, incoming: totals.0, outgoing: totals.1, net: totals.0 - totals.1) }
         )
     }
 

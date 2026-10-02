@@ -5,79 +5,93 @@ struct OnboardingView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var page = 0
 
-    private let content = [
-        ("Uangmu lebih mudah dipahami", "Catat transaksi. Atur anggaran. Capai target Anda.", "wallet.pass.fill", Color.danarapiMint),
-        ("Periksa sebelum disimpan", "Impor foto, PDF, atau teks. Bukti membantu pencatatan, bukan pembayaran.", "doc.text.magnifyingglass", Color.danarapiSky),
-        ("Coba tanpa akun", "Jelajahi Demo dengan data contoh. Tidak perlu mendaftar.", "sparkles", Color.danarapiSun)
-    ]
+    private var content: [ProductCatalog.OnboardingStep] { ProductCatalog.bundled?.onboarding ?? [] }
+    private var lastPage: Bool { content.isEmpty || page >= content.count - 1 }
 
     var body: some View {
-        VStack(spacing: 24) {
-            TabView(selection: $page) {
-                ForEach(content.indices, id: \.self) { index in
-                    VStack(spacing: 28) {
-                        Spacer()
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 42, style: .continuous).fill(content[index].3).frame(width: 190, height: 190)
-                            Image(systemName: content[index].2).font(.system(size: 70, weight: .medium)).foregroundStyle(Color.danarapiInk)
+        VStack(spacing: 20) {
+            GeometryReader { geometry in
+                TabView(selection: $page) {
+                    ForEach(content.indices, id: \.self) { index in
+                        ScrollView {
+                            VStack(spacing: 24) {
+                                Image(content[index].image).renderingMode(.original).resizable().scaledToFit()
+                                    .frame(width: min(max(geometry.size.width - 48, 0), 300), height: min(geometry.size.height * 0.55, 260))
+                                    .accessibilityHidden(true)
+                                Text(content[index].title).font(.title.bold()).foregroundStyle(Color.danarapiInk).multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
+                                Text(content[index].description).font(.body).foregroundStyle(Color.danarapiMuted).multilineTextAlignment(.center).lineSpacing(4).fixedSize(horizontal: false, vertical: true)
+                            }
+                            .padding(24).frame(maxWidth: .infinity)
                         }
-                        Text(content[index].0).font(.largeTitle.bold()).foregroundStyle(Color.danarapiInk).multilineTextAlignment(.center)
-                        Text(content[index].1).font(.body).foregroundStyle(Color.danarapiMuted).multilineTextAlignment(.center).lineSpacing(4)
-                        Spacer()
+                        .tag(index)
                     }
-                    .padding(.horizontal, 28)
-                    .tag(index)
                 }
+                .tabViewStyle(.page(indexDisplayMode: .never))
             }
-            .tabViewStyle(.page(indexDisplayMode: .always))
-
-            VStack(spacing: 12) {
-                Button(page == content.count - 1 ? "Buat akun" : "Lanjut") {
-                    if page < content.count - 1 {
-                        if reduceMotion { page += 1 } else { withAnimation(.easeOut(duration: DesignTokens.motion)) { page += 1 } }
-                    }
-                    else { app.onboardingCompleted = true }
+            HStack(spacing: 8) {
+                ForEach(content.indices, id: \.self) { index in
+                    Capsule().fill(index == page ? Color.danarapiPrimary : Color.danarapiBorder).frame(width: index == page ? 24 : 8, height: 8)
                 }
-                .buttonStyle(PrimaryButtonStyle())
-                Button("Lewati tur") { app.onboardingCompleted = true }
-                    .frame(minHeight: 44)
-                Button("Coba Demo") { Task { await app.startDemo() } }
-                    .font(.headline).frame(minHeight: 44)
+            }.accessibilityElement(children: .ignore).accessibilityLabel("Langkah \(page + 1) dari \(content.count)")
+            VStack(spacing: 12) {
+                HStack(spacing: 12) {
+                    if page > 0 {
+                        Button("Kembali") { if reduceMotion { page -= 1 } else { withAnimation(.easeOut(duration: DesignTokens.motion)) { page -= 1 } } }.buttonStyle(.bordered).frame(minHeight: 44)
+                    }
+                    Button(lastPage ? "Mulai mencatat" : "Lanjut") {
+                        if !lastPage {
+                            if reduceMotion { page += 1 } else { withAnimation(.easeOut(duration: DesignTokens.motion)) { page += 1 } }
+                        }
+                        else { app.completeOnboarding() }
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                }
+                Button { app.completeOnboarding() } label: {
+                    Text("Lewati tur")
+                        .foregroundStyle(Color.danarapiPrimary)
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                ProductLinksView()
             }
             .padding(.horizontal, 24).padding(.bottom, 20)
         }
+        .background { BrandBackgroundView().ignoresSafeArea() }
     }
 }
 
 struct AuthView: View {
     @Environment(AppModel.self) private var app
-    @State private var isAuthenticating = false
+    private var welcome: ProductCatalog.Welcome? { ProductCatalog.bundled?.welcome }
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                Spacer(minLength: 40)
-                Image(systemName: "circle.hexagongrid.fill").font(.system(size: 44)).foregroundStyle(Color.danarapiPrimary)
+            VStack(spacing: 28) {
+                Spacer(minLength: 24)
+                BrandIdentityView().padding(.bottom, 8)
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Selamat datang").font(.largeTitle.bold()).foregroundStyle(Color.danarapiInk)
-                    Text(app.requiresReauthentication ? "Masuk kembali dengan akun yang sama." : "Satu akun untuk semua catatanmu.").foregroundStyle(Color.danarapiMuted)
-                }
+                    Text(welcome?.headline ?? "Keuangan rapi,\nhari lebih tenang.").font(.largeTitle.bold()).foregroundStyle(Color.danarapiInk).frame(maxWidth: .infinity)
+                    Text(app.requiresReauthentication ? welcome?.reauthenticationMessage ?? "Masuk kembali dengan akun yang sama." : welcome?.subtitle ?? "Catat, rencanakan, dan bagi tagihan dengan mudah.").foregroundStyle(Color.danarapiMuted).frame(maxWidth: .infinity)
+                }.multilineTextAlignment(.center)
                 VStack(spacing: 12) {
-                    ProviderLoginButton(isBusy: isAuthenticating) { authenticate() }
-                }.disabled(isAuthenticating || app.isLoading || !app.cloudReceiptScanConfigured)
+                    ProviderLoginButton(isBusy: app.isAuthenticating) { app.startGoogleSignIn() }
+                }.disabled(app.isAuthenticating || app.isLoading || !app.cloudReceiptScanConfigured)
+                if app.isAuthenticating {
+                    Button("Batalkan login") { app.cancelSignIn() }
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .accessibilityIdentifier("auth.cancel")
+                }
                 if !app.cloudReceiptScanConfigured { Text("Login belum tersedia. Coba Demo tanpa akun.").font(.caption).foregroundStyle(Color.danarapiMuted) }
                 if !app.requiresReauthentication {
-                    Button("Coba Demo tanpa akun") { Task { await app.startDemo() } }.frame(maxWidth: .infinity, minHeight: 44).disabled(isAuthenticating)
+                    Button("Coba Demo tanpa akun") { Task { await app.startDemo() } }.frame(maxWidth: .infinity, minHeight: 44).disabled(app.isAuthenticating)
                 }
-                Text("Danarapi mencatat keuangan, bukan memproses pembayaran.").font(.caption).foregroundStyle(Color.danarapiMuted)
+                Text(welcome?.disclaimer ?? "Pencatat keuangan, bukan layanan pembayaran.").font(.caption).foregroundStyle(Color.danarapiMuted).multilineTextAlignment(.center)
+                ProductLinksView().frame(maxWidth: .infinity)
             }.padding(24)
-        }.background(Color.danarapiCanvas)
+        }.background { BrandBackgroundView().ignoresSafeArea() }
     }
 
-    private func authenticate() {
-        isAuthenticating = true
-        Task { _ = await app.signIn(provider: "google"); isAuthenticating = false }
-    }
 }
 
 private struct ProviderLoginButton: View {

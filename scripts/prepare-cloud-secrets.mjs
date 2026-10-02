@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 
-const [source, destination, requestedOrigin = 'http://127.0.0.1:5173'] = process.argv.slice(2);
+const [source, destination, requestedOrigin = 'https://danarapi.vercel.app'] = process.argv.slice(2);
 if (!source || !destination) throw new Error('Gunakan file konfigurasi server dan tujuan sementara.');
 const env = {};
 for (const line of (await readFile(source, 'utf8')).split(/\r?\n/)) {
@@ -29,5 +29,9 @@ const secrets = {
   ALLOWED_ORIGIN: origin.origin,
   ALLOWED_ORIGINS: [...new Set([origin.origin, 'http://127.0.0.1:5173', 'http://localhost:5173'])].join(','),
 };
+if (env.SUPPORT_EMAIL) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(env.SUPPORT_EMAIL)) throw new Error('SUPPORT_EMAIL tidak valid.');
+  secrets.SUPPORT_EMAIL = env.SUPPORT_EMAIL;
+}
 await writeFile(destination, Object.entries(secrets).map(([name, value]) => `${name}=${value}`).join('\n') + '\n', { mode: 0o600 });
 console.log(`Konfigurasi model ${model} valid. Key tidak ditampilkan.`);

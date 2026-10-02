@@ -9,19 +9,27 @@ final class AppModel {
     private(set) var mode: AppMode = .signedOut
     private(set) var snapshot = DashboardSnapshot(accounts: [], categories: [], transactions: [], transfers: [], splitBills: [], reviewItems: [], merchantRules: [], budgets: [], overview: .zero, nextTransactionCursor: nil, syncedAt: nil)
     private(set) var isLoading = false
-    var monthlyReport: ReportSummary { snapshot.reportMonth == MonthPeriod.key(.now) ? snapshot.monthlyReport ?? .zero : .zero }
+    private(set) var isStarting = true
+    private(set) var hasLoadedDashboard = false
+    private(set) var dashboardError: String?
+    private(set) var monthlyReportError: String?
+    var monthlyReport: ReportSummary? { snapshot.reportMonth == MonthPeriod.key(.now) ? snapshot.monthlyReport : nil }
     private(set) var isOnline = true
     private(set) var pendingOutboxCount = 0
     private(set) var isLoadingMoreTransactions = false
     private(set) var isSyncing = false
     private(set) var outboxChanges: [OutboxRecord] = []
     private(set) var requiresReauthentication = false
+    private(set) var isAuthenticating = false
     private(set) var lastRejectedReview: ReviewItem?
     private(set) var session: AuthSession?
     var errorMessage: String?
     var toastMessage: String?
     var isLocked = false
     var privacyCoverVisible = false
+    var productPage: ProductRoute?
+    private(set) var aiConsent: AIConsentState?
+    var timezone: String { snapshot.timezone ?? defaults.string(forKey: "financeTimezone") ?? "Asia/Jakarta" }
 
     var theme: ThemePreference {
         didSet { defaults.set(theme.rawValue, forKey: "theme") }
@@ -32,8 +40,27 @@ final class AppModel {
     var appLockEnabled: Bool {
         didSet { defaults.set(appLockEnabled, forKey: "appLockEnabled") }
     }
+    private var onboardingRevision = 0
+    private var demoOnboardingCompleted = false
     var onboardingCompleted: Bool {
-        didSet { defaults.set(onboardingCompleted, forKey: "onboardingCompleted") }
+        _ = onboardingRevision
+        if mode == .demo { return demoOnboardingCompleted }
+        guard mode == .authenticated, let userID = session?.userID else { return true }
+        return hasCompletedOnboarding(userID: userID)
+    }
+
+    func hasCompletedOnboarding(userID: String) -> Bool {
+        defaults.bool(forKey: "onboardingCompleted.\(userID)")
+    }
+
+    func completeOnboarding() {
+        if mode == .demo {
+            demoOnboardingCompleted = true
+            return
+        }
+        guard mode == .authenticated, let userID = session?.userID else { return }
+        defaults.set(true, forKey: "onboardingCompleted.\(userID)")
+        onboardingRevision += 1
     }
 
     let network = NetworkMonitor()
@@ -45,7 +72,14 @@ final class AppModel {
     private var configuration: SupabaseConfiguration?
     private var recoverySession: AuthSession?
     private let oauthPresenter = OAuthPresenter()
+    private var signInTask: Task<Void, Never>?
     private var outboxRetryTask: Task<Void, Never>?
+    private var didStart = false
+    private var dashboardLoadVersion = 0
+
+    var showsStartupScreen: Bool {
+        isStarting || (mode != .signedOut && !requiresReauthentication && !hasLoadedDashboard && (isLoading || dashboardError == nil))
+    }
 
     init(
         defaults: UserDefaults = .standard,
@@ -58,7 +92,6 @@ final class AppModel {
         theme = ThemePreference(rawValue: defaults.string(forKey: "theme") ?? "system") ?? .system
         hideAmounts = defaults.bool(forKey: "hideAmounts")
         appLockEnabled = defaults.bool(forKey: "appLockEnabled")
-        onboardingCompleted = defaults.bool(forKey: "onboardingCompleted")
         repository = RepositoryFactory.demo()
         configuration = SupabaseConfiguration.fromBundle()
         if let configuration { authService = AuthService(configuration: configuration, sessionStore: sessionStore) }
@@ -87,10 +120,17 @@ final class AppModel {
     var incomeCategories: [Category] { snapshot.categories.filter { $0.kind == .income && !$0.archived } }
 
     func start() async {
+        guard !didStart else { return }
+        didStart = true
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--ui-testing-startup") { return }
+        #endif
+        defer { isStarting = false }
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("--ui-testing-auth") {
-            onboardingCompleted = true
             mode = .signedOut
+            hasLoadedDashboard = false
+            dashboardError = nil
             return
         }
         #endif
@@ -114,30 +154,53 @@ final class AppModel {
 
     func startDemo() async {
         guard mode != .authenticated else { return }
+        demoOnboardingCompleted = false
         repository = RepositoryFactory.demo()
         mode = .demo
         session = nil
-        onboardingCompleted = true
         await refresh()
     }
 
+    func startGoogleSignIn() {
+        guard signInTask == nil, !isAuthenticating else { return }
+        signInTask = Task { [weak self] in
+            guard let self else { return }
+            defer { self.signInTask = nil }
+            _ = await self.signIn(provider: "google")
+        }
+    }
+
+    func cancelSignIn() {
+        signInTask?.cancel()
+        oauthPresenter.cancel()
+    }
+
     func signIn(provider: String) async -> Bool {
+        guard !isAuthenticating else { return false }
         guard let authService, let configuration else { errorMessage = "Login belum dikonfigurasi."; return false }
+        isAuthenticating = true
+        errorMessage = nil
+        dashboardLoadVersion += 1
+        pauseOutboxRetry()
+        defer { isAuthenticating = false }
         do {
+            try Task.checkCancellation()
             try await authService.ensureOAuthProvider(provider)
+            try Task.checkCancellation()
             let verifier = try OAuthPKCE.verifier()
             let url = try await authService.oauthURL(provider: provider, verifier: verifier)
             let callback = try await oauthPresenter.authenticate(url: url)
+            try Task.checkCancellation()
             return await run {
                 let value = try await authService.finishOAuth(callback: callback, verifier: verifier, expectedUserID: mode == .authenticated ? session?.userID : nil)
                 session = value
                 repository = RepositoryFactory.remote(configuration: configuration, sessionStore: sessionStore)
                 mode = .authenticated
-                onboardingCompleted = true
                 requiresReauthentication = false
                 try await loadDashboard()
             }
         } catch is CancellationError { return false }
+        catch let error as URLError where error.code == .cancelled { return false }
         catch { present(error); return false }
     }
 
@@ -151,7 +214,6 @@ final class AppModel {
             session = value
             repository = RepositoryFactory.remote(configuration: configuration, sessionStore: sessionStore)
             mode = .authenticated
-            onboardingCompleted = true
             requiresReauthentication = false
             try await loadDashboard()
         }
@@ -168,7 +230,6 @@ final class AppModel {
             session = try await authService.verify(email: email, code: code)
             repository = RepositoryFactory.remote(configuration: configuration, sessionStore: sessionStore)
             mode = .authenticated
-            onboardingCompleted = true
             try await loadDashboard()
         }
     }
@@ -211,6 +272,10 @@ final class AppModel {
             try offlineStore.clear(ownerID: ownerID)
             sessionStore.clear()
             session = nil
+            aiConsent = nil
+            AIConsentPresenter.cancel()
+            defaults.removeObject(forKey: "financeTimezone")
+            UserDefaults.standard.removeObject(forKey: "financeTimezone")
             mode = .signedOut
             isLocked = false
             requiresReauthentication = false
@@ -228,27 +293,34 @@ final class AppModel {
     func resetDemo() async { _ = await mutate(success: "Data contoh direset.") { try await repository.resetDemo() } }
 
     func refresh() async {
-        guard mode != .signedOut else { return }
+        guard mode != .signedOut, !isAuthenticating, !requiresReauthentication else { return }
         let requestedOwner = ownerID
         let requestedMode = mode
+        var requestedVersion = dashboardLoadVersion
         isOnline = network.isOnline
         isLoading = true
+        dashboardError = nil
         defer { isLoading = false }
         do {
             if mode == .authenticated && !isOnline {
-                if let cached = try offlineStore.cachedSnapshot(ownerID: ownerID) { snapshot = cached }
+                guard let cached = try offlineStore.cachedSnapshot(ownerID: ownerID) else { throw AppError.validation("Hubungkan internet untuk memuat catatan pertama kali.") }
+                snapshot = cached
+                adoptTimezone(cached.timezone)
+                hasLoadedDashboard = true
                 try updateOfflineProjection()
                 return
             }
+            requestedVersion = dashboardLoadVersion + 1
             try await loadDashboard()
             guard ownerID == requestedOwner, mode == requestedMode else { return }
             if mode == .authenticated {
                 await syncOutbox()
             }
         } catch {
-            guard ownerID == requestedOwner, mode == requestedMode else { return }
+            guard ownerID == requestedOwner, mode == requestedMode, dashboardLoadVersion == requestedVersion else { return }
+            guard !isAuthenticating, !requiresReauthentication else { return }
             if mode == .authenticated {
-                if let cached = try? offlineStore.cachedSnapshot(ownerID: ownerID) { snapshot = cached }
+                if let cached = try? offlineStore.cachedSnapshot(ownerID: ownerID) { snapshot = cached; adoptTimezone(cached.timezone); hasLoadedDashboard = true }
                 try? updateOfflineProjection()
             }
             present(error)
@@ -273,6 +345,20 @@ final class AppModel {
             present(error)
         }
     }
+    func ensureTransaction(id: String) async throws {
+        if snapshot.transactions.contains(where: { $0.id == id }) { return }
+        let requestedOwner = ownerID
+        let value = try await repository.transaction(id: id)
+        guard requestedOwner == ownerID else { throw AppError.validation("Akun berubah.") }
+        if !snapshot.transactions.contains(where: { $0.id == id }) { snapshot.transactions.append(value) }
+    }
+    func planningHistory(_ request: PlanningHistoryRequest) async throws -> PlanningHistoryPage {
+        let requestedOwner = ownerID
+        let value = try await repository.planningHistory(request)
+        guard requestedOwner == ownerID else { throw AppError.validation("Akun berubah.") }
+        return value
+    }
+    func copyBudgets(from: Date, to: Date) async -> Bool { await onlineMutation { try await repository.copyBudgets(from: from, to: to) } }
 
     func report(since startDate: Date, until endDate: Date? = nil) async -> ReportSummary? {
         let requestedOwner = ownerID
@@ -298,12 +384,69 @@ final class AppModel {
     func scanReceipt(images: [ReceiptScanImage]) async throws -> ReceiptScanResponse {
         if mode == .demo, ProcessInfo.processInfo.arguments.contains("--local-receipt-scan") {
             guard let scanner = DevelopmentReceiptScanConfiguration.bundled else { throw AppError.validation("Scanner pengembangan belum dikonfigurasi.") }
+            if aiConsent?.granted != true || aiConsent?.policyVersion != ProductCatalog.policyVersion {
+                guard await AIConsentPresenter.request() else { throw AppError.validation("Pengiriman AI dibatalkan.") }
+                try Task.checkCancellation()
+                aiConsent = AIConsentState(granted: true,policyVersion: ProductCatalog.policyVersion,updatedAt: .now)
+            }
+            try Task.checkCancellation()
             return try await scanner.scan(images)
         }
         guard configuration != nil else { throw AppError.validation("Layanan scan cloud belum dikonfigurasi. Foto tetap tersedia.") }
         guard mode == .authenticated else { throw AppError.validation("Masuk akun untuk membaca struk melalui layanan cloud.") }
         guard network.isOnline else { throw AppError.validation("Hubungkan internet untuk membaca struk. Foto tetap tersedia.") }
+        let requestedOwner = ownerID
+        let consent = try await refreshAIConsent()
+        if !(consent.granted && consent.policyVersion == ProductCatalog.policyVersion) {
+            guard await AIConsentPresenter.request() else { throw AppError.validation("Pengiriman AI dibatalkan. Isi manual tetap tersedia.") }
+            try Task.checkCancellation()
+            guard requestedOwner == ownerID, mode == .authenticated else { throw AppError.validation("Akun berubah. Coba kembali.") }
+            try await setAIConsent(true)
+        }
+        try Task.checkCancellation()
+        guard requestedOwner == ownerID, mode == .authenticated else { throw AppError.validation("Akun berubah. Coba kembali.") }
         return try await repository.scanReceipt(images: images)
+    }
+    func refreshAIConsent() async throws -> AIConsentState {
+        let requestedOwner = ownerID
+        let result = try await repository.aiConsentState()
+        guard requestedOwner == ownerID else { throw AppError.validation("Akun berubah.") }
+        aiConsent = result
+        return result
+    }
+    func setAIConsent(_ granted: Bool) async throws {
+        guard mode == .authenticated else { throw AppError.validation("Masuk untuk mengubah persetujuan AI.") }
+        let requestedOwner = ownerID
+        try await repository.setAIConsent(granted: granted, policyVersion: ProductCatalog.policyVersion)
+        guard requestedOwner == ownerID else { throw AppError.validation("Akun berubah.") }
+        aiConsent = AIConsentState(granted: granted, policyVersion: ProductCatalog.policyVersion, updatedAt: .now)
+    }
+    func updateTimezone(_ value: String) async -> Bool {
+        guard ["Asia/Jakarta", "Asia/Makassar", "Asia/Jayapura", "UTC"].contains(value) else { return false }
+        return await onlineMutation {
+            try await repository.setTimezone(value)
+            defaults.set(value, forKey: "financeTimezone")
+            UserDefaults.standard.set(value, forKey: "financeTimezone")
+            snapshot.timezone = value
+        }
+    }
+    func acknowledgeRetention() async throws { try await repository.acknowledgeRetention() }
+    func supportTickets() async throws -> [SupportTicket] { try await repository.supportTickets() }
+    func reportResult(since startDate: Date, until endDate: Date) async throws -> ReportSummary {
+        let requestedOwner = ownerID
+        let value = try await repository.report(since: startDate, until: endDate)
+        guard requestedOwner == ownerID else { throw AppError.validation("Akun berubah.") }
+        return value
+    }
+    func sendSupportTicket(id: String, topic: String, description: String, requestID: String?) async throws { try await repository.sendSupportTicket(id: id, topic: topic, description: description, requestID: requestID) }
+    func productInfo() async throws -> ProductInfo {
+        guard let configuration else { throw AppError.validation("Layanan belum dikonfigurasi.") }
+        var request = URLRequest(url: try configuration.endpoint("/functions/v1/product-info"))
+        request.setValue(configuration.anonKey, forHTTPHeaderField: "apikey")
+        request.timeoutInterval = 12
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw AppError.validation("Status layanan belum dapat diperiksa.") }
+        return try JSONDecoder.danarapi.decode(ProductInfo.self, from: data)
     }
     var cloudReceiptScanConfigured: Bool { configuration != nil }
     @discardableResult func updateAccount(_ account: FinancialAccount) async -> Bool { await mutate { try await repository.updateAccount(account) } }
@@ -460,7 +603,8 @@ final class AppModel {
         guard mode == .demo || network.isOnline else { present(AppError(code: "REQUIRES_ONLINE", message: "Draft lokal dapat dibuat, tetapi unggah lampiran memerlukan internet pada R1.", requestID: nil, details: [:])); return false }
         var value = item
         value.duplicateCandidateID = ImportService.duplicateCandidate(for: value, transactions: snapshot.transactions)
-        return await mutate { try await repository.addReviewItem(value, attachment: attachment) }
+        let requestedRepository = repository
+        return await persistReview(value) { try await requestedRepository.addReviewItem(value, attachment: attachment) }
     }
 
     func rejectReview(_ item: ReviewItem) async {
@@ -471,7 +615,10 @@ final class AppModel {
         if await mutate(success: "Item dikembalikan.", operation: { try await repository.restoreReviewItem(id: item.id) }) { lastRejectedReview = nil }
     }
     func clearReviewUndo() { lastRejectedReview = nil }
-    func updateReview(_ item: ReviewItem) async -> Bool { await mutate { try await repository.updateReviewItem(item) } }
+    func updateReview(_ item: ReviewItem) async -> Bool {
+        let requestedRepository = repository
+        return await persistReview(item) { try await requestedRepository.updateReviewItem(item) }
+    }
     func confirmReview(_ item: ReviewItem, transaction: TransactionDraft) async -> Bool { await mutate { try await repository.confirmReviewItem(id: item.id, transaction: transaction) } }
     func mergeReview(_ item: ReviewItem, into transactionID: String) async -> Bool { await mutate { try await repository.mergeReviewItem(id: item.id, into: transactionID) } }
     func clearReviewDuplicate(_ item: ReviewItem) async -> Bool { await mutate(success: "Ditandai bukan duplikat.") { try await repository.clearReviewDuplicate(id: item.id) } }
@@ -495,6 +642,8 @@ final class AppModel {
             sessionStore.clear()
             session = nil
             mode = .signedOut
+            hasLoadedDashboard = false
+            dashboardError = nil
             repository = RepositoryFactory.demo()
             snapshot = DashboardSnapshot(accounts: [], categories: [], transactions: [], transfers: [], splitBills: [], reviewItems: [], merchantRules: [], budgets: [], overview: .zero, nextTransactionCursor: nil, syncedAt: nil)
             toastMessage = "Permintaan penghapusan selesai."
@@ -645,6 +794,32 @@ final class AppModel {
         snapshot = try offlineStore.overlay(snapshot, ownerID: ownerID)
     }
 
+    private func persistReview(_ item: ReviewItem, operation: () async throws -> Void) async -> Bool {
+        let requestedOwner = ownerID
+        let requestedMode = mode
+        let saved = await mutate {
+            try await operation()
+            guard ownerID == requestedOwner, mode == requestedMode else {
+                throw AppError.validation("Sesi akun berubah. Draft tersimpan pada akun sebelumnya.")
+            }
+            snapshot.reconcileAcknowledgedReview(item, replacingExisting: true)
+            cacheAcknowledgedReview(item)
+        }
+        guard saved, ownerID == requestedOwner, mode == requestedMode else { return false }
+        if snapshot.reconcileAcknowledgedReview(item) { cacheAcknowledgedReview(item) }
+        return true
+    }
+
+    private func cacheAcknowledgedReview(_ item: ReviewItem) {
+        guard mode == .authenticated else { return }
+        do {
+            var cached = try offlineStore.cachedSnapshot(ownerID: ownerID) ?? snapshot
+            cached.reconcileAcknowledgedReview(item, replacingExisting: true)
+            try offlineStore.cache(cached, ownerID: ownerID)
+        }
+        catch { present(error) }
+    }
+
     private func mutate(success: String = "Tersimpan", operation: () async throws -> Void) async -> Bool {
         await run {
             try await operation()
@@ -668,24 +843,57 @@ final class AppModel {
         isLoading = true
         defer { isLoading = false }
         do { try await operation(); return true }
+        catch is CancellationError { return false }
+        catch let error as URLError where error.code == .cancelled { return false }
         catch { present(error); return false }
     }
 
     private func loadDashboard() async throws {
         let requestedOwner = ownerID
         let requestedMode = mode
-        let value = try await repository.dashboard()
-        guard ownerID == requestedOwner, mode == requestedMode else { return }
+        let requestedRepository = repository
+        dashboardLoadVersion += 1
+        let requestedVersion = dashboardLoadVersion
+        monthlyReportError = nil
+        var value = try await requestedRepository.dashboard()
+        guard ownerID == requestedOwner, mode == requestedMode, dashboardLoadVersion == requestedVersion else { return }
+        let selectedTimezone = mode == .demo ? defaults.string(forKey: "financeTimezone") ?? "Asia/Jakarta" : value.timezone ?? "Asia/Jakarta"
+        value.timezone = selectedTimezone
+        adoptTimezone(selectedTimezone)
+        value.syncedAt = mode == .authenticated ? .now : nil
         snapshot = value
-        let summary = try await repository.report(since: MonthPeriod.start(.now), until: MonthPeriod.end(.now))
-        guard ownerID == requestedOwner, mode == requestedMode else { return }
-        snapshot.monthlyReport = summary
-        snapshot.reportMonth = MonthPeriod.key(.now)
-        snapshot.syncedAt = mode == .authenticated ? .now : nil
+        hasLoadedDashboard = true
+        dashboardError = nil
         if mode == .authenticated {
-            try offlineStore.cache(snapshot, ownerID: ownerID)
-            try updateOfflineProjection()
+            do {
+                try offlineStore.cache(value, ownerID: ownerID)
+                try updateOfflineProjection()
+            } catch { present(error) }
         }
+        let reportDate = Date.now
+        let reportMonth = MonthPeriod.key(reportDate)
+        do {
+            let summary = try await requestedRepository.report(since: MonthPeriod.start(reportDate), until: MonthPeriod.end(reportDate))
+            guard ownerID == requestedOwner, mode == requestedMode, dashboardLoadVersion == requestedVersion else { return }
+            snapshot.monthlyReport = summary
+            snapshot.reportMonth = reportMonth
+            value.monthlyReport = summary
+            value.reportMonth = reportMonth
+            if mode == .authenticated {
+                do { try offlineStore.cache(value, ownerID: ownerID) }
+                catch { present(error) }
+            }
+        } catch {
+            guard ownerID == requestedOwner, mode == requestedMode, dashboardLoadVersion == requestedVersion else { return }
+            monthlyReportError = (error as? AppError)?.message ?? "Ringkasan bulan ini belum dimuat."
+            if (error as? AppError)?.code == "UNAUTHORIZED" { present(error) }
+        }
+    }
+
+    private func adoptTimezone(_ timezone: String?) {
+        let value = timezone ?? "Asia/Jakarta"
+        defaults.set(value, forKey: "financeTimezone")
+        UserDefaults.standard.set(value, forKey: "financeTimezone")
     }
 
     private func present(_ error: Error) {
@@ -695,5 +903,6 @@ final class AppModel {
         }
         else if let urlError = error as? URLError { errorMessage = urlError.code == .notConnectedToInternet ? "Tidak ada koneksi internet." : "Jaringan bermasalah. Coba lagi." }
         else { errorMessage = "Terjadi kesalahan. Coba lagi." }
+        if mode == .authenticated && !hasLoadedDashboard { dashboardError = errorMessage }
     }
 }

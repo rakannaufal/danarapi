@@ -13,6 +13,17 @@ Deno.serve(async (request) => {
     const dashboardResponse = await fetch(`${baseUrl}/functions/v1/ios-data/dashboard-full`, { method: "POST", headers: { authorization, apikey: anonKey } });
     if (!dashboardResponse.ok) throw await dashboardResponse.json();
     const dashboard = await dashboardResponse.json() as Record<string, unknown>;
+    for (const [table, property] of [['ai_consents','aiConsent'],['support_tickets','supportTickets']]) {
+      const rows: unknown[] = [];
+      for (let offset = 0;; offset += 1000) {
+        const response = await fetch(`${baseUrl}/rest/v1/${table}?select=*&limit=1000&offset=${offset}&order=${table === 'ai_consents' ? 'user_id' : 'id'}.asc`, { headers: { authorization, apikey: anonKey } });
+        if (!response.ok) throw await response.json();
+        const page = await response.json() as unknown[];
+        rows.push(...page);
+        if (page.length < 1000) break;
+      }
+      dashboard[property] = table === 'ai_consents' ? rows[0] ?? null : rows;
+    }
     const attachmentRows: { id: string; storage_key: string; mime: string; size_bytes: number; sha256: string }[] = [];
     for (let offset = 0;; offset += 1000) {
       const attachmentsResponse = await fetch(`${baseUrl}/rest/v1/attachments?select=id,storage_key,mime,size_bytes,sha256&order=id.asc&limit=1000&offset=${offset}`, { headers: { authorization, apikey: anonKey } });

@@ -1,4 +1,92 @@
 import SwiftUI
+import UIKit
+
+struct KeyboardDismissalView: UIViewRepresentable {
+    func makeUIView(context: Context) -> KeyboardDismissalAnchor { KeyboardDismissalAnchor(frame: .zero) }
+    func updateUIView(_ uiView: KeyboardDismissalAnchor, context: Context) {}
+    static func dismantleUIView(_ uiView: KeyboardDismissalAnchor, coordinator: ()) { uiView.detach() }
+}
+
+final class KeyboardDismissalAnchor: UIView, UIGestureRecognizerDelegate {
+    private weak var attachedWindow: UIWindow?
+    private weak var editingAtTouchStart: UIView?
+    private lazy var outsideTap: UITapGestureRecognizer = {
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        gesture.cancelsTouchesInView = false
+        gesture.delaysTouchesBegan = false
+        gesture.delaysTouchesEnded = false
+        gesture.delegate = self
+        return gesture
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        isUserInteractionEnabled = false
+        accessibilityElementsHidden = true
+    }
+
+    required init?(coder: NSCoder) { return nil }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        guard attachedWindow !== window else { return }
+        detach()
+        guard let window else { return }
+        window.addGestureRecognizer(outsideTap)
+        attachedWindow = window
+    }
+
+    func detach() {
+        attachedWindow?.removeGestureRecognizer(outsideTap)
+        attachedWindow = nil
+        editingAtTouchStart = nil
+    }
+
+    static func isEditableTarget(_ view: UIView?) -> Bool {
+        var candidate = view
+        while let current = candidate {
+            if current is UITextField || current is UITextView { return true }
+            candidate = current.superview
+        }
+        return false
+    }
+
+    static func isEditableTarget(at point: CGPoint, in view: UIView) -> Bool {
+        guard !view.isHidden, view.alpha > 0.01 else { return false }
+        let inside = view.bounds.contains(point)
+        if view.clipsToBounds && !inside { return false }
+        if inside && (view is UITextField || view is UITextView) { return true }
+        return view.subviews.contains { child in
+            isEditableTarget(at: child.convert(point, from: view), in: child)
+        }
+    }
+
+    private static func firstResponder(in view: UIView?) -> UIView? {
+        guard let view else { return nil }
+        if view.isFirstResponder { return view }
+        for child in view.subviews {
+            if let responder = firstResponder(in: child) { return responder }
+        }
+        return nil
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        guard let window = attachedWindow else { return false }
+        guard !Self.isEditableTarget(touch.view), !Self.isEditableTarget(at: touch.location(in: window), in: window) else { return false }
+        editingAtTouchStart = Self.firstResponder(in: attachedWindow)
+        return editingAtTouchStart != nil
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool { true }
+
+    @objc private func dismissKeyboard() {
+        guard let window = attachedWindow, let responder = editingAtTouchStart else { return }
+        DispatchQueue.main.async { [weak window, weak responder] in
+            guard let window, let responder, responder.isFirstResponder else { return }
+            window.endEditing(true)
+        }
+    }
+}
 
 extension Budget {
     var progressColor: Color {
@@ -36,7 +124,7 @@ struct DesignTokenCatalog: Decodable, Sendable {
 }
 
 enum DesignTokens {
-    static let version = DesignTokenCatalog.bundled?.version ?? "1.2.0"
+    static let version = DesignTokenCatalog.bundled?.version ?? "1.3.0"
     static let cornerCard = CGFloat(DesignTokenCatalog.bundled?.radius["card"] ?? 20)
     static let cornerControl = CGFloat(DesignTokenCatalog.bundled?.radius["button"] ?? 12)
     static let gutter = CGFloat(DesignTokenCatalog.bundled?.layout["mobileGutter"] ?? 20)
@@ -46,20 +134,30 @@ enum DesignTokens {
 }
 
 extension Color {
-    static let danarapiCanvas = token("canvas", fallbackLight: 0xF5F5F7, fallbackDark: 0x111113)
-    static let danarapiSurface = token("surface", fallbackLight: 0xFFFFFF, fallbackDark: 0x1C1C1E)
-    static let danarapiInk = token("ink", fallbackLight: 0x1D1D1F, fallbackDark: 0xF5F5F7)
-    static let danarapiMuted = token("muted", fallbackLight: 0x62626A, fallbackDark: 0xB0B0B8)
-    static let danarapiBorder = token("border", fallbackLight: 0xDEDEE3, fallbackDark: 0x3B3B40)
-    static let danarapiPrimary = token("primary", fallbackLight: 0x0066CC, fallbackDark: 0x80BAFF)
-    static let danarapiOnPrimary = token("on-primary", fallbackLight: 0xFFFFFF, fallbackDark: 0x101C30)
-    static let danarapiMint = token("primary-soft", darkName: "mint-surface", fallbackLight: 0xEAF2FF, fallbackDark: 0x222C37)
-    static let danarapiSky = token("sky-soft", darkName: "sky-surface", fallbackLight: 0xF0F4FA, fallbackDark: 0x242B35)
-    static let danarapiPeach = token("peach-soft", darkName: "peach-surface", fallbackLight: 0xFAF0F0, fallbackDark: 0x34282B)
-    static let danarapiSun = token("sun-soft", darkName: "sun-surface", fallbackLight: 0xF7F4EA, fallbackDark: 0x323025)
-    static let danarapiLavender = token("lavender-soft", darkName: "lavender-surface", fallbackLight: 0xF1EFF7, fallbackDark: 0x2C2837)
-    static let danarapiIncome = token("income-ink", fallbackLight: 0x1C6B41, fallbackDark: 0x86D9A5)
-    static let danarapiExpense = token("expense-ink", fallbackLight: 0xB32632, fallbackDark: 0xFFACB1)
+    static let danarapiCanvas = token("canvas", fallbackLight: 0xFBFCFB, fallbackDark: 0x0A1624)
+    static let danarapiSurface = token("surface", fallbackLight: 0xFFFFFF, fallbackDark: 0x112433)
+    static let danarapiInk = token("ink", fallbackLight: 0x18343B, fallbackDark: 0xF1FAF7)
+    static let danarapiMuted = token("muted", fallbackLight: 0x49635D, fallbackDark: 0xAAC6BE)
+    static let danarapiBorder = token("border", fallbackLight: 0xD8E4DE, fallbackDark: 0x2C4651)
+    static let danarapiPrimary = token("primary", fallbackLight: 0x09746C, fallbackDark: 0x7BDDC2)
+    static let danarapiOnPrimary = token("on-primary", fallbackLight: 0xFFFFFF, fallbackDark: 0x0A1624)
+    static let danarapiMint = token("primary-soft", darkName: "mint-surface", fallbackLight: 0xBAF4DE, fallbackDark: 0x153B3B)
+    static let danarapiSky = token("sky-soft", darkName: "sky-surface", fallbackLight: 0xEFF7F3, fallbackDark: 0x132D36)
+    static let danarapiPeach = token("peach-soft", darkName: "peach-surface", fallbackLight: 0xFDCEB2, fallbackDark: 0x3A2B2A)
+    static let danarapiSun = token("sun-soft", darkName: "sun-surface", fallbackLight: 0xFFF1E7, fallbackDark: 0x36312A)
+    static let danarapiLavender = token("lavender-soft", darkName: "lavender-surface", fallbackLight: 0xF0F4F4, fallbackDark: 0x253543)
+    static let danarapiIncome = token("income-ink", fallbackLight: 0x09746C, fallbackDark: 0x9DE4C0)
+    static let danarapiExpense = token("expense-ink", fallbackLight: 0xA83245, fallbackDark: 0xFFB3B0)
+    static let danarapiChartIncome = danarapiPrimary
+    static let danarapiChartExpense = Color(light: 0xA84E37, dark: 0xFDCBAC)
+    static let danarapiChartColors: [Color] = [
+        danarapiPrimary,
+        Color(light: 0x4D9A80, dark: 0x9DE4C0),
+        Color(light: 0xCC9274, dark: 0xFDCBAC),
+        Color(light: 0x8C9D6B, dark: 0xC6D49A),
+        Color(light: 0xB57368, dark: 0xE6AAA0),
+        Color(light: 0x4E7F8E, dark: 0x90C7CE)
+    ]
 
     private static func token(_ name: String, darkName: String? = nil, fallbackLight: UInt, fallbackDark: UInt) -> Color {
         Color(light: DesignTokenCatalog.bundled?.hex(name, theme: "light") ?? fallbackLight,
@@ -84,6 +182,25 @@ struct CardStyle: ViewModifier {
             .padding(18)
             .background(color, in: RoundedRectangle(cornerRadius: DesignTokens.cornerCard, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: DesignTokens.cornerCard, style: .continuous).stroke(Color.danarapiBorder.opacity(0.6), lineWidth: 0.5))
+    }
+}
+
+struct BrandIdentityView: View {
+    var body: some View {
+        HStack(spacing: 12) {
+            Image("AppLogo").renderingMode(.original).resizable().scaledToFit().frame(width: 52, height: 52)
+            Image("danarapi_text").renderingMode(.original).resizable().scaledToFit().frame(width: 180, height: 42)
+        }
+        .accessibilityElement(children: .ignore).accessibilityLabel("Danarapi")
+    }
+}
+
+struct BrandBackgroundView: View {
+    var body: some View {
+        GeometryReader { geometry in
+            Image("background").renderingMode(.original).resizable().scaledToFill()
+                .frame(width: geometry.size.width, height: geometry.size.height).clipped()
+        }.background(Color.danarapiCanvas).accessibilityHidden(true).allowsHitTesting(false)
     }
 }
 

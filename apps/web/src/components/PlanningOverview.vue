@@ -6,8 +6,9 @@ import { progressPercent, budgetStatus } from '../planning.ts';
 import GoalCard from './GoalCard.vue';
 import Money from './Money.vue';
 import Icon from './Icon.vue';
+import type { PlanningEntry } from '../product.ts';
 const props = defineProps<{ month: string; targetsOnly?: boolean }>();
-defineEmits<{ goal: [goal?: SavingsGoal]; budget: []; progress: [goal: SavingsGoal] }>();
+defineEmits<{ goal: [goal?: SavingsGoal]; budget: []; progress: [goal: SavingsGoal]; entry: [entry: PlanningEntry] }>();
 const tick = ref(Date.now());
 let timer: ReturnType<typeof setInterval> | undefined;
 onMounted(() => { timer = setInterval(() => { tick.value = Date.now(); }, 60000); });
@@ -27,7 +28,7 @@ const monthLabel = computed(() => new Intl.DateTimeFormat('id-ID', { month: 'lon
       <div class="section-heading"><h2><Icon name="target" /> Target</h2><button class="text-button" @click="$emit('goal')"><Icon name="plus" :size="16" /> Tambah</button></div>
       <div v-if="goals.length" class="plan-summary"><span class="muted">{{ goals.length }} target · terkumpul</span><strong><Money :amount="totalSaved" /></strong><span class="fine-print">dari <Money :amount="totalTarget" /></span></div>
       <div v-else class="plan-empty"><span class="icon-tile sky"><Icon name="target" :size="26" /></span><h3>Belum ada target</h3><button class="secondary" @click="$emit('goal')">Buat target</button></div>
-      <GoalCard v-for="goal in goals" :key="goal.id" :goal="goal" :day="day" @edit="$emit('goal', $event)" @progress="$emit('progress', $event)" />
+      <div class="goal-list"><GoalCard v-for="goal in goals" :key="goal.id" :goal="goal" :day="day" @edit="$emit('goal', $event)" @progress="$emit('progress', $event)" @entry="$emit('entry',$event)" /></div>
     </section>
     <section v-if="!targetsOnly" class="card plan-panel" aria-label="Anggaran bulanan">
       <div class="section-heading"><h2><Icon name="budget" /> Anggaran</h2><button class="text-button" @click="$emit('budget')">Atur <Icon name="next" :size="16" /></button></div>

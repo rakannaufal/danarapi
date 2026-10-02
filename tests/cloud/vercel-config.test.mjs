@@ -13,6 +13,11 @@ test('Vercel builds the web app from the repository root with locked dependencie
   assert.equal(manifest.scripts['web:build'], 'npm run build --prefix apps/web');
   assert.equal(root.outputDirectory, 'apps/web/dist');
   assert.equal(lock.lockfileVersion, 3);
+  assert.equal(manifest.engines.node, '22.x');
+  const ignored = (await readFile(new URL('../../.vercelignore', import.meta.url), 'utf8')).split('\n');
+  assert.ok(ignored.includes('**/.env*'));
+  assert.ok(!ignored.includes('supabase'));
+  assert.ok(!ignored.includes('tests'));
   assert.deepEqual(root.headers, web.headers);
   assert.deepEqual(root.rewrites, web.rewrites);
   assert.equal(root.env, undefined);

@@ -3,7 +3,7 @@ import Foundation
 enum MonthPeriod {
     static var calendar: Calendar {
         var value = Calendar(identifier: .gregorian)
-        value.timeZone = TimeZone(identifier: "Asia/Jakarta")!
+        value.timeZone = TimeZone(identifier: UserDefaults.standard.string(forKey: "financeTimezone") ?? "Asia/Jakarta") ?? TimeZone(identifier: "Asia/Jakarta")!
         return value
     }
     static func start(_ date: Date) -> Date { calendar.date(from: calendar.dateComponents([.year, .month], from: date))! }
@@ -19,5 +19,13 @@ enum MonthPeriod {
     static func dateKey(_ date: Date) -> String {
         let parts = calendar.dateComponents([.year, .month, .day], from: date)
         return String(format: "%04d-%02d-%02d", parts.year!, parts.month!, parts.day!)
+    }
+    static func display(_ date: Date, template: String = "d MMM yyyy") -> String {
+        let formatter = DateFormatter()
+        formatter.calendar = calendar
+        formatter.timeZone = calendar.timeZone
+        formatter.locale = Locale(identifier: "id_ID")
+        formatter.setLocalizedDateFormatFromTemplate(template)
+        return formatter.string(from: date)
     }
 }

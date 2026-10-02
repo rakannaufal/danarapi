@@ -4,7 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 test('quick menu, ten categories, custom monthly budget, goal countdown and editing', async ({ page }, info) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.clock.install({ time: new Date('2026-10-01T05:00:00Z') });
-  await page.goto('/'); await page.getByRole('button', { name: /Coba Demo/ }).click();
+  await page.goto('/'); await page.getByRole('button', { name: /Coba Demo/ }).click(); await page.getByRole('dialog').getByRole('button', { name: 'Lewati tur', exact: true }).click();
   await expect(page.locator('.position-strip')).toHaveCount(0);
   await page.getByLabel('Periode beranda').fill('2026-10');
   const balance = await page.locator('.balance-value').innerText();
@@ -76,7 +76,7 @@ test('login shows only Google; reports include reconciled allocation charts', as
   await expect(page.getByRole('button', { name: 'Lanjutkan dengan Google' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Lanjutkan dengan Apple' })).toHaveCount(0);
   await expect(page.locator('input[type="password"], input[type="email"]')).toHaveCount(0);
-  await page.getByRole('button', { name: /Coba Demo/ }).click();
+  await page.getByRole('button', { name: /Coba Demo/ }).click(); await page.getByRole('dialog').getByRole('button', { name: 'Lewati tur', exact: true }).click();
   await page.goto('/#reports');
   await expect(page.getByRole('img', { name: 'Diagram Alokasi pengeluaran', exact: true })).toBeVisible();
   await expect(page.getByRole('img', { name: 'Diagram Pemasukan & pengeluaran', exact: true })).toBeVisible();
@@ -87,7 +87,7 @@ test('login shows only Google; reports include reconciled allocation charts', as
 });
 
 test('merchant stays inline; budget bars follow actual expense thresholds', async ({ page }) => {
-  await page.goto('/'); await page.getByRole('button', { name: /Coba Demo/ }).click();
+  await page.goto('/'); await page.getByRole('button', { name: /Coba Demo/ }).click(); await page.getByRole('dialog').getByRole('button', { name: 'Lewati tur', exact: true }).click();
   await page.getByRole('button', { name: 'Catat baru' }).click(); await page.getByRole('button', { name: /^Anggaran$/ }).click();
   await page.getByRole('button', { name: 'Hiburan', exact: true }).click();
   await page.getByLabel('Limit bulanan', { exact: true }).fill('100000');

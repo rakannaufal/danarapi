@@ -34,7 +34,15 @@ test "$seed_count" = "200"
 "$pg_bin/psql" "$database_url" -v ON_ERROR_STOP=1 -v item_fixture="$(cat tests/fixtures/item-split-v1.json)" -f tests/database/planning-smoke.sql
 "$pg_bin/psql" "$database_url" -v ON_ERROR_STOP=1 -v receipt_fixture="$(cat tests/fixtures/receipt-split-v2.json)" -f tests/database/receipt-scan-smoke.sql
 "$pg_bin/psql" "$database_url" -v ON_ERROR_STOP=1 -f tests/database/goal-transactions-smoke.sql
+"$pg_bin/psql" "$database_url" -v ON_ERROR_STOP=1 -f tests/database/backdated-entries-smoke.sql
+"$pg_bin/psql" "$database_url" -v ON_ERROR_STOP=1 -f tests/database/product-readiness-smoke.sql
 PATH="$pg_bin:$PATH" DATABASE_URL="$database_url" sh tests/database/concurrency.sh
+"$pg_bin/psql" "$database_url" -v ON_ERROR_STOP=1 <<'SQL' >/dev/null
+set request.jwt.claims = '{"sub":"15000000-0000-4000-8000-000000000001","role":"authenticated"}';
+set role authenticated;
+select public.api_set_ai_consent(true,'2026-10-02');
+select public.api_create_support_ticket('fa000000-0000-4000-8000-000000000001','lainnya','Backup sintetis untuk pemeriksaan restore','web','test');
+SQL
 "$pg_bin/pg_dump" --data-only --format=custom --no-owner "$database_url" -f "$cluster_dir/backup.dump"
 restore_url="postgresql://postgres@localhost:55439/danarapi_restore?host=$socket_dir"
 "$pg_bin/createdb" -h "$socket_dir" -p 55439 -U postgres danarapi_restore
@@ -49,9 +57,11 @@ fingerprint_sql="select md5(string_agg(payload, '|' order by payload)) from (
   union all select jsonb_build_object('table', 'transactions', 'row', to_jsonb(source))::text from public.transactions source
   union all select jsonb_build_object('table', 'ledger_entries', 'row', to_jsonb(source))::text from public.ledger_entries source
   union all select jsonb_build_object('table', 'overview', 'row', to_jsonb(source))::text from public.financial_overview source
+  union all select jsonb_build_object('table', 'consent', 'row', to_jsonb(source))::text from public.ai_consents source
+  union all select jsonb_build_object('table', 'support', 'row', to_jsonb(source))::text from public.support_tickets source
 ) records"
 original_fingerprint="$("$pg_bin/psql" "$database_url" -Atc "$fingerprint_sql")"
 restored_fingerprint="$("$pg_bin/psql" "$restore_url" -Atc "$fingerprint_sql")"
 test "$original_fingerprint" = "$restored_fingerprint"
 "$pg_bin/psql" "$restore_url" -v ON_ERROR_STOP=1 -f tests/database/retention-smoke.sql >/dev/null
-echo "Synthetic database backup/restore passed: account, transaction, ledger and financial overview fingerprints match; retention/RLS passed after restore."
+echo "Synthetic database backup/restore passed: accounts, transactions, ledger, overview, consent and support fingerprints match; retention/RLS passed after restore."

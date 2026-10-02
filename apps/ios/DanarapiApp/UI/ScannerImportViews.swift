@@ -185,7 +185,7 @@ struct ScanHubView: View {
             let source: ReviewSource = attachment.mimeType == "application/pdf" ? .pdfText : .image
             let item = try await ImportService.readReceipt(images: images, source: source, attachmentName: attachment.name, cloudScan: { try await app.scanReceipt(images: $0) })
             if let existingReviewID {
-                guard let existing = app.snapshot.reviewItems.first(where: { $0.id == existingReviewID }), let receipt = item.receipt else { throw AppError.validation("Draft tidak lagi tersedia atau rincian belum terbaca.") }
+                guard let existing = app.snapshot.reviewItems.first(where: { $0.matchesID(existingReviewID) }), let receipt = item.receipt else { throw AppError.validation("Draft tidak lagi tersedia atau rincian belum terbaca.") }
                 var updated = ImportService.reviewFromReceipt(receipt, source: existing.source, existing: existing)
                 updated.amount.confidence = item.amount.confidence
                 updated.merchant.confidence = item.merchant.confidence

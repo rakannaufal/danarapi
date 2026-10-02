@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(12);
+select plan(20);
 
 insert into auth.users(instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at)
 values
@@ -28,6 +28,16 @@ select is((select count(*)::integer from public.accounts), 2, 'user two reads ow
 select is((select name from public.accounts where id = '21000000-0000-4000-8000-000000000002'), 'Akun User 2', 'user two reads own fixture account');
 select is((select count(*)::integer from public.accounts where user_id = '11000000-0000-4000-8000-000000000001'), 0, 'user two cannot read user one accounts');
 select is((select count(*)::integer from public.review_items), 0, 'user two cannot read user one review item');
+select lives_ok($$insert into public.review_items(id,source) values ('41000000-0000-4000-8000-000000000003','pasted_text')$$, 'review insert derives owner from authenticated session');
+select is((select user_id::text from public.review_items where id='41000000-0000-4000-8000-000000000003'), '11000000-0000-4000-8000-000000000002', 'review owner is the authenticated user');
+select lives_ok($$insert into public.budgets(category_id,month,limit_amount) select id,date_trunc('month',now())::date,50000 from public.categories where user_id=auth.uid() and kind='expense' and archived_at is null limit 1$$, 'budget insert derives owner before category validation');
+select is((select count(*)::integer from public.budgets where user_id=auth.uid()), 1, 'budget persists for authenticated owner');
+
+reset role;
+select ok(not has_table_privilege('anon', 'public.savings_goal_progress', 'SELECT'), 'anonymous users cannot read goal progress');
+select ok(has_table_privilege('authenticated', 'public.savings_goal_progress', 'SELECT'), 'authenticated users can read goal progress');
+select ok((select reloptions @> array['security_invoker=true'] from pg_class where oid='public.savings_goal_progress'::regclass), 'goal progress honors caller RLS');
+select is((select count(*)::integer from pg_proc procedure join pg_namespace namespace on namespace.oid=procedure.pronamespace where namespace.nspname='public' and procedure.proname ~ '^api_' and has_function_privilege('anon',procedure.oid,'EXECUTE')), 0, 'application RPCs reject anonymous execution');
 
 select * from finish();
 rollback;

@@ -39,6 +39,9 @@ content_path = "./supabase/templates/recovery.html"
 [functions.ledger]
 verify_jwt = true
 
+[functions.product-info]
+verify_jwt = false
+
 [functions.ios-data]
 verify_jwt = true
 

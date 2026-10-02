@@ -5,6 +5,9 @@ protocol FinanceRepository: Sendable {
 
     func dashboard() async throws -> DashboardSnapshot
     func transactionPage(after cursor: TransactionCursor) async throws -> TransactionPage
+    func transaction(id: String) async throws -> FinanceTransaction
+    func planningHistory(_ request: PlanningHistoryRequest) async throws -> PlanningHistoryPage
+    func copyBudgets(from: Date, to: Date) async throws
     func report(since startDate: Date, until endDate: Date?) async throws -> ReportSummary
     func resetDemo() async throws
 
@@ -54,9 +57,42 @@ protocol FinanceRepository: Sendable {
     func exportArchive() async throws -> URL
     func requestAccountDeletion(password: String) async throws
     func replayOutbox(operation: String, mutationID: String, payload: Data) async throws
+    func aiConsentState() async throws -> AIConsentState
+    func setAIConsent(granted: Bool, policyVersion: String) async throws
+    func setTimezone(_ timezone: String) async throws
+    func acknowledgeRetention() async throws
+    func supportTickets() async throws -> [SupportTicket]
+    func sendSupportTicket(id: String, topic: String, description: String, requestID: String?) async throws
 }
 
 extension FinanceRepository {
+    func transaction(id: String) async throws -> FinanceTransaction {
+        guard let value = try await dashboard().transactions.first(where: { $0.id == id }) else { throw AppError.validation("Transaksi tidak tersedia.") }
+        return value
+    }
+    func planningHistory(_ request: PlanningHistoryRequest) async throws -> PlanningHistoryPage {
+        let data = try await dashboard()
+        var items = data.transactions.filter { !$0.deleted && $0.kind == .expense && (request.goalID == nil || $0.goalID == request.goalID) && (request.categoryID == nil || $0.categoryID == request.categoryID) }.map { PlanningEntry(id: $0.id, sourceID: $0.id, kind: "transaction", amount: $0.amount, occurredAt: $0.occurredAt, merchant: $0.merchant, note: $0.note) }
+        if let category = request.categoryID {
+            items += data.splitBills.filter { !$0.deleted && $0.categoryID == category && $0.selfShare > 0 }.map { PlanningEntry(id: $0.id, sourceID: $0.id, kind: "split_bill", amount: $0.selfShare, occurredAt: $0.occurredAt, merchant: $0.title, note: nil) }
+        }
+        items = items.filter { (request.startDate == nil || $0.occurredAt >= request.startDate!) && (request.endDate == nil || $0.occurredAt < request.endDate!) }.sorted { $0.occurredAt == $1.occurredAt ? $0.id > $1.id : $0.occurredAt > $1.occurredAt }
+        let start = request.cursor.flatMap { cursor in items.firstIndex(where: { $0.id == cursor.id }).map { $0 + 1 } } ?? 0
+        let page = Array(items.dropFirst(start).prefix(30))
+        return PlanningHistoryPage(items: page, nextCursor: start + 30 < items.count ? page.last.map { TransactionCursor(occurredAt: $0.occurredAt, id: $0.id) } : nil)
+    }
+    func copyBudgets(from: Date, to: Date) async throws {
+        let data = try await dashboard()
+        for budget in data.budgets where MonthPeriod.key(budget.month) == MonthPeriod.key(from) && !data.budgets.contains(where: { $0.categoryID == budget.categoryID && MonthPeriod.key($0.month) == MonthPeriod.key(to) }) {
+            try await upsertBudget(categoryID: budget.categoryID, month: to, limit: budget.limitAmount)
+        }
+    }
+    func aiConsentState() async throws -> AIConsentState { AIConsentState(granted: false, policyVersion: nil, updatedAt: nil) }
+    func setAIConsent(granted: Bool, policyVersion: String) async throws { throw AppError.validation("Masuk untuk mengubah persetujuan AI.") }
+    func setTimezone(_ timezone: String) async throws {}
+    func acknowledgeRetention() async throws { throw AppError.validation("Masuk untuk mencatat penerimaan kebijakan.") }
+    func supportTickets() async throws -> [SupportTicket] { [] }
+    func sendSupportTicket(id: String, topic: String, description: String, requestID: String?) async throws { throw AppError.validation("Masuk untuk mengirim laporan privat.") }
     func scanReceipt(images: [ReceiptScanImage]) async throws -> ReceiptScanResponse { ReceiptScanResponse(status: "config_error", data: nil) }
     func report(since startDate: Date) async throws -> ReportSummary { try await report(since: startDate, until: nil) }
 }

@@ -4,11 +4,24 @@ import { readFileSync } from 'node:fs';
 
 const receipt = { merchant: 'Karis Jaya Shop', date: '2023-08-02', items: [{ name: 'Indomie Goreng', qty: 1, unit_price: 36000, line_total: 36000, note: '1 lusin' }, { name: 'Fruit Tea Apple', qty: 1, unit_price: 7000, line_total: 7000, note: '500 ml' }, { name: 'Belfood Sosis Bakar', qty: 1, unit_price: 27000, line_total: 27000, note: null }], subtotal: 70000, service_charge: 0, tax: 0, discount: 0, rounding: 0, grand_total: 70000, tax_included_in_price: false, unreadable_fields: [] };
 async function openImport(page: Page) {
-  await page.goto('/'); await page.getByRole('button', { name: /Coba Demo/ }).click(); await page.getByRole('button', { name: /^Perlu Ditinjau/ }).click();
+  await page.goto('/'); await page.getByRole('button', { name: /Coba Demo/ }).click(); await page.getByRole('dialog').getByRole('button', { name: 'Lewati tur', exact: true }).click(); await page.getByRole('link', { name: /^Perlu Ditinjau/ }).click();
 }
 async function image(page: Page) {
   return Buffer.from(await page.evaluate(() => { const canvas = document.createElement('canvas'); canvas.width = 200; canvas.height = 350; const context = canvas.getContext('2d')!; context.fillStyle = 'white'; context.fillRect(0, 0, 200, 350); context.fillStyle = 'black'; context.fillText('STRUK SINTETIS UNTUK TEST', 10, 50); return canvas.toDataURL('image/png').split(',')[1]!; }), 'base64');
 }
+test('cancelled AI consent keeps manual evidence without sending an image', async ({ page }) => {
+  let sends = 0;
+  await page.route('**/__local/receipt-scan', route => {
+    if (route.request().method() === 'GET') return route.fulfill({ json: { configured: true, token: 'test-token' } });
+    sends++; return route.fulfill({ json: { status: 'unreadable' } });
+  });
+  await openImport(page);
+  await page.getByLabel('Unggah gambar atau PDF').setInputFiles({ name: 'cancelled.png', mimeType: 'image/png', buffer: await image(page) });
+  await page.getByRole('button', { name: 'Isi manual', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('dibatalkan');
+  await expect(page.locator('.review-card')).toHaveCount(3);
+  expect(sends).toBe(0);
+});
 test('wholesale receipt shows full quantities, named discrepancy and explicit manual correction', async ({ page }) => {
   const wholesale = JSON.parse(readFileSync(new URL('../../../tests/fixtures/receipt-wholesale.json', import.meta.url), 'utf8'));
   let calls = 0;
@@ -18,6 +31,7 @@ test('wholesale receipt shows full quantities, named discrepancy and explicit ma
   });
   await openImport(page);
   await page.getByLabel('Unggah gambar atau PDF').setInputFiles({ name: 'grosir-test.png', mimeType: 'image/png', buffer: await image(page) });
+  await page.getByRole('button',{ name: 'Setuju dan lanjutkan',exact: true }).click();
   const card = page.locator('.review-card').filter({ hasText: 'Toko Abang' });
   await expect(card.locator('.extracted-items tbody tr')).toHaveCount(8);
   await expect(card.locator('.extracted-items tbody tr').nth(0)).toContainText('4.000');
@@ -51,6 +65,7 @@ test('image import displays complete extraction, historical date, evidence and p
   });
   await openImport(page);
   await page.getByLabel('Unggah gambar atau PDF').setInputFiles({ name: 'struk-sintetis.png', mimeType: 'image/png', buffer: await image(page) });
+  await page.getByRole('button',{ name: 'Setuju dan lanjutkan',exact: true }).click();
   const card = page.locator('.review-card').filter({ hasText: 'Karis Jaya Shop' });
   await expect(card).toBeVisible(); await expect(card).toContainText('Rp70.000'); await expect(card).toContainText('2023-08-02'); await expect(card.locator('.extracted-items tbody tr')).toHaveCount(3); await expect(card).toContainText('1 lusin'); await expect(card).toContainText('500 ml'); await expect(card.locator('.extraction-check')).toHaveCount(0); expect(calls).toBe(1);
   await card.getByText('Lihat asal ekstraksi').click(); await expect(card.locator('details')).toContainText('Belfood Sosis Bakar');
@@ -65,6 +80,7 @@ test('scan failure preserves manual import and re-reading updates the same revie
   let available = false;
   await page.route('**/__local/receipt-scan', route => route.fulfill({ json: route.request().method() === 'GET' ? { configured: true, token: 'test-token' } : available ? { status: 'ok', data: receipt } : { status: 'quota_exceeded' } }));
   await openImport(page); await page.getByLabel('Unggah gambar atau PDF').setInputFiles({ name: 'fallback.png', mimeType: 'image/png', buffer: await image(page) });
+  await page.getByRole('button',{ name: 'Setuju dan lanjutkan',exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('Kuota scan habis');
   const card = page.locator('.review-card').filter({ hasText: 'Merchant belum terbaca' }); await expect(card).toHaveCount(1);
   available = true; await card.getByRole('button', { name: 'Baca ulang' }).click(); await expect(page.locator('.review-card').filter({ hasText: 'Karis Jaya Shop' })).toHaveCount(1); await expect(page.locator('.review-card').filter({ hasText: 'Merchant belum terbaca' })).toHaveCount(0);
@@ -80,6 +96,7 @@ test('scan always uses AI without mode toggles; mobile review stays within the p
   await expect(page.getByText('Privasi foto', { exact: true })).toHaveCount(0);
   await expect(page.locator('.demo-banner')).toHaveCount(0);
   await page.getByLabel('Unggah gambar atau PDF').setInputFiles({ name: 'scan.png', mimeType: 'image/png', buffer: await image(page) });
+  await page.getByRole('button',{ name: 'Setuju dan lanjutkan',exact: true }).click();
   await expect(page.locator('.review-card').filter({ hasText: 'Karis Jaya Shop' })).toBeVisible(); expect(calls).toBe(1); expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 test('PDF without a text layer is rendered into an image and extracted', async ({ page }) => {
@@ -94,5 +111,6 @@ test('PDF without a text layer is rendered into an image and extracted', async (
   for (const [index, object] of objects.entries()) { offsets.push(Buffer.byteLength(pdf)); pdf += `${index + 1} 0 obj\n${object}\nendobj\n`; }
   const xref = Buffer.byteLength(pdf); pdf += `xref\n0 5\n0000000000 65535 f \n${offsets.slice(1).map(offset => `${String(offset).padStart(10, '0')} 00000 n \n`).join('')}trailer\n<< /Size 5 /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
   await openImport(page); await page.getByLabel('Unggah gambar atau PDF').setInputFiles({ name: 'scan-sintetis.pdf', mimeType: 'application/pdf', buffer: Buffer.from(pdf) });
+  await page.getByRole('button',{ name: 'Setuju dan lanjutkan',exact: true }).click();
   await expect(page.locator('.review-card').filter({ hasText: 'Karis Jaya Shop' })).toContainText('Rp70.000'); expect(calls).toBe(1);
 });

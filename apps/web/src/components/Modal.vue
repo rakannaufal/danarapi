@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
+import { ref, watch, nextTick, onMounted, onBeforeUnmount, useId } from 'vue';
 import Icon from './Icon.vue';
 const props = defineProps<{ title: string; dirty?: boolean }>();
 const emit = defineEmits<{ close: [] }>();
 const dialog = ref<HTMLDialogElement>();
+const titleID = useId();
 const previous = document.activeElement as HTMLElement | null;
-function focusContent() { const target = [...(dialog.value?.querySelectorAll<HTMLElement>('.modal-body input:not([type="file"]):not(:disabled), .modal-body select:not(:disabled), .modal-body textarea:not(:disabled), .modal-body button:not(:disabled)') ?? [])].find(element => element.tabIndex >= 0 && element.getClientRects().length > 0); (target ?? dialog.value)?.focus(); }
+function focusContent() { const preferred = dialog.value?.querySelector<HTMLElement>('.modal-body [data-initial-focus]:not(:disabled)'); const target = preferred ?? [...(dialog.value?.querySelectorAll<HTMLElement>('.modal-body input:not([type="file"]):not(:disabled), .modal-body select:not(:disabled), .modal-body textarea:not(:disabled), .modal-body button:not(:disabled)') ?? [])].find(element => element.tabIndex >= 0 && element.getClientRects().length > 0); (target ?? dialog.value)?.focus(); }
 onMounted(() => { dialog.value?.showModal(); focusContent(); });
 watch(() => props.title, () => nextTick(focusContent));
 onBeforeUnmount(() => { dialog.value?.close(); previous?.focus(); });
@@ -20,4 +21,4 @@ function trapFocus(event: KeyboardEvent) {
   controls[nextIndex]?.focus();
 }
 </script>
-<template><dialog ref="dialog" class="modal" aria-labelledby="modal-title" @keydown="trapFocus" @cancel.prevent="close" @click="($event.target === dialog) && close()"><header class="modal-header"><h2 id="modal-title">{{ title }}</h2><button type="button" class="icon-button" aria-label="Tutup" @click="close"><Icon name="close" /></button></header><div class="modal-body"><slot /></div></dialog></template>
+<template><dialog ref="dialog" class="modal" :aria-labelledby="titleID" @keydown="trapFocus" @cancel.prevent="close" @click="($event.target === dialog) && close()"><header class="modal-header"><h2 :id="titleID">{{ title }}</h2><button type="button" class="icon-button" aria-label="Tutup" @click="close"><Icon name="close" /></button></header><div class="modal-body"><slot /></div></dialog></template>

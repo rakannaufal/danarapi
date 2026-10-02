@@ -23,7 +23,7 @@ struct OutboxChangeView: View {
                     LabeledContent("Akun", value: accountName(transaction.accountID))
                     if let merchant = transaction.merchant { LabeledContent("Merchant", value: merchant) }
                     if let note = transaction.note { LabeledContent("Catatan", value: note) }
-                    LabeledContent("Tanggal", value: transaction.occurredAt.formatted(date: .abbreviated, time: .shortened))
+                    LabeledContent("Tanggal", value: MonthPeriod.display(transaction.occurredAt, template: "d MMM yyyy HHmm"))
                 } else if let transfer {
                     LabeledContent("Nominal") { MoneyText(amount: transfer.amount, style: .headline) }
                     LabeledContent("Dari", value: accountName(transfer.fromAccountID))

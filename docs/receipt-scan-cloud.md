@@ -10,9 +10,11 @@
 
 ## Kondisi workspace
 
-Pada 1 Oktober 2026, URL proyek `zoccosfjulasqxczhvfm` dan publishable key sudah dikonfigurasi pada web/iOS. Pemeriksaan awal menemukan Google belum aktif, schema aplikasi belum tersedia, dan fungsi backend belum terdeploy (404). Model scan yang dipilih tersedia dengan key server existing; ekstraksi cloud nyata belum diuji. Ikuti `docs/supabase-cloud-setup.md` untuk migrations, deployment, provider dan pengujian. Implementasi client saja tidak membuat layanan cloud siap.
+Proyek `zoccosfjulasqxczhvfm` memiliki Google aktif, callback iOS, 20 migrations, lima fungsi backend dan secret scan server. Migrasi 18–20 serta pembaruan `ios-data`, `export-data`, dan `product-info` diterapkan pada 2 Oktober 2026. CORS Vercel/localhost diperiksa. Uji cloud terautentikasi pada struk sintetis menghasilkan total Rp 23.000 dan qty 2. Penegakan persetujuan AI pada sumber `receipt-scan` belum di-rollout: tunggu klien web dan iOS yang kompatibel. Rincian deployment dan perbaikan ada di `docs/cloud-login-repair.md`; status rilis terbaru ada di `docs/production-readiness.md`. Login Google akun pengguna, foto struk nyata dan jaringan seluler tetap memerlukan pemeriksaan perangkat.
 
 ## Verifikasi pembaruan
+
+Angka berikut merupakan bukti pengujian sebelumnya. Pengujian terbaru pada 2 Oktober 2026 mencakup 122 tes Chromium/WebKit, 90 unit web, cloud sintetis, database lokal dan iPhone. Gunakan `docs/production-readiness.md` untuk hasil terbaru, koreksi selama pengujian dan batas verifikasi keyboard/perangkat.
 
 - 71 tes logika web/backend dan 19 tes kontrak Swift lolos.
 - 70 tes browser Chromium/WebKit lolos, mencakup impor foto/PDF, koreksi, split bill, offline, aksesibilitas, serta tampilan terang/gelap pada ponsel dan desktop. Respons AI memakai mock, bukan foto pengguna.
@@ -20,7 +22,7 @@ Pada 1 Oktober 2026, URL proyek `zoccosfjulasqxczhvfm` dan publishable key sudah
 - Pengujian pada iPhone 13 Rakan tanggal 1 Oktober 2026: 43 tes unit dan 3 tes UI lolos pada build terbaru. Cakupan mencakup rincian struk/PDF, pembulatan, penyimpanan draft, transport HTTPS dengan mock, navigasi tab, pilihan Struk/QRIS, dan pergantian bulan laporan. Screenshot diperiksa; tombol tambah dan navbar tidak lagi bertumpuk. Tes UI juga memastikan bingkai tombol tambah tidak beririsan dengan lima tombol navbar. Aplikasi dibuka kembali tanpa argumen tes atau debugger.
 - Tes perangkat menemukan identifier navbar tertimpa oleh identifier kontainer dan tombol tambah menimpa navbar. Identifier kontainer dihapus; navbar kini memiliki ruang tersendiri di layout, tombol tambah ditempatkan di area konten. Ekspektasi tes token desain diselaraskan dengan kontrak desain yang sudah digunakan aplikasi.
 - Satu percobaan startup UI sempat berhenti di layar masuk; pengulangan ketiga tes UI pada build yang sama lolos. Firefox tidak berhasil membuat profil tes; hasil Chromium/WebKit bukan bukti kelulusan Firefox.
-- Scan seluler nyata masih menunggu konfigurasi/deploy backend produksi dan pengujian perangkat. Belum ada klaim bahwa seluruh alur produksi bebas error.
+- Backend scan sudah terdeploy dan ekstraksi struk sintetis melalui cloud lolos. Bug RPC `finish_receipt_scan` yang mengembalikan HTTP 204 tanpa JSON diperbaiki; respons kosong tidak lagi dilaporkan sebagai gambar tidak valid. Foto struk pengguna pada seluler belum menjadi bagian dari pengujian ini.
 
 ## Pengembangan lokal
 

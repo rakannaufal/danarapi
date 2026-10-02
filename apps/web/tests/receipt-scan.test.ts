@@ -2,6 +2,24 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { normalizeAmount, normalizeReceipt, validateReceipt, type ScanResult } from '../src/receipt.ts';
 import { scanReceipt, validateImages, readBounded, receiptSchema, type ScanStore } from '../../../supabase/functions/_shared/receipt-scan.ts';
+
+test('bounded HTTP reader preserves payload when network chunks reuse a buffer', async () => {
+  const original = JSON.stringify({ images: [{ mimeType: 'image/png', data: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.repeat(4096) }] });
+  const bytes = new TextEncoder().encode(original);
+  const scratch = new Uint8Array(1024);
+  let offset = 0;
+  const body = new ReadableStream<Uint8Array>({
+    pull(controller) {
+      if (offset === bytes.length) { controller.close(); return; }
+      const count = Math.min(scratch.length, bytes.length - offset);
+      scratch.set(bytes.subarray(offset, offset + count));
+      offset += count;
+      controller.enqueue(scratch.subarray(0, count));
+    },
+  }, { highWaterMark: 0 });
+  const result = await readBounded(new Response(body), bytes.length);
+  assert.equal(new TextDecoder().decode(result), original);
+});
 import { calculateReceipt, type ItemSplit } from '../src/item-split.ts';
 import { DemoRepository } from '../src/demo.ts';
 import { readFileSync } from 'node:fs';

@@ -312,6 +312,12 @@ struct ReviewItem: Identifiable, Codable, Hashable, Sendable {
     var createdAt: Date
     var receiptLines: [ReceiptLine]? = nil
     var receipt: ScannedReceipt? = nil
+
+    func matchesID(_ candidate: String) -> Bool {
+        if id == candidate { return true }
+        guard let storedUUID = UUID(uuidString: id), let candidateUUID = UUID(uuidString: candidate) else { return false }
+        return storedUUID == candidateUUID
+    }
 }
 
 struct Budget: Identifiable, Codable, Hashable, Sendable {
@@ -376,6 +382,18 @@ struct DashboardSnapshot: Codable, Sendable {
     var goals: [SavingsGoal]? = nil
     var monthlyReport: ReportSummary? = nil
     var reportMonth: String? = nil
+    var timezone: String? = nil
+
+    @discardableResult
+    mutating func reconcileAcknowledgedReview(_ item: ReviewItem, replacingExisting: Bool = false) -> Bool {
+        if let index = reviewItems.firstIndex(where: { $0.matchesID(item.id) }) {
+            guard replacingExisting else { return false }
+            reviewItems[index] = item
+        } else {
+            reviewItems.insert(item, at: 0)
+        }
+        return true
+    }
 }
 
 struct SavingsGoal: Identifiable, Codable, Hashable, Sendable {
@@ -405,6 +423,27 @@ struct TransactionCursor: Codable, Hashable, Sendable {
     let id: String
 }
 
+struct PlanningEntry: Codable, Identifiable, Sendable {
+    let id: String
+    let sourceID: String
+    let kind: String
+    @DecimalString var amount: Int64
+    let occurredAt: Date
+    let merchant: String?
+    let note: String?
+}
+struct PlanningHistoryPage: Codable, Sendable {
+    let items: [PlanningEntry]
+    let nextCursor: TransactionCursor?
+}
+struct PlanningHistoryRequest: Codable, Sendable {
+    var goalID: String? = nil
+    var categoryID: String? = nil
+    var startDate: Date? = nil
+    var endDate: Date? = nil
+    var cursor: TransactionCursor? = nil
+}
+
 struct TransactionPage: Codable, Sendable {
     let items: [FinanceTransaction]
     let nextCursor: TransactionCursor?
@@ -420,8 +459,17 @@ struct ReportSummary: Codable, Sendable {
     @DecimalString var personalExpense: Int64
     let categories: [ReportCategoryAmount]
     var allocations: [ReportAllocation]? = nil
+    var cashAccounts: [ReportAccountCash]? = nil
 
     static let zero = ReportSummary(personalIncome: 0, personalExpense: 0, categories: [])
+}
+
+struct ReportAccountCash: Identifiable, Codable, Sendable {
+    var id: String { accountID }
+    let accountID: String
+    @DecimalString var incoming: Int64
+    @DecimalString var outgoing: Int64
+    @DecimalString var net: Int64
 }
 
 struct ReportAllocation: Identifiable, Codable, Sendable {
