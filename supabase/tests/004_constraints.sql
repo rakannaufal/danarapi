@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(6);
+select plan(8);
 
 insert into auth.users(instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at)
 values
@@ -40,9 +40,19 @@ select throws_ok($$select private.validate_split_bill('64000000-0000-4000-8000-0
 
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"14000000-0000-4000-8000-000000000001","role":"authenticated"}', true);
-select throws_ok($sql$
+select lives_ok($sql$
   select public.api_create_transaction('74000000-0000-4000-8000-000000000001','expense','1000','24000000-0000-4000-8000-000000000001','34000000-0000-4000-8000-000000000001','2026-08-31Z',null,null,'manual')
-$sql$, 'P0001', null, 'transaction before account opening is rejected');
+$sql$, 'historical transaction before account opening is accepted');
+select is(
+  (select count(*) from public.transactions where account_id = '24000000-0000-4000-8000-000000000001' and occurred_at = '2026-08-31Z' and amount = 1000),
+  1::bigint,
+  'historical transaction retains its original date and amount'
+);
+select is(
+  (select opened_at from public.accounts where id = '24000000-0000-4000-8000-000000000001'),
+  '2026-09-01Z'::timestamptz,
+  'historical entry does not change the account opening date'
+);
 
 select * from finish();
 rollback;
