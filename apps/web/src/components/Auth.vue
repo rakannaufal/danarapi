@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { client, state, startDemo, message } from '../store.ts';
-import Icon from './Icon.vue';
+import { client, state, message } from '../store.ts';
 import { cloudConfiguration } from '../remote.ts';
 import { ensureOAuthProvider } from '../cloud.ts';
 import ProviderSignInButton from './ProviderSignInButton.vue';
@@ -29,8 +28,7 @@ async function signIn(provider: 'google') {
     <section class="auth-card">
       <h2>{{ welcomeContent.signInTitle }}</h2><p class="muted">{{ welcomeContent.signInSubtitle }}</p>
       <div class="oauth-actions"><ProviderSignInButton provider="google" :busy="busy === 'google'" :disabled="!!busy || !client" @click="signIn('google')" /></div>
-      <p v-if="error || state.error" class="error-text" role="alert">{{ error || state.error }}</p><p v-if="!client" class="fine-print">Login belum tersedia. Coba Demo tanpa akun.</p>
-      <div class="divider"><span>atau</span></div><button class="secondary demo-button" :disabled="state.loading || !!busy" @click="startDemo"><Icon name="wallet" /> Coba Demo</button>
+      <p v-if="error || state.error" class="error-text" role="alert">{{ error || state.error }}</p><p v-if="!client" class="fine-print">Login belum tersedia. Coba lagi nanti.</p>
     </section>
   </main>
   </div>

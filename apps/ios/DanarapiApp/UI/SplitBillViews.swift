@@ -245,8 +245,8 @@ struct SplitBillDetailView: View {
                         ShareLink(item: reminder(bill)) { Label("Bagikan ringkasan", systemImage: "square.and.arrow.up") }
                         Button("Hapus bill", role: .destructive) { Task { if await app.deleteSplitBill(bill) { deletedBill = bill } } }.disabled(bill.settlements.contains { !$0.reversed } || bill.resolutions.contains { !$0.reversed })
                     }
-                }.navigationTitle(bill.title)
-            } else { ContentUnavailableView("Bill tidak tersedia", systemImage: "person.3") }
+                }.danarapiListSurface().navigationTitle(bill.title)
+            } else { ContentUnavailableView("Bill tidak tersedia", systemImage: AppSymbol.split.rawValue) }
         }
         .sheet(item: $settlementMember) { SettlementSheet(billID: billID, member: $0) }
         .sheet(item: $resolutionMember) { ResolutionSheet(billID: billID, member: $0) }
@@ -271,7 +271,7 @@ private struct SettlementReversalSheet: View {
     let event: SplitSettlement
     @State private var reason = ""
     var body: some View {
-        NavigationStack { Form { Section { Text("Membatalkan pelunasan \(event.amount.idr) akan memulihkan sisa kewajiban dan membalik arus kasnya."); TextField("Alasan wajib", text: $reason, axis: .vertical) }; Section { Button("Batalkan pelunasan", role: .destructive) { Task { if await app.reverseSettlement(event, reason: reason) { dismiss() } } }.disabled(reason.nilIfBlank == nil) } }.navigationTitle("Batalkan pelunasan").toolbar { ToolbarItem(placement: .cancellationAction) { Button("Tutup") { dismiss() } } } }
+        NavigationStack { Form { Section { Text("Membatalkan pelunasan \(event.amount.idr) akan memulihkan sisa kewajiban dan membalik arus kasnya."); TextField("Alasan wajib", text: $reason, axis: .vertical) }; Section { Button("Batalkan pelunasan", role: .destructive) { Task { if await app.reverseSettlement(event, reason: reason) { dismiss() } } }.disabled(reason.nilIfBlank == nil) } }.danarapiListSurface().navigationTitle("Batalkan pelunasan").toolbar { ToolbarItem(placement: .cancellationAction) { Button("Tutup") { dismiss() } } } }
     }
 }
 
@@ -281,7 +281,7 @@ private struct ResolutionReversalSheet: View {
     let event: SplitResolution
     @State private var reason = ""
     var body: some View {
-        NavigationStack { Form { Section { Text("Pembalikan memulihkan piutang atau utang tanpa mengubah saldo akun."); TextField("Alasan wajib", text: $reason, axis: .vertical) }; Section { Button("Batalkan penghapusan", role: .destructive) { Task { if await app.reverseResolution(event, reason: reason) { dismiss() } } }.disabled(reason.nilIfBlank == nil) } }.navigationTitle("Batalkan penghapusan").toolbar { ToolbarItem(placement: .cancellationAction) { Button("Tutup") { dismiss() } } } }
+        NavigationStack { Form { Section { Text("Pembalikan memulihkan piutang atau utang tanpa mengubah saldo akun."); TextField("Alasan wajib", text: $reason, axis: .vertical) }; Section { Button("Batalkan penghapusan", role: .destructive) { Task { if await app.reverseResolution(event, reason: reason) { dismiss() } } }.disabled(reason.nilIfBlank == nil) } }.danarapiListSurface().navigationTitle("Batalkan penghapusan").toolbar { ToolbarItem(placement: .cancellationAction) { Button("Tutup") { dismiss() } } } }
     }
 }
 
@@ -294,7 +294,7 @@ private struct SettlementSheet: View {
     @State private var accountID = ""
     @State private var note = ""
     var body: some View {
-        NavigationStack { Form { Section { MoneyField(title: "Nominal pelunasan", value: $amount).listRowInsets(EdgeInsets()).listRowBackground(Color.clear); Text("Sisa \(member.remainingAmount.idr)").font(.caption) }; Section { Picker("Akun", selection: $accountID) { ForEach(app.activeAccounts) { Text($0.name).tag($0.id) } }; TextField("Catatan", text: $note) }; Section { Button("Catat pelunasan") { Task { guard let value = Int64(amount) else { return }; if await app.recordSettlement(SettlementDraft(billID: billID, memberID: member.id, accountID: accountID, amount: value, occurredAt: .now, note: note.nilIfBlank)) { dismiss() } } }.buttonStyle(PrimaryButtonStyle()).disabled((Int64(amount) ?? 0) <= 0 || (Int64(amount) ?? 0) > member.remainingAmount).listRowInsets(EdgeInsets()).listRowBackground(Color.clear) } }.navigationTitle("Pelunasan \(member.displayName)").toolbar { ToolbarItem(placement: .cancellationAction) { Button("Batal") { dismiss() } } }.onAppear { accountID = app.activeAccounts.first?.id ?? "" } }
+        NavigationStack { Form { Section { MoneyField(title: "Nominal pelunasan", value: $amount).listRowInsets(EdgeInsets()).listRowBackground(Color.clear); Text("Sisa \(member.remainingAmount.idr)").font(.caption) }; Section { Picker("Akun", selection: $accountID) { ForEach(app.activeAccounts) { Text($0.name).tag($0.id) } }; TextField("Catatan", text: $note) }; Section { Button("Catat pelunasan") { Task { guard let value = Int64(amount) else { return }; if await app.recordSettlement(SettlementDraft(billID: billID, memberID: member.id, accountID: accountID, amount: value, occurredAt: .now, note: note.nilIfBlank)) { dismiss() } } }.buttonStyle(PrimaryButtonStyle()).disabled((Int64(amount) ?? 0) <= 0 || (Int64(amount) ?? 0) > member.remainingAmount).listRowInsets(EdgeInsets()).listRowBackground(Color.clear) } }.danarapiListSurface().navigationTitle("Pelunasan \(member.displayName)").toolbar { ToolbarItem(placement: .cancellationAction) { Button("Batal") { dismiss() } } }.onAppear { accountID = app.activeAccounts.first?.id ?? "" } }
     }
 }
 
@@ -306,6 +306,6 @@ private struct ResolutionSheet: View {
     @State private var amount = ""
     @State private var reason = ""
     var body: some View {
-        NavigationStack { Form { Section { MoneyField(title: "Nominal yang dihapuskan", value: $amount).listRowInsets(EdgeInsets()).listRowBackground(Color.clear); Text("Saldo akun tidak berubah. Piutang yang dihapus menjadi pengeluaran nonkas; pembebasan utang menjadi pemasukan nonkas.").font(.caption).foregroundStyle(Color.danarapiMuted) }; Section { TextField("Alasan wajib", text: $reason, axis: .vertical) }; Section { Button("Hapuskan kewajiban", role: .destructive) { Task { guard let value = Int64(amount) else { return }; if await app.recordResolution(ResolutionDraft(billID: billID, memberID: member.id, amount: value, occurredAt: .now, reason: reason)) { dismiss() } } }.disabled((Int64(amount) ?? 0) <= 0 || (Int64(amount) ?? 0) > member.remainingAmount || reason.nilIfBlank == nil) } }.navigationTitle("Hapuskan sisa").toolbar { ToolbarItem(placement: .cancellationAction) { Button("Batal") { dismiss() } } } }
+        NavigationStack { Form { Section { MoneyField(title: "Nominal yang dihapuskan", value: $amount).listRowInsets(EdgeInsets()).listRowBackground(Color.clear); Text("Saldo akun tidak berubah. Piutang yang dihapus menjadi pengeluaran nonkas; pembebasan utang menjadi pemasukan nonkas.").font(.caption).foregroundStyle(Color.danarapiMuted) }; Section { TextField("Alasan wajib", text: $reason, axis: .vertical) }; Section { Button("Hapuskan kewajiban", role: .destructive) { Task { guard let value = Int64(amount) else { return }; if await app.recordResolution(ResolutionDraft(billID: billID, memberID: member.id, amount: value, occurredAt: .now, reason: reason)) { dismiss() } } }.disabled((Int64(amount) ?? 0) <= 0 || (Int64(amount) ?? 0) > member.remainingAmount || reason.nilIfBlank == nil) } }.danarapiListSurface().navigationTitle("Hapuskan sisa").toolbar { ToolbarItem(placement: .cancellationAction) { Button("Batal") { dismiss() } } } }
     }
 }

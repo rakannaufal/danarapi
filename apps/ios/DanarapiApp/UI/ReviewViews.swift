@@ -20,23 +20,37 @@ struct ReviewListView: View {
 
     private var reviewContent: some View {
             Group {
-                if app.snapshot.reviewItems.isEmpty {
+                if app.snapshot.reviewItems.isEmpty && app.sharedProofCount == 0 {
                     ContentUnavailableView(
                         "Semua sudah ditinjau",
                         systemImage: "checkmark.circle",
                         description: Text("Bukti impor menunggu pemeriksaan.")
                     )
+                    .overlay(alignment: .bottom) {
+                        NavigationLink("Bukti dari Share") { SharedInboxView() }.padding()
+                    }
                 } else {
-                    List(app.snapshot.reviewItems) { item in
-                        NavigationLink { ReviewDetailView(itemID: item.id) } label: {
-                            ReviewRow(item: item)
+                    List {
+                        Section {
+                            NavigationLink { SharedInboxView() } label: {
+                                Label {
+                                    HStack { Text("Bukti dari Share"); Spacer(); Text("\(app.sharedProofCount)").foregroundStyle(Color.danarapiMuted) }
+                                } icon: { Image(systemName: "tray.and.arrow.down") }
+                            }.accessibilityIdentifier("reviews.sharedInbox")
+                        } footer: { Text("Bukti lokal menunggu akun tujuan. Saldo belum berubah.") }
+                        Section("Draft akun ini") {
+                            ForEach(app.snapshot.reviewItems) { item in
+                                NavigationLink { ReviewDetailView(itemID: item.id) } label: { ReviewRow(item: item) }
+                            }
                         }
                     }
                     .listStyle(.insetGrouped)
                 }
             }
+            .danarapiListSurface()
             .navigationTitle("Tinjauan").navigationBarTitleDisplayMode(.inline)
-            .refreshable { await app.refresh() }
+            .refreshable { await app.refresh(); app.refreshSharedInboxCount() }
+            .task { app.refreshSharedInboxCount() }
     }
 }
 
@@ -45,10 +59,7 @@ private struct ReviewRow: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            Image(systemName: icon)
-                .font(.title3)
-                .frame(width: 44, height: 44)
-                .background(Color.danarapiSun, in: RoundedRectangle(cornerRadius: 14))
+            SymbolBadge(symbol: icon, background: .danarapiSun, size: 44)
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.merchant.value ?? "Jumlah belum terbaca")
                     .font(.headline)
@@ -75,7 +86,7 @@ private struct ReviewRow: View {
     private var icon: String {
         switch item.source {
         case .qris: "qrcode"
-        case .image: "photo"
+        case .image: AppSymbol.gallery.rawValue
         case .pdfText: "doc.richtext"
         case .pastedText: "text.quote"
         }
@@ -93,9 +104,11 @@ struct ReviewDetailView: View {
     @State private var categoryID = ""
     @State private var showSplit = false
     @State private var rejectConfirmation = false
+    @State private var deleteConfirmation = false
     @State private var showReceiptEditor = false
     @State private var confirmMismatch = false
     @State private var showReread = false
+    @State private var kind: TransactionKind = .expense
 
     private var item: ReviewItem? { app.snapshot.reviewItems.first(where: { $0.matchesID(itemID) }) }
     private var valid: Bool {
@@ -151,14 +164,29 @@ struct ReviewDetailView: View {
                             Button("Bukan duplikat") { Task { _ = await app.clearReviewDuplicate(item) } }
                         }
                     }
-                    Section("Catat sebagai pengeluaran") {
+                    if item.rawReference?.hasPrefix("Bukti dari Share") == true {
+                        Section {
+                            SharedOriginalButton(itemID: item.id)
+                            NavigationLink("Transfer antar akun sendiri") { TransferFormView(reviewItem: item) { dismiss() } }
+                        } footer: {
+                            Text("Pembacaan lokal perlu diperiksa. Biaya admin belum ditambahkan. Pilih Transfer untuk perpindahan antar akun sendiri agar kedua saldo benar.")
+                        }
+                    }
+                    Section("Catat transaksi") {
+                        if item.source != .qris {
+                            Picker("Jenis", selection: $kind) {
+                                Text("Pengeluaran").tag(TransactionKind.expense)
+                                Text("Pemasukan").tag(TransactionKind.income)
+                            }
+                            .onChange(of: kind) { _, _ in categoryID = "" }
+                        }
                         Picker("Akun", selection: $accountID) {
                             Text("Pilih akun").tag("")
                             ForEach(app.activeAccounts) { Text($0.name).tag($0.id) }
                         }
                         Picker("Kategori", selection: $categoryID) {
                             Text("Pilih kategori").tag("")
-                            ForEach(app.expenseCategories.filter { $0.systemKey != "goal" }) { Text($0.name).tag($0.id) }
+                            ForEach((kind == .expense ? app.expenseCategories : app.incomeCategories).filter { $0.systemKey != "goal" }) { Text($0.name).tag($0.id) }
                         }.disabled(item.source == .qris)
                         if item.source == .qris { Text("QRIS untuk pencatatan, bukan pembayaran.")
                             .font(.footnote)
@@ -172,6 +200,7 @@ struct ReviewDetailView: View {
                             .listRowInsets(EdgeInsets())
                             .listRowBackground(Color.clear)
                         Button("Jadikan split bill") { showSplit = true }
+                            .disabled(kind != .expense)
                             .disabled(Int64(amount) == nil)
                     }
                     Section {
@@ -182,6 +211,7 @@ struct ReviewDetailView: View {
                             }
                         }
                         Button("Tolak draft", role: .destructive) { rejectConfirmation = true }
+                        Button("Hapus draft", systemImage: "trash", role: .destructive) { deleteConfirmation = true }.disabled(app.isLoading)
                     }
                 }
                 .scrollContentBackground(.hidden)
@@ -222,6 +252,9 @@ struct ReviewDetailView: View {
                 } message: {
                     Text("Bukti belum memengaruhi saldo. Penolakan dapat diurungkan.")
                 }
+                .confirmationDialog("Hapus draft ini?", isPresented: $deleteConfirmation, titleVisibility: .visible) {
+                    Button("Hapus draft", role: .destructive) { Task { if await app.deleteReview(item) { dismiss() } } }
+                } message: { Text("Draft beserta lampirannya akan dihapus. Saldo tidak berubah. Penghapusan tidak dapat diurungkan.") }
             } else {
                 ContentUnavailableView("Draft tidak tersedia", systemImage: "tray")
             }
@@ -292,7 +325,7 @@ struct ReviewDetailView: View {
         guard let value = Int64(amount) else { return }
         let draft = TransactionDraft(
             id: nil,
-            kind: .expense,
+            kind: kind,
             amount: value,
             accountID: accountID,
             categoryID: categoryID,

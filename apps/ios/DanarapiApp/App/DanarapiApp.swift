@@ -10,6 +10,9 @@ struct DanarapiApp: App {
             RootView()
                 .environment(app)
                 .tint(Color.danarapiPrimary)
+                .fontDesign(.default)
+                .symbolRenderingMode(.hierarchical)
+                .buttonBorderShape(.capsule)
                 .scrollContentBackground(.hidden)
                 .preferredColorScheme(app.colorScheme)
                 .environment(\.timeZone, TimeZone(identifier: app.timezone) ?? TimeZone(identifier: "Asia/Jakarta")!)
@@ -21,7 +24,9 @@ struct DanarapiApp: App {
                             .accessibilityHidden(true)
                     }
                 }
-                .task { await app.start() }
+                .task { await app.start(); app.refreshSharedInboxCount() }
+                .onChange(of: app.ownerID) { _, _ in app.refreshSharedInboxCount() }
+                .onChange(of: app.isLocked) { _, _ in app.refreshSharedInboxCount() }
                 .onChange(of: scenePhase) { _, phase in
                     switch phase {
                     case .background:
@@ -34,7 +39,8 @@ struct DanarapiApp: App {
                         if !app.isAuthenticating { app.lockIfNeeded() }
                     case .active:
                         app.privacyCoverVisible = false
-                        if !app.isStarting { Task { await app.refresh() } }
+                        app.refreshSharedInboxCount()
+                        if !app.isStarting { Task { await app.refresh(); app.refreshSharedInboxCount() } }
                     @unknown default: break
                     }
                 }

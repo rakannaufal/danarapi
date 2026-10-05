@@ -36,7 +36,7 @@ struct OnboardingView: View {
             VStack(spacing: 12) {
                 HStack(spacing: 12) {
                     if page > 0 {
-                        Button("Kembali") { if reduceMotion { page -= 1 } else { withAnimation(.easeOut(duration: DesignTokens.motion)) { page -= 1 } } }.buttonStyle(.bordered).frame(minHeight: 44)
+                        Button("Kembali") { if reduceMotion { page -= 1 } else { withAnimation(.easeOut(duration: DesignTokens.motion)) { page -= 1 } } }.buttonStyle(PrimaryButtonStyle())
                     }
                     Button(lastPage ? "Mulai mencatat" : "Lanjut") {
                         if !lastPage {
@@ -82,9 +82,12 @@ struct AuthView: View {
                         .frame(maxWidth: .infinity, minHeight: 44)
                         .accessibilityIdentifier("auth.cancel")
                 }
-                if !app.cloudReceiptScanConfigured { Text("Login belum tersedia. Coba Demo tanpa akun.").font(.caption).foregroundStyle(Color.danarapiMuted) }
+                if !app.cloudReceiptScanConfigured { Text(app.requiresReauthentication ? "Login belum tersedia. Coba lagi nanti." : "Login belum tersedia. Coba Demo tanpa akun.").font(.caption).foregroundStyle(Color.danarapiMuted) }
                 if !app.requiresReauthentication {
-                    Button("Coba Demo tanpa akun") { Task { await app.startDemo() } }.frame(maxWidth: .infinity, minHeight: 44).disabled(app.isAuthenticating)
+                    Button("Coba Demo tanpa akun") { Task { await app.startDemo() } }
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .disabled(app.isAuthenticating || app.isLoading)
+                        .accessibilityIdentifier("auth.demo")
                 }
                 Text(welcome?.disclaimer ?? "Pencatat keuangan, bukan layanan pembayaran.").font(.caption).foregroundStyle(Color.danarapiMuted).multilineTextAlignment(.center)
                 ProductLinksView().frame(maxWidth: .infinity)
@@ -107,7 +110,7 @@ private struct ProviderLoginButton: View {
                     if let logo = UIImage(named: "GoogleSignInLogo") { Image(uiImage: logo).renderingMode(.original).resizable().scaledToFit() }
                 }.frame(width: 24, height: 24).accessibilityHidden(true)
                 Text(isBusy ? "Menghubungkan…" : title)
-                    .font(.custom("GoogleSans-Medium", size: 18, relativeTo: .headline))
+                    .font(.headline.weight(.medium))
                     .lineLimit(1).minimumScaleFactor(0.85).frame(maxWidth: .infinity)
                 Group {
                     if isBusy { ProgressView().tint(.black) }

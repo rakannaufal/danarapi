@@ -107,6 +107,14 @@ async function importSample(kind: 'pdf' | 'png') {
 }
 async function retryUpload() { if (!failedUpload.value) return; importing.value = true; try { await upload(failedUpload.value.id, failedUpload.value.file); failedUpload.value = undefined; error.value = ''; state.notice = 'Lampiran terunggah.'; } catch (cause) { error.value = message(cause); } finally { importing.value = false; } }
 async function reject(review: Review) { if (await mutate('reject_review_item', { id: review.id }, 'Hasil impor ditolak')) emit('undo', async () => { await mutate('restore_review_item', { id: review.id }, 'Hasil impor dipulihkan'); }, 'Hasil impor ditolak'); }
+async function removeReview(review: Review) {
+  if (!window.confirm('Hapus draft beserta lampirannya? Saldo tidak berubah. Penghapusan tidak dapat diurungkan.')) return;
+  if (await mutate('delete_review_item', { id: review.id }, 'Draft dihapus')) {
+    attachments.delete(review.id); clearPreview();
+    if (editing.value === review.id) editing.value = undefined;
+    if (failedUpload.value?.id === review.id) failedUpload.value = undefined;
+  }
+}
 async function merge(review: Review) { if (!review.duplicateCandidateID || !window.confirm('Gabungkan bukti ke catatan yang sudah ada? Tidak membuat transaksi baru.')) return; const bill = state.data.splitBills.some(row => row.id === review.duplicateCandidateID); await mutate('merge_review_item', { id: review.id, ...(bill ? { bill_id: review.duplicateCandidateID } : { transaction_id: review.duplicateCandidateID }) }, 'Bukti digabung; saldo tidak berubah.'); }
 async function viewAttachment(review: Review) {
   clearPreview();
@@ -156,7 +164,7 @@ async function attachmentFile(review: Review): Promise<File> {
       <details><summary>Lihat asal ekstraksi</summary><p class="fine-print pre-wrap">{{ (review.rawReference || review.amount.evidenceSpan || 'Belum terbaca. Baca ulang atau isi manual.').replace(/Google\s+Gemini|Gemini/gi, 'AI') }}</p></details>
       <p v-if="review.duplicateCandidateID" class="callout sun">Ditemukan transaksi mirip. Periksa sebelum menyimpan.</p>
       <div class="button-row"><button v-if="review.attachmentName" class="text-button" @click="viewAttachment(review)">Lihat lampiran</button><button v-if="review.attachmentName && ['image','pdf_text'].includes(review.source)" class="text-button" :disabled="importing" @click="rescan(review)">Baca ulang</button></div>
-      <div class="button-row"><button class="secondary" :disabled="importing" @click="emit('confirm', review, false)">Periksa &amp; simpan</button><button class="text-button" :disabled="importing" @click="emit('confirm', review, true)">Split bill</button><button class="text-button danger-text" :disabled="state.saving || importing" @click="reject(review)">Tolak</button><button v-if="review.duplicateCandidateID" class="text-button" :disabled="state.saving" @click="merge(review)">Gabung</button><button v-if="review.duplicateCandidateID" class="text-button" :disabled="state.saving" @click="mutate('clear_review_duplicate', { id: review.id }, 'Ditandai bukan duplikat')">Bukan duplikat</button></div>
+      <div class="button-row"><button class="secondary" :disabled="importing" @click="emit('confirm', review, false)">Periksa &amp; simpan</button><button class="text-button" :disabled="importing" @click="emit('confirm', review, true)">Split bill</button><button class="text-button danger-text" :disabled="state.saving || importing" @click="reject(review)">Tolak</button><button class="text-button danger-text" :disabled="state.saving || importing" @click="removeReview(review)"><Icon name="trash" :size="16" />Hapus draft</button><button v-if="review.duplicateCandidateID" class="text-button" :disabled="state.saving" @click="merge(review)">Gabung</button><button v-if="review.duplicateCandidateID" class="text-button" :disabled="state.saving" @click="mutate('clear_review_duplicate', { id: review.id }, 'Ditandai bukan duplikat')">Bukan duplikat</button></div>
     </article>
   </div>
   <section v-if="preview" class="card attachment-preview"><div class="section-heading"><h3>{{ preview.name }}</h3><button class="icon-button" aria-label="Tutup pratinjau" @click="clearPreview"><Icon name="close" /></button></div><iframe v-if="preview.type === 'application/pdf'" :src="preview.url" title="Pratinjau PDF" sandbox=""></iframe><img v-else :src="preview.url" :alt="'Bukti ' + preview.name"></section>

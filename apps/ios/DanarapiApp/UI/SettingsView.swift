@@ -17,17 +17,17 @@ struct SettingsView: View {
                     Section { Label("Demo · data contoh", systemImage: "sparkles") }
                 }
                 Section("Tampilan") {
-                    Picker("Tema", selection: $app.theme) { ForEach(ThemePreference.allCases) { Text($0.title).tag($0) } }
-                    Toggle("Sembunyikan nominal", isOn: $app.hideAmounts)
-                    Toggle("Kunci saat aplikasi ditinggalkan", isOn: $app.appLockEnabled)
+                    Picker(selection: $app.theme) { ForEach(ThemePreference.allCases) { Text($0.title).tag($0) } } label: { SettingsRowLabel(title: "Tema", symbol: .appearance, background: .danarapiSky) }
+                    Toggle(isOn: $app.hideAmounts) { SettingsRowLabel(title: "Sembunyikan nominal", symbol: .hidden, background: .danarapiSky) }
+                    Toggle(isOn: $app.appLockEnabled) { SettingsRowLabel(title: "Kunci saat aplikasi ditinggalkan", symbol: .privacy) }
                         .disabled(app.mode == .demo || !AppLockService.isAvailable)
                     InformationDisclosure(title: "Tentang pengunci", message: "Gunakan Face ID, Touch ID, atau kode perangkat. Pengunci melindungi tampilan perangkat, bukan menggantikan keamanan akun.")
                 }
                 Section("Kelola") {
-                    NavigationLink("Akun keuangan") { AccountManagementView() }
-                    NavigationLink("Kategori") { CategoryManagementView() }
-                    NavigationLink("Aturan merchant") { MerchantRulesView() }
-                    NavigationLink("Tagihan bersama") { SplitBillListView() }
+                    NavigationLink { AccountManagementView() } label: { SettingsRowLabel(title: "Akun keuangan", symbol: .wallet, background: .danarapiSky) }
+                    NavigationLink { CategoryManagementView() } label: { SettingsRowLabel(title: "Kategori", symbol: .category, color: .danarapiChartExpense, background: .danarapiPeach) }
+                    NavigationLink { MerchantRulesView() } label: { SettingsRowLabel(title: "Aturan merchant", symbol: .receipt, background: .danarapiSun) }
+                    NavigationLink { SplitBillListView() } label: { SettingsRowLabel(title: "Tagihan bersama", symbol: .split) }
                 }
                 Section("Data") {
                     Button { Task { await export() } } label: { Label("Ekspor data lengkap", systemImage: "square.and.arrow.up") }
@@ -61,17 +61,19 @@ struct SettingsView: View {
                 }
                 Section("Privasi") {
                     InformationDisclosure(title: "Pemrosesan struk", message: "Foto dan halaman PDF struk dikirim ke layanan AI eksternal saat Anda memilih membaca struk. Penggunaan dan penyimpanan oleh penyedia mengikuti ketentuan layanannya; layanan gratis dapat menggunakan data untuk peningkatan model. Hindari data sensitif. QRIS dan teks diproses lokal. Hasil ekstraksi tetap draft sampai Anda mengonfirmasi.")
-                    Label("Danarapi tidak memproses pembayaran", systemImage: "shield.lefthalf.filled")
+                    Label("Danarapi tidak memproses pembayaran", systemImage: AppSymbol.privacy.rawValue)
                     Text("Saldo adalah catatan Anda. Bukti impor perlu diperiksa sebelum disimpan.")
                         .font(.caption).foregroundStyle(Color.danarapiMuted)
-                    Picker("Zona waktu", selection: Binding(get: { app.timezone }, set: { value in Task { _ = await app.updateTimezone(value) } })) { ForEach(["Asia/Jakarta", "Asia/Makassar", "Asia/Jayapura", "UTC"], id: \.self) { Text($0).tag($0) } }
+                    Picker(selection: Binding(get: { app.timezone }, set: { value in Task { _ = await app.updateTimezone(value) } })) { ForEach(["Asia/Jakarta", "Asia/Makassar", "Asia/Jayapura", "UTC"], id: \.self) { Text($0).tag($0) } } label: { SettingsRowLabel(title: "Zona waktu", symbol: .time, background: .danarapiSky) }
                 }
                 Section("Tentang & bantuan") { ForEach(ProductCatalog.links, id: \.0) { identifier, title in NavigationLink(title) { ProductPageView(pageID: identifier) } } }
                 Section {
                     Button(app.mode == .demo ? "Keluar dari Demo" : "Keluar akun", role: .destructive) { showLogout = true }
                 }
             }
-            .navigationTitle("Pengaturan").navigationBarTitleDisplayMode(.inline)
+            .listSectionSpacing(16)
+            .scrollContentBackground(.hidden).background(Color.danarapiCanvas)
+            .danarapiMainHeader()
             .sheet(isPresented: $showShare) { if let exportURL { ShareSheet(items: [exportURL]) } }
             .sheet(isPresented: $showDelete) { DeleteAccountView() }
             .confirmationDialog("Buang perubahan perangkat ini?", isPresented: Binding(get: { discardMutationID != nil }, set: { if !$0 { discardMutationID = nil } }), titleVisibility: .visible) {
@@ -121,6 +123,7 @@ private struct MerchantRulesView: View {
                 }
             }
         }
+        .danarapiListSurface()
         .navigationTitle("Aturan merchant")
         .toolbar { ToolbarItem(placement: .topBarTrailing) { Button { adding = true } label: { Image(systemName: "plus") }.accessibilityLabel("Tambah aturan merchant") } }
         .sheet(isPresented: $adding) { MerchantRuleEditor(rule: nil) }
@@ -155,6 +158,7 @@ private struct MerchantRuleEditor: View {
                 }
                 if rule != nil { Section { Button("Hapus aturan", role: .destructive) { deleteConfirmation = true } } }
             }
+            .danarapiListSurface()
             .navigationTitle(rule == nil ? "Tambah aturan" : "Ubah aturan")
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Batal") { dismiss() } } }
             .onAppear {
@@ -190,16 +194,17 @@ struct AccountManagementView: View {
 
     var body: some View {
         List {
-            ForEach(app.snapshot.accounts) { account in
+            ForEach(app.snapshot.accounts.filter { !$0.archived }) { account in
                 Button { editing = account } label: {
                     HStack {
-                        Image(systemName: icon(account.kind)).frame(width: 36, height: 36).background(Color.danarapiSky, in: Circle())
+                        SymbolBadge(symbol: icon(account.kind), background: .danarapiSky, size: 36)
                         VStack(alignment: .leading) { Text(account.name).font(.headline); Text(account.kind.title).font(.caption).foregroundStyle(Color.danarapiMuted) }
                         Spacer(); MoneyText(amount: account.balance, style: .subheadline.bold())
                     }
                 }.buttonStyle(.plain)
             }
         }
+        .danarapiListSurface()
         .navigationTitle("Akun")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { ToolbarItem(placement: .topBarTrailing) { Button { adding = true } label: { Image(systemName: "plus") }.accessibilityLabel("Tambah akun") } }
@@ -208,7 +213,7 @@ struct AccountManagementView: View {
     }
 
     private func icon(_ kind: AccountKind) -> String {
-        switch kind { case .cash: "banknote"; case .bank: "building.columns"; case .ewallet: "iphone"; case .other: "wallet.pass" }
+        switch kind { case .cash: AppSymbol.cash.rawValue; case .bank: AppSymbol.bank.rawValue; case .ewallet: "iphone"; case .other: AppSymbol.wallet.rawValue }
     }
 }
 
@@ -220,7 +225,9 @@ private struct AccountEditorView: View {
     @State private var kind: AccountKind = .cash
     @State private var openingBalance = "0"
     @State private var openedAt = Date.now
-    @State private var archiveConfirmation = false
+    @State private var deleteConfirmation = false
+    @State private var saving = false
+    @State private var reason = ""
 
     var body: some View {
         NavigationStack {
@@ -228,56 +235,56 @@ private struct AccountEditorView: View {
                 Section {
                     TextField("Nama akun", text: $name)
                     Picker("Jenis", selection: $kind) { ForEach(AccountKind.allCases) { Text($0.title).tag($0) } }
-                    MoneyField(title: "Saldo awal", value: $openingBalance).listRowInsets(EdgeInsets()).listRowBackground(Color.clear).disabled(account != nil && hasActivity)
-                    DatePicker("Tanggal pembukaan", selection: $openedAt, displayedComponents: .date).disabled(account != nil && hasActivity)
-                    if account != nil && hasActivity { Text("Akun sudah memiliki aktivitas. Gunakan penyesuaian saldo untuk koreksi berikutnya.").font(.caption).foregroundStyle(Color.danarapiMuted) }
+                    MoneyField(title: account == nil ? "Saldo awal" : "Saldo saat ini", value: $openingBalance, signed: true).listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
+                    if account == nil { DatePicker("Tanggal pembukaan", selection: $openedAt, displayedComponents: .date) }
+                    else {
+                        TextField("Alasan penyesuaian (opsional)", text: $reason)
+                        Text("Selisih saldo dicatat sebagai penyesuaian. Riwayat pemasukan dan pengeluaran tetap tersimpan.").font(.caption).foregroundStyle(Color.danarapiMuted)
+                    }
                 }
                 Section {
-                    Button("Simpan akun") { Task { await save() } }.buttonStyle(PrimaryButtonStyle()).disabled(name.nilIfBlank == nil || Int64(openingBalance) == nil).listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
+                    Button("Simpan akun") { Task { await save() } }.buttonStyle(PrimaryButtonStyle()).disabled(saving || app.isLoading || name.nilIfBlank == nil || !validBalance || reason.count > 500).listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                 }
                 if account != nil {
-                    Section { Button("Arsipkan akun", role: .destructive) { archiveConfirmation = true } }
+                    Section { Button("Hapus akun", systemImage: "trash", role: .destructive) { deleteConfirmation = true }.disabled(saving || app.isLoading) }
                 }
             }
+            .danarapiListSurface()
             .navigationTitle(account == nil ? "Tambah akun" : "Ubah akun")
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Batal") { dismiss() } } }
             .onAppear {
                 name = account?.name ?? ""
                 kind = account?.kind ?? .cash
-                openingBalance = String(account?.openingBalance ?? 0)
+                openingBalance = String(account?.balance ?? 0)
                 openedAt = account?.openedAt ?? .now
             }
-            .confirmationDialog("Arsipkan akun?", isPresented: $archiveConfirmation) {
-                Button("Arsipkan", role: .destructive) { Task { if let account, await app.archiveAccount(account) { dismiss() } } }
+            .confirmationDialog("Hapus akun ini?", isPresented: $deleteConfirmation, titleVisibility: .visible) {
+                Button("Hapus akun", role: .destructive) { Task { if let account, await app.deleteAccount(account) { dismiss() } } }
                 Button("Batal", role: .cancel) {}
-            } message: { Text("Riwayat tetap tersimpan. Akun tidak dapat dipakai untuk catatan baru.") }
+            } message: { Text("Akun tanpa riwayat dihapus permanen. Akun yang sudah dipakai diarsipkan agar riwayat dan saldo tetap akurat. Akun aktif terakhir tidak dapat dihapus.") }
         }
     }
 
+    private var validBalance: Bool {
+        guard let balance = Int64(openingBalance) else { return false }
+        return (-Money.maximum...Money.maximum).contains(balance)
+    }
+
     private func save() async {
-        guard let balance = Int64(openingBalance), let cleanName = name.nilIfBlank else { return }
+        guard !saving, validBalance, let balance = Int64(openingBalance), let cleanName = name.nilIfBlank else { return }
+        saving = true
+        defer { saving = false }
         if var account {
+            let expectedBalance = account.balance
             account.name = cleanName
             account.kind = kind
-            if !hasActivity {
-                account.openingBalance = balance
-                account.openedAt = openedAt
-            }
-            if await app.updateAccount(account) { dismiss() }
+            account.balance = balance
+            if await app.editAccount(account, expectedBalance: expectedBalance, reason: reason.nilIfBlank ?? "Koreksi saldo akun") { dismiss() }
         } else {
             if await app.createAccount(AccountDraft(name: cleanName, kind: kind, openingBalance: balance, openedAt: openedAt)) { dismiss() }
         }
     }
 
-    private var hasActivity: Bool {
-        guard let account else { return false }
-        return app.snapshot.transactions.contains { $0.accountID == account.id }
-            || app.snapshot.transfers.contains { $0.fromAccountID == account.id || $0.toAccountID == account.id }
-            || app.snapshot.splitBills.contains { bill in
-                if case let .selfPaid(accountID) = bill.payer, accountID == account.id { return true }
-                return bill.settlements.contains { $0.accountID == account.id && !$0.reversed }
-            }
-    }
 }
 
 private struct CategoryManagementView: View {
@@ -285,6 +292,7 @@ private struct CategoryManagementView: View {
     @State private var kind: TransactionKind = .expense
     @State private var newName = ""
     @State private var editing: Category?
+    @State private var deleting: Category?
 
     private var rows: [Category] { app.snapshot.categories.filter { $0.kind == kind && !$0.archived } }
 
@@ -296,10 +304,14 @@ private struct CategoryManagementView: View {
             Section("Kategori") {
                 ForEach(rows) { category in
                     HStack {
-                        Image(systemName: kind == .expense ? "tag" : "arrow.down.left").frame(width: 34, height: 34).background(Color.danarapiLavender, in: Circle())
+                        SymbolBadge(symbol: kind == .expense ? AppSymbol.category.rawValue : AppSymbol.income.rawValue, background: .danarapiLavender, size: 34)
                         Button(category.name) { editing = category }.foregroundStyle(Color.danarapiInk)
                         Spacer()
-                        Button("Arsipkan", role: .destructive) { Task { await app.archiveCategory(category) } }.font(.caption)
+                        if category.systemKey == nil {
+                            Button { deleting = category } label: { Image(systemName: "trash") }
+                                .foregroundStyle(Color.danarapiExpense).disabled(app.isLoading)
+                                .accessibilityLabel("Hapus kategori \(category.name)")
+                        }
                     }.frame(minHeight: 44)
                 }
             }
@@ -308,8 +320,12 @@ private struct CategoryManagementView: View {
                 Button("Tambah kategori") { Task { guard let name = newName.nilIfBlank else { return }; if await app.createCategory(name: name, kind: kind) { newName = "" } } }.disabled(newName.nilIfBlank == nil)
             }
         }
+        .danarapiListSurface()
         .navigationTitle("Kategori")
         .sheet(item: $editing) { CategoryEditorView(category: $0) }
+        .confirmationDialog("Hapus kategori ini?", isPresented: Binding(get: { deleting != nil }, set: { if !$0 { deleting = nil } }), titleVisibility: .visible, presenting: deleting) { category in
+            Button("Hapus kategori", role: .destructive) { Task { _ = await app.deleteCategory(category); deleting = nil } }
+        } message: { category in Text("Kategori \(category.name) yang masih dipakai akan diarsipkan. Riwayat transaksi tetap tersimpan.") }
     }
 }
 
@@ -339,6 +355,7 @@ private struct CategoryEditorView: View {
                     }.buttonStyle(PrimaryButtonStyle()).disabled(name.nilIfBlank == nil).listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                 }
             }
+            .danarapiListSurface()
             .navigationTitle("Ubah kategori")
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Batal") { dismiss() } } }
             .onAppear { name = category.name; sortOrder = category.sortOrder }

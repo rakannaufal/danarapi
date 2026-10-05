@@ -2,6 +2,846 @@
   "schema_version": "1.0.0",
   "seed": "danarapi-demo-v1",
   "synthetic": true,
+  "showcase": {
+    "accounts": [
+      {
+        "id": "cash",
+        "name": "Tunai",
+        "kind": "cash",
+        "openingBalance": "1250000"
+      },
+      {
+        "id": "bank",
+        "name": "Bank utama",
+        "kind": "bank",
+        "openingBalance": "5000000"
+      },
+      {
+        "id": "wallet",
+        "name": "Dompet digital",
+        "kind": "ewallet",
+        "openingBalance": "750000"
+      }
+    ],
+    "categories": [
+      {
+        "id": "food",
+        "name": "Makan",
+        "kind": "expense"
+      },
+      {
+        "id": "transport",
+        "name": "Transportasi",
+        "kind": "expense"
+      },
+      {
+        "id": "household",
+        "name": "Rumah",
+        "kind": "expense"
+      },
+      {
+        "id": "bills",
+        "name": "Tagihan",
+        "kind": "expense"
+      },
+      {
+        "id": "health",
+        "name": "Kesehatan",
+        "kind": "expense"
+      },
+      {
+        "id": "shopping",
+        "name": "Belanja",
+        "kind": "expense"
+      },
+      {
+        "id": "entertainment",
+        "name": "Hiburan",
+        "kind": "expense"
+      },
+      {
+        "id": "salary",
+        "name": "Gaji",
+        "kind": "income"
+      },
+      {
+        "id": "freelance",
+        "name": "Freelance",
+        "kind": "income"
+      }
+    ],
+    "recurring": [
+      {
+        "day": 1,
+        "kind": "income",
+        "amount": "8500000",
+        "accountID": "bank",
+        "categoryID": "salary",
+        "merchant": "Gaji bulanan",
+        "note": "Gaji bersih setelah potongan"
+      },
+      {
+        "day": 1,
+        "kind": "expense",
+        "amount": "1800000",
+        "accountID": "bank",
+        "categoryID": "household",
+        "merchant": "Sewa kamar",
+        "note": "Sewa bulanan termasuk air"
+      },
+      {
+        "day": 1,
+        "kind": "expense",
+        "amount": "1500000",
+        "accountID": "bank",
+        "categoryID": "feature-goal",
+        "merchant": "Tabungan laptop",
+        "note": "Alokasi ke tabungan target",
+        "goalID": "demo-goal"
+      },
+      {
+        "day": 1,
+        "kind": "expense",
+        "amount": "1000000",
+        "accountID": "bank",
+        "categoryID": "feature-goal",
+        "merchant": "Dana darurat",
+        "note": "Alokasi dana darurat",
+        "goalID": "demo-emergency"
+      },
+      {
+        "day": 3,
+        "kind": "expense",
+        "amount": "185000",
+        "accountID": "bank",
+        "categoryID": "bills",
+        "merchant": "Internet rumah",
+        "note": "Paket internet bulanan"
+      },
+      {
+        "day": 4,
+        "kind": "expense",
+        "amount": "245000",
+        "accountID": "bank",
+        "categoryID": "household",
+        "merchant": "Pasar Lokal",
+        "note": "Beras, telur, sayur, dan kebutuhan dapur"
+      },
+      {
+        "day": 5,
+        "kind": "expense",
+        "amount": "99000",
+        "accountID": "wallet",
+        "categoryID": "bills",
+        "merchant": "Paket data",
+        "note": "Paket data ponsel 30 hari"
+      },
+      {
+        "day": 7,
+        "kind": "expense",
+        "amount": "65000",
+        "accountID": "wallet",
+        "categoryID": "entertainment",
+        "merchant": "Bioskop akhir pekan",
+        "note": "Satu tiket bioskop"
+      },
+      {
+        "day": 10,
+        "kind": "expense",
+        "amount": "85000",
+        "accountID": "bank",
+        "categoryID": "health",
+        "merchant": "Apotek Sehat",
+        "note": "Vitamin dan kebutuhan kesehatan"
+      },
+      {
+        "day": 12,
+        "kind": "income",
+        "amount": "1250000",
+        "accountID": "bank",
+        "categoryID": "freelance",
+        "merchant": "Proyek desain",
+        "note": "Pelunasan desain katalog UMKM"
+      },
+      {
+        "day": 14,
+        "kind": "expense",
+        "amount": "219000",
+        "accountID": "bank",
+        "categoryID": "household",
+        "merchant": "Pasar Lokal",
+        "note": "Belanja kebutuhan dua minggu"
+      },
+      {
+        "day": 18,
+        "kind": "expense",
+        "amount": "129000",
+        "accountID": "bank",
+        "categoryID": "shopping",
+        "merchant": "Toko Buku",
+        "note": "Dua buku untuk belajar"
+      },
+      {
+        "day": 20,
+        "kind": "expense",
+        "amount": "300000",
+        "accountID": "bank",
+        "categoryID": "feature-goal",
+        "merchant": "Tabungan liburan",
+        "note": "Alokasi liburan keluarga",
+        "goalID": "demo-holiday"
+      },
+      {
+        "day": 22,
+        "kind": "expense",
+        "amount": "120000",
+        "accountID": "bank",
+        "categoryID": "bills",
+        "merchant": "Token listrik",
+        "note": "Isi token listrik kamar"
+      },
+      {
+        "day": 26,
+        "kind": "expense",
+        "amount": "45000",
+        "accountID": "wallet",
+        "categoryID": "entertainment",
+        "merchant": "Langganan musik",
+        "note": "Paket individu bulanan"
+      },
+      {
+        "day": 28,
+        "kind": "expense",
+        "amount": "189000",
+        "accountID": "bank",
+        "categoryID": "household",
+        "merchant": "Pasar Lokal",
+        "note": "Kebutuhan dapur akhir bulan"
+      },
+      {
+        "day": 1,
+        "kind": "expense",
+        "amount": "22000",
+        "accountID": "cash",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 1,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 2,
+        "kind": "expense",
+        "amount": "28000",
+        "accountID": "wallet",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 2,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 3,
+        "kind": "expense",
+        "amount": "25000",
+        "accountID": "cash",
+        "categoryID": "food",
+        "merchant": "Kedai Sore",
+        "note": "Makan malam"
+      },
+      {
+        "day": 3,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 4,
+        "kind": "expense",
+        "amount": "32000",
+        "accountID": "wallet",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 4,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 5,
+        "kind": "expense",
+        "amount": "22000",
+        "accountID": "cash",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 5,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 6,
+        "kind": "expense",
+        "amount": "28000",
+        "accountID": "wallet",
+        "categoryID": "food",
+        "merchant": "Kedai Sore",
+        "note": "Makan malam"
+      },
+      {
+        "day": 7,
+        "kind": "expense",
+        "amount": "25000",
+        "accountID": "cash",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 8,
+        "kind": "expense",
+        "amount": "32000",
+        "accountID": "wallet",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 8,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 9,
+        "kind": "expense",
+        "amount": "22000",
+        "accountID": "cash",
+        "categoryID": "food",
+        "merchant": "Kedai Sore",
+        "note": "Makan malam"
+      },
+      {
+        "day": 9,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 10,
+        "kind": "expense",
+        "amount": "28000",
+        "accountID": "wallet",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 10,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 11,
+        "kind": "expense",
+        "amount": "25000",
+        "accountID": "cash",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 11,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 12,
+        "kind": "expense",
+        "amount": "32000",
+        "accountID": "wallet",
+        "categoryID": "food",
+        "merchant": "Kedai Sore",
+        "note": "Makan malam"
+      },
+      {
+        "day": 12,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 13,
+        "kind": "expense",
+        "amount": "22000",
+        "accountID": "cash",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 14,
+        "kind": "expense",
+        "amount": "28000",
+        "accountID": "wallet",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 15,
+        "kind": "expense",
+        "amount": "25000",
+        "accountID": "cash",
+        "categoryID": "food",
+        "merchant": "Kedai Sore",
+        "note": "Makan malam"
+      },
+      {
+        "day": 15,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 16,
+        "kind": "expense",
+        "amount": "32000",
+        "accountID": "wallet",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 16,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 17,
+        "kind": "expense",
+        "amount": "22000",
+        "accountID": "cash",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 17,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 18,
+        "kind": "expense",
+        "amount": "28000",
+        "accountID": "wallet",
+        "categoryID": "food",
+        "merchant": "Kedai Sore",
+        "note": "Makan malam"
+      },
+      {
+        "day": 18,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 19,
+        "kind": "expense",
+        "amount": "25000",
+        "accountID": "cash",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 19,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 20,
+        "kind": "expense",
+        "amount": "32000",
+        "accountID": "wallet",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 21,
+        "kind": "expense",
+        "amount": "22000",
+        "accountID": "cash",
+        "categoryID": "food",
+        "merchant": "Kedai Sore",
+        "note": "Makan malam"
+      },
+      {
+        "day": 22,
+        "kind": "expense",
+        "amount": "28000",
+        "accountID": "wallet",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 22,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 23,
+        "kind": "expense",
+        "amount": "25000",
+        "accountID": "cash",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 23,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 24,
+        "kind": "expense",
+        "amount": "32000",
+        "accountID": "wallet",
+        "categoryID": "food",
+        "merchant": "Kedai Sore",
+        "note": "Makan malam"
+      },
+      {
+        "day": 24,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 25,
+        "kind": "expense",
+        "amount": "22000",
+        "accountID": "cash",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 25,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 26,
+        "kind": "expense",
+        "amount": "28000",
+        "accountID": "wallet",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      },
+      {
+        "day": 26,
+        "kind": "expense",
+        "amount": "14000",
+        "accountID": "wallet",
+        "categoryID": "transport",
+        "merchant": "Transportasi kota",
+        "note": "Perjalanan pergi dan pulang kerja"
+      },
+      {
+        "day": 27,
+        "kind": "expense",
+        "amount": "25000",
+        "accountID": "cash",
+        "categoryID": "food",
+        "merchant": "Kedai Sore",
+        "note": "Makan malam"
+      },
+      {
+        "day": 28,
+        "kind": "expense",
+        "amount": "32000",
+        "accountID": "wallet",
+        "categoryID": "food",
+        "merchant": "Warung Pagi",
+        "note": "Makan siang"
+      }
+    ],
+    "transfers": [
+      {
+        "day": 1,
+        "fromAccountID": "bank",
+        "toAccountID": "cash",
+        "amount": "600000",
+        "note": "Tarik tunai untuk makan sehari-hari"
+      },
+      {
+        "day": 1,
+        "fromAccountID": "bank",
+        "toAccountID": "wallet",
+        "amount": "1000000",
+        "note": "Isi dompet digital untuk makan dan transportasi"
+      }
+    ],
+    "budgets": [
+      {
+        "categoryID": "food",
+        "limitAmount": "1200000"
+      },
+      {
+        "categoryID": "transport",
+        "limitAmount": "450000"
+      },
+      {
+        "categoryID": "household",
+        "limitAmount": "2600000"
+      },
+      {
+        "categoryID": "bills",
+        "limitAmount": "500000"
+      },
+      {
+        "categoryID": "entertainment",
+        "limitAmount": "200000"
+      },
+      {
+        "categoryID": "shopping",
+        "limitAmount": "350000"
+      },
+      {
+        "categoryID": "health",
+        "limitAmount": "200000"
+      }
+    ],
+    "goals": [
+      {
+        "id": "demo-goal",
+        "name": "Laptop impian",
+        "targetAmount": "15000000",
+        "monthsUntil": 6
+      },
+      {
+        "id": "demo-emergency",
+        "name": "Dana darurat",
+        "targetAmount": "18000000",
+        "monthsUntil": 12
+      },
+      {
+        "id": "demo-holiday",
+        "name": "Liburan keluarga",
+        "targetAmount": "6000000",
+        "monthsUntil": 8
+      }
+    ],
+    "splitBills": [
+      {
+        "id": "demo-bill-self",
+        "title": "Makan bersama",
+        "total": "240000",
+        "categoryID": "food",
+        "monthOffset": 0,
+        "day": 1,
+        "selfPaid": true,
+        "accountID": "bank",
+        "shareAmount": "80000",
+        "settlements": [
+          {
+            "memberIndex": 1,
+            "amount": "50000",
+            "day": 1
+          }
+        ]
+      },
+      {
+        "id": "demo-bill-other",
+        "title": "Tiket pameran seni",
+        "total": "180000",
+        "categoryID": "entertainment",
+        "monthOffset": -1,
+        "day": 28,
+        "selfPaid": false,
+        "accountID": "bank",
+        "shareAmount": "60000",
+        "settlements": []
+      },
+      {
+        "id": "demo-bill-settled",
+        "title": "Makan siang tim",
+        "total": "150000",
+        "categoryID": "food",
+        "monthOffset": -1,
+        "day": 24,
+        "selfPaid": true,
+        "accountID": "bank",
+        "shareAmount": "50000",
+        "settlements": [
+          {
+            "memberIndex": 1,
+            "amount": "50000",
+            "day": 25
+          },
+          {
+            "memberIndex": 2,
+            "amount": "50000",
+            "day": 26
+          }
+        ]
+      }
+    ],
+    "reviews": [
+      {
+        "id": "review-qris",
+        "source": "qris",
+        "merchant": "Kedai Sore",
+        "amount": "48000",
+        "daysAgo": 0,
+        "note": "Pembayaran QRIS makan dan minum. Periksa sebelum disimpan."
+      },
+      {
+        "id": "review-text",
+        "source": "pasted_text",
+        "merchant": "Pasar Lokal",
+        "amount": "156000",
+        "daysAgo": 1,
+        "note": "Belanja mingguan\nBeras 75.000\nTelur 31.000\nSayur 50.000\nTotal 156.000"
+      },
+      {
+        "id": "review-ambiguous",
+        "source": "pasted_text",
+        "merchant": "Warung Pagi",
+        "daysAgo": 2,
+        "note": "Subtotal 50.000\nTotal 58.000\nTotal 60.000\nPeriksa nominal akhir pada struk."
+      }
+    ],
+    "merchantRules": [
+      {
+        "id": "demo-rule-0",
+        "matchType": "contains",
+        "normalizedPattern": "warung",
+        "categoryID": "food",
+        "priority": 10
+      },
+      {
+        "id": "demo-rule-1",
+        "matchType": "contains",
+        "normalizedPattern": "kedai",
+        "categoryID": "food",
+        "priority": 11
+      },
+      {
+        "id": "demo-rule-2",
+        "matchType": "contains",
+        "normalizedPattern": "pasar lokal",
+        "categoryID": "household",
+        "priority": 12
+      },
+      {
+        "id": "demo-rule-3",
+        "matchType": "contains",
+        "normalizedPattern": "transportasi kota",
+        "categoryID": "transport",
+        "priority": 13
+      },
+      {
+        "id": "demo-rule-4",
+        "matchType": "contains",
+        "normalizedPattern": "apotek",
+        "categoryID": "health",
+        "priority": 14
+      },
+      {
+        "id": "demo-rule-5",
+        "matchType": "contains",
+        "normalizedPattern": "toko buku",
+        "categoryID": "shopping",
+        "priority": 15
+      }
+    ]
+  },
   "timezone": "Asia/Jakarta",
   "period": {
     "from": "2026-07-01T00:00:00.000Z",

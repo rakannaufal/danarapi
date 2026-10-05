@@ -22,8 +22,11 @@ final class DanarapiAppUITests: XCTestCase {
             retainScreenshot("Onboarding pertama \(theme)", in: app)
             app.buttons["Lanjut"].tap()
             XCTAssertTrue(app.staticTexts["Rencana lebih terarah"].isHittable)
+            let back = app.buttons["Kembali"]
+            XCTAssertTrue(back.isHittable)
+            XCTAssertEqual(back.frame.height, app.buttons["Lanjut"].frame.height, accuracy: 1)
             retainScreenshot("Onboarding kedua \(theme)", in: app)
-            app.staticTexts["Rencana lebih terarah"].swipeRight()
+            back.tap()
             XCTAssertTrue(app.staticTexts["Struk jadi catatan"].isHittable)
             app.buttons["Lanjut"].tap()
             app.buttons["Lanjut"].tap()
@@ -192,6 +195,61 @@ final class DanarapiAppUITests: XCTestCase {
     }
 
     @MainActor
+    func testBottomNavigationReturnsToRootsFromDetailsAndScan() throws {
+        let app = launchDemo()
+        app.buttons["home.accounts"].tap()
+        XCTAssertTrue(app.navigationBars["Akun"].waitForExistence(timeout: 5))
+        for identifier in ["nav.0", "nav.1", "nav.scan", "nav.3", "nav.4"] {
+            XCTAssertTrue(app.buttons[identifier].isHittable)
+        }
+        app.buttons["nav.0"].tap()
+        XCTAssertTrue(app.navigationBars["Ringkasan keuangan"].waitForExistence(timeout: 5))
+        app.buttons["home.expense"].tap()
+        XCTAssertTrue(app.navigationBars["Pengeluaran"].waitForExistence(timeout: 5))
+        app.buttons["nav.1"].tap()
+        XCTAssertTrue(app.navigationBars["Transaksi"].waitForExistence(timeout: 5))
+        app.buttons["nav.4"].tap()
+        app.buttons["Akun keuangan"].tap()
+        XCTAssertTrue(app.navigationBars["Akun"].waitForExistence(timeout: 5))
+        app.buttons["nav.4"].tap()
+        XCTAssertTrue(app.navigationBars["Pengaturan"].waitForExistence(timeout: 5))
+        app.buttons["nav.scan"].tap()
+        XCTAssertTrue(app.segmentedControls["scan.mode"].waitForExistence(timeout: 5))
+        app.buttons["scan.reviews"].tap()
+        XCTAssertTrue(app.navigationBars["Tinjauan"].waitForExistence(timeout: 5))
+        app.buttons["nav.3"].tap()
+        XCTAssertTrue(app.navigationBars["Laporan"].waitForExistence(timeout: 5))
+        app.buttons["nav.0"].tap()
+        XCTAssertTrue(app.navigationBars["Ringkasan keuangan"].waitForExistence(timeout: 5))
+    }
+
+    @MainActor
+    func testSettingsAndManagedPagesKeepNavigationInLightAndDark() throws {
+        for theme in ["light", "dark"] {
+            let app = launchDemo(theme: theme)
+            app.buttons["nav.4"].tap()
+            XCTAssertTrue(app.navigationBars["Pengaturan"].waitForExistence(timeout: 5))
+            XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Tema")).firstMatch.exists)
+            XCTAssertTrue(app.switches["Sembunyikan nominal"].isHittable)
+            retainScreenshot("Pengaturan \(theme)", in: app)
+            for (link, title) in [("Akun keuangan", "Akun"), ("Kategori", "Kategori"), ("Aturan merchant", "Aturan merchant")] {
+                let button = app.buttons[link]
+                reveal(button, in: app); button.tap()
+                XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 5))
+                for identifier in ["nav.0", "nav.1", "nav.scan", "nav.3", "nav.4"] {
+                    XCTAssertTrue(app.buttons[identifier].isHittable)
+                }
+                retainScreenshot("\(title) \(theme)", in: app)
+                app.buttons["nav.4"].tap()
+                XCTAssertTrue(app.navigationBars["Pengaturan"].waitForExistence(timeout: 5))
+            }
+            app.buttons["nav.0"].tap()
+            XCTAssertTrue(app.navigationBars["Ringkasan keuangan"].waitForExistence(timeout: 5))
+            app.terminate()
+        }
+    }
+
+    @MainActor
     func testDemoCoreNavigation() throws {
         let app = launchDemo()
 
@@ -260,7 +318,7 @@ final class DanarapiAppUITests: XCTestCase {
         merchant.tap()
         merchant.typeText("TOKO KEYBOARD")
         XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 3))
-        reveal(amount, in: app)
+        reveal(amount, in: app, scrollTowardTop: true)
         amount.tap()
         let reopened = app.keyboards.firstMatch.waitForExistence(timeout: 3)
         if !reopened { retainScreenshot("Keyboard saat berpindah input", in: app) }
@@ -408,6 +466,32 @@ final class DanarapiAppUITests: XCTestCase {
     }
 
     @MainActor
+    func testBudgetPercentAndChartTapShowSelectedAllocation() throws {
+        let app = launchDemo()
+        let budgets = app.buttons["home.budgets"]
+        reveal(budgets, in: app); budgets.tap()
+        let row = app.buttons["budget.row.showcase-budget-2-food"]
+        reveal(row, in: app)
+        XCTAssertTrue(row.label.contains("%"))
+        retainScreenshot("Persentase anggaran", in: app)
+        row.tap()
+        XCTAssertTrue(app.navigationBars["Makan"].waitForExistence(timeout: 4))
+        let percent = app.descendants(matching: .any).matching(identifier: "budget.percent.showcase-budget-2-food").firstMatch
+        XCTAssertTrue(percent.waitForExistence(timeout: 4))
+        app.buttons["nav.3"].tap()
+        let chart = app.descendants(matching: .any).matching(identifier: "report.donut.Alokasi pengeluaran").firstMatch
+        reveal(chart, in: app)
+        chart.coordinate(withNormalizedOffset: CGVector(dx: 0.75, dy: 0.22)).tap()
+        let detail = app.descendants(matching: .any).matching(identifier: "report.selection.Alokasi pengeluaran").firstMatch
+        XCTAssertTrue(detail.waitForExistence(timeout: 4), app.debugDescription)
+        reveal(detail, in: app)
+        retainScreenshot("Rincian diagram pengeluaran", in: app)
+        let cash = app.staticTexts["Arus kas per akun"]
+        reveal(cash, in: app)
+        retainScreenshot("Tipografi arus kas per akun", in: app)
+    }
+
+    @MainActor
     func testReportCanSelectPreviousMonth() throws {
         let app = launchDemo()
         app.buttons["nav.3"].tap()
@@ -426,14 +510,16 @@ final class DanarapiAppUITests: XCTestCase {
     }
 
     @MainActor
-    private func launchDemo() -> XCUIApplication {
+    private func launchDemo(theme: String? = nil) -> XCUIApplication {
         XCUIDevice.shared.orientation = .portrait
         addUIInterruptionMonitor(withDescription: "System undo typing") { alert in
             guard alert.label == "Undo Typing", alert.buttons["Cancel"].exists else { return false }
             alert.buttons["Cancel"].tap()
             return true
         }
-        let app = XCUIApplication(); app.launchArguments = ["--ui-testing-demo"]; app.launch()
+        let app = XCUIApplication(); app.launchArguments = ["--ui-testing-demo"]
+        if let theme { app.launchArguments += ["-theme", theme] }
+        app.launch()
         XCTAssertTrue(app.buttons["Lewati tur"].waitForExistence(timeout: 10))
         app.buttons["Lewati tur"].tap()
         XCTAssertTrue(app.buttons["Tambah catatan"].waitForExistence(timeout: 10))
@@ -447,7 +533,7 @@ final class DanarapiAppUITests: XCTestCase {
     }
 
     @MainActor
-    private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
+    private func reveal(_ element: XCUIElement, in app: XCUIApplication, scrollTowardTop: Bool = false) {
         for _ in 0..<16 {
             let typingAlert = app.alerts["Undo Typing"]
             if typingAlert.exists && typingAlert.buttons["Cancel"].isHittable {
@@ -460,7 +546,8 @@ final class DanarapiAppUITests: XCTestCase {
             let bottom = keyboardVisible ? keyboard.frame.minY : app.frame.maxY - 34
             let clearance: CGFloat = keyboardVisible ? 32 : 8
             if element.exists && element.isHittable && element.frame.minY > top + 8 && element.frame.maxY < bottom - clearance { return }
-            let scrollDown = element.exists && element.frame.midY < top + 8
+            // Native lists can recycle a field above the visible viewport.
+            let scrollDown = element.exists ? element.frame.midY < top + 8 : scrollTowardTop
             let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: scrollDown ? 0.2 : 0.45))
             let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: scrollDown ? 0.45 : 0.2))
             start.press(forDuration: 0.05, thenDragTo: end)

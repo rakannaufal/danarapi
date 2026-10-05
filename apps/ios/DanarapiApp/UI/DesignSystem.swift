@@ -124,9 +124,9 @@ struct DesignTokenCatalog: Decodable, Sendable {
 }
 
 enum DesignTokens {
-    static let version = DesignTokenCatalog.bundled?.version ?? "1.3.0"
-    static let cornerCard = CGFloat(DesignTokenCatalog.bundled?.radius["card"] ?? 20)
-    static let cornerControl = CGFloat(DesignTokenCatalog.bundled?.radius["button"] ?? 12)
+    static let version = DesignTokenCatalog.bundled?.version ?? "1.4.0"
+    static let cornerCard = CGFloat(DesignTokenCatalog.bundled?.radius["card"] ?? 28)
+    static let cornerControl = CGFloat(DesignTokenCatalog.bundled?.radius["button"] ?? 24)
     static let gutter = CGFloat(DesignTokenCatalog.bundled?.layout["mobileGutter"] ?? 20)
     static let sectionGap = CGFloat(DesignTokenCatalog.bundled?.layout["sectionGap"] ?? 24)
     static let minimumTouch = CGFloat(DesignTokenCatalog.bundled?.touchTarget["minimum"] ?? 44)
@@ -150,6 +150,10 @@ extension Color {
     static let danarapiExpense = token("expense-ink", fallbackLight: 0xA83245, fallbackDark: 0xFFB3B0)
     static let danarapiChartIncome = danarapiPrimary
     static let danarapiChartExpense = Color(light: 0xA84E37, dark: 0xFDCBAC)
+    static let danarapiPeachInk = Color(light: 0x843B19, dark: 0xFDCBAC)
+    static let danarapiBalanceStart = Color(light: 0x09746C, dark: 0x153B3B)
+    static let danarapiBalanceEnd = Color(light: 0x064E49, dark: 0x112433)
+    static let danarapiOnBalance = Color(light: 0xFFFFFF, dark: 0xF1FAF7)
     static let danarapiChartColors: [Color] = [
         danarapiPrimary,
         Color(light: 0x4D9A80, dark: 0x9DE4C0),
@@ -179,9 +183,88 @@ struct CardStyle: ViewModifier {
     var color: Color = .danarapiSurface
     func body(content: Content) -> some View {
         content
-            .padding(18)
+            .padding(20)
             .background(color, in: RoundedRectangle(cornerRadius: DesignTokens.cornerCard, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: DesignTokens.cornerCard, style: .continuous).stroke(Color.danarapiBorder.opacity(0.6), lineWidth: 0.5))
+            .overlay(RoundedRectangle(cornerRadius: DesignTokens.cornerCard, style: .continuous).stroke(Color.danarapiBorder.opacity(0.45), lineWidth: 0.5))
+            .shadow(color: Color.danarapiPrimary.opacity(0.045), radius: 12, y: 4)
+    }
+}
+
+enum AppSymbol: String, CaseIterable {
+    case home = "house"
+    case transactions = "arrow.left.arrow.right"
+    case scan = "viewfinder"
+    case reports = "chart.xyaxis.line"
+    case settings = "gearshape"
+    case appearance = "circle.lefthalf.filled"
+    case hidden = "eye.slash"
+    case time = "clock"
+    case wallet = "wallet.bifold"
+    case bank = "building.columns"
+    case cash = "banknote"
+    case income = "arrow.down"
+    case expense = "arrow.up"
+    case goal = "scope"
+    case budget = "chart.pie"
+    case category = "square.grid.2x2"
+    case split = "person.2"
+    case gallery = "photo.stack"
+    case receipt = "doc.text.viewfinder"
+    case privacy = "lock.shield"
+}
+
+struct CalculatorIcon: View {
+    var body: some View {
+        CalculatorOutline()
+            .stroke(style: StrokeStyle(lineWidth: 1.6, lineCap: .round, lineJoin: .round))
+            .frame(width: 18, height: 24)
+            .accessibilityHidden(true)
+    }
+
+    private struct CalculatorOutline: Shape {
+        func path(in rect: CGRect) -> Path {
+            var path = Path()
+            path.addRoundedRect(in: CGRect(x: 1, y: 1, width: 16, height: 22), cornerSize: CGSize(width: 2.5, height: 2.5))
+            path.addRoundedRect(in: CGRect(x: 4, y: 4, width: 10, height: 4), cornerSize: CGSize(width: 0.8, height: 0.8))
+            for y in [12.0, 16.0, 20.0] {
+                for x in [5.0, 9.0, 13.0] {
+                    path.move(to: CGPoint(x: x - 0.3, y: y))
+                    path.addLine(to: CGPoint(x: x + 0.3, y: y))
+                }
+            }
+            return path.applying(CGAffineTransform(scaleX: rect.width / 18, y: rect.height / 24))
+        }
+    }
+}
+
+struct SymbolBadge: View {
+    let symbol: String
+    var color: Color = .danarapiPrimary
+    var background: Color = .danarapiMint
+    var size: CGFloat = 40
+
+    var body: some View {
+        Image(systemName: symbol)
+            .font(.system(size: size * 0.45, weight: .medium))
+            .symbolRenderingMode(.hierarchical)
+            .foregroundStyle(color)
+            .frame(width: size, height: size)
+            .background(background, in: RoundedRectangle(cornerRadius: size * 0.3, style: .continuous))
+            .accessibilityHidden(true)
+    }
+}
+
+struct SettingsRowLabel: View {
+    let title: String
+    let symbol: AppSymbol
+    var color: Color = .danarapiPrimary
+    var background: Color = .danarapiMint
+
+    var body: some View {
+        Label { Text(title).foregroundStyle(Color.danarapiInk) } icon: {
+            SymbolBadge(symbol: symbol.rawValue, color: color, background: background, size: 32)
+        }
+        .accessibilityLabel(title)
     }
 }
 
@@ -195,6 +278,43 @@ struct BrandIdentityView: View {
     }
 }
 
+private struct DanarapiSettingsActionKey: EnvironmentKey {
+    static let defaultValue: @MainActor () -> Void = {}
+}
+
+extension EnvironmentValues {
+    var openDanarapiSettings: @MainActor () -> Void {
+        get { self[DanarapiSettingsActionKey.self] }
+        set { self[DanarapiSettingsActionKey.self] = newValue }
+    }
+}
+
+private struct MainHeaderModifier: ViewModifier {
+    @Environment(\.openDanarapiSettings) private var openSettings
+    var enabled: Bool
+    @ViewBuilder func body(content: Content) -> some View {
+        if enabled {
+            content.navigationTitle("").navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        HStack(spacing: 7) {
+                            Image("AppLogo").renderingMode(.original).resizable().scaledToFit().frame(width: 30, height: 30)
+                            Image("danarapi_text").renderingMode(.original).resizable().scaledToFit().frame(width: 106, height: 27)
+                        }.accessibilityElement(children: .ignore).accessibilityLabel("Danarapi")
+                    }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(action: openSettings) { Image(systemName: AppSymbol.settings.rawValue).frame(minWidth: 44, minHeight: 44) }
+                            .accessibilityLabel("Pengaturan").accessibilityIdentifier("header.settings")
+                    }
+                }
+        } else { content }
+    }
+}
+
+extension View {
+    func danarapiMainHeader(enabled: Bool = true) -> some View { modifier(MainHeaderModifier(enabled: enabled)) }
+}
+
 struct BrandBackgroundView: View {
     var body: some View {
         GeometryReader { geometry in
@@ -206,6 +326,12 @@ struct BrandBackgroundView: View {
 
 extension View {
     func danarapiCard(_ color: Color = .danarapiSurface) -> some View { modifier(CardStyle(color: color)) }
+    func danarapiListSurface() -> some View {
+        listStyle(.insetGrouped)
+            .listSectionSpacing(16)
+            .scrollContentBackground(.hidden)
+            .background(Color.danarapiCanvas)
+    }
 }
 
 struct InformationDisclosure: View {

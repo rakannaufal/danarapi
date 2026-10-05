@@ -2,6 +2,7 @@ import { readBounded, scanReceipt, validateImages, type ScanStore } from '../_sh
 import { scanMessages } from '../_shared/receipt.ts';
 import { corsFor } from '../_shared/cors.ts';
 import { consentAllowsScan } from '../_shared/product.ts';
+import { scanBankProof, validateBankProofInput } from '../_shared/bank-proof.ts';
 
 function configInteger(name: string, fallback: number, minimum: number, maximum: number) { const value = Number(Deno.env.get(name) ?? fallback); if (!Number.isInteger(value) || value < minimum || value > maximum) throw new Error('config_error'); return value; }
 Deno.serve(async request => {
@@ -27,8 +28,12 @@ Deno.serve(async request => {
     stage = 'payload';
     if (!request.headers.get('content-type')?.startsWith('application/json')) throw new Error('invalid_image');
     const body = JSON.parse(new TextDecoder().decode(await readBounded(request, 5700000)));
+    if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('invalid_image');
     stage = 'image';
-    const { images, hash } = await validateImages(body.images);
+    if (body.purpose != null && !['receipt', 'bank_proof'].includes(body.purpose)) throw new Error('invalid_image');
+    const bankProof = body.purpose === 'bank_proof';
+    const input = bankProof ? await validateBankProofInput(body) : await validateImages(body.images);
+    const { images, hash } = input;
     stage = 'scan';
     const daily = configInteger('SCAN_DAILY_LIMIT', 50, 1, 10000); const interval = configInteger('SCAN_INTERVAL_MS', 4000, 0, 60000);
     async function rpc(name: string, payload: unknown) {
@@ -43,8 +48,9 @@ Deno.serve(async request => {
       reserve: (userID, hash) => rpc('reserve_receipt_scan_call', { p_user_id: userID, p_hash: hash, p_interval_ms: interval }),
       finish: async (userID, hash, result) => { await rpc('finish_receipt_scan', { p_user_id: userID, p_hash: hash, p_result: result }); },
     };
-    const result = await scanReceipt({ userID: user.id, hash, images, apiKey: Deno.env.get('GEMINI_API_KEY') ?? '', model: Deno.env.get('GEMINI_MODEL') ?? 'gemini-3.5-flash-lite', fallbackModel: Deno.env.get('GEMINI_FALLBACK_MODEL'), store });
-    return Response.json({ ...result, message: scanMessages[result.status] }, { headers: cors });
+    const options = { userID: user.id, hash, images, apiKey: Deno.env.get('GEMINI_API_KEY') ?? '', model: Deno.env.get('GEMINI_MODEL') ?? 'gemini-3.5-flash-lite', fallbackModel: Deno.env.get('GEMINI_FALLBACK_MODEL'), store };
+    const result = bankProof ? await scanBankProof({ ...options, text: 'text' in input && typeof input.text === 'string' ? input.text : '' }) : await scanReceipt(options);
+    return Response.json({ ...result, message: bankProof && result.status === 'ok' ? 'Bukti terbaca oleh AI. Periksa semua rincian sebelum menyimpan draft.' : scanMessages[result.status] }, { headers: cors });
   } catch (error) {
     const status = (stage === 'payload' && error instanceof SyntaxError) || (error instanceof Error && ['invalid_image', 'size_limit', 'empty_body'].includes(error.message)) ? 'invalid_image' : error instanceof Error && error.message === 'config_error' ? 'config_error' : 'service_error';
     console.error(JSON.stringify({ event: 'receipt_scan_failed', request_id: requestID, status, stage }));

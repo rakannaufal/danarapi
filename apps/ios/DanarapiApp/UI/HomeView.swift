@@ -6,6 +6,7 @@ struct HomeView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var editingGoal: SavingsGoal?
     @State private var progressGoal: SavingsGoal?
+    @State private var addingIncome = false
 
     var body: some View {
         NavigationStack {
@@ -14,9 +15,9 @@ struct HomeView: View {
                     balanceCard
                     metrics
                     goals
+                    recentTransactions
                     budgets
                     unsettledBills
-                    recentTransactions
                 }
                 .padding(DesignTokens.gutter)
                 .padding(.bottom, 76)
@@ -25,48 +26,100 @@ struct HomeView: View {
                 Button(action: onAdd) {
                     Image(systemName: "plus").font(.title2.bold()).frame(width: 58, height: 58)
                         .foregroundStyle(Color.danarapiOnPrimary).background(Color.danarapiPrimary, in: Circle())
-                        .shadow(color: Color.danarapiInk.opacity(0.12), radius: 14, y: 8)
+                        .shadow(color: Color.danarapiPrimary.opacity(0.2), radius: 14, y: 8)
                 }.accessibilityLabel("Tambah catatan").padding(22)
             }
             .background(Color.danarapiCanvas)
-            .navigationTitle("Ringkasan keuangan")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    NavigationLink { ReviewListView(embedded: true) } label: {
-                        HStack(spacing: 4) {
-                            Image(systemName: "tray").font(.system(size: 19))
-                            if !app.snapshot.reviewItems.isEmpty { Text("\(app.snapshot.reviewItems.count)").font(.caption.weight(.semibold)) }
-                        }.frame(minWidth: 44, minHeight: 44)
-                    }.accessibilityLabel("Tinjauan").accessibilityIdentifier("home.reviews")
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button { app.hideAmounts.toggle() } label: { Image(systemName: app.hideAmounts ? "eye.slash" : "eye") }.accessibilityLabel(app.hideAmounts ? "Tampilkan nominal" : "Sembunyikan nominal")
-                }
-            }
+            .danarapiMainHeader()
             .refreshable { await app.refresh() }
+            .sheet(isPresented: $addingIncome) { TransactionFormView(kind: .income) { addingIncome = false } }
             .sheet(item: $editingGoal) { GoalEditorView(goal: $0) }
             .sheet(item: $progressGoal) { goal in NavigationStack { TransactionFormView(kind: .expense, initialGoal: goal) }.presentationDragIndicator(.visible) }
         }
     }
 
     private var balanceCard: some View {
-        NavigationLink { AccountManagementView() } label: {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack { Label("Saldo akun", systemImage: "wallet.pass"); Spacer(); Image(systemName: "chevron.right").font(.caption.weight(.semibold)) }.font(.subheadline.weight(.semibold)).foregroundStyle(Color.danarapiMuted)
-                MoneyText(amount: app.snapshot.overview.accountBalance, style: .largeTitle.bold())
-                if let syncedAt = app.snapshot.syncedAt { Text("Diperbarui \(MonthPeriod.display(syncedAt, template: "HHmm"))").font(.caption2).foregroundStyle(Color.danarapiMuted) }
-            }.danarapiCard().contentShape(RoundedRectangle(cornerRadius: DesignTokens.cornerCard))
-        }.buttonStyle(.plain).accessibilityIdentifier("home.accounts")
+        VStack(alignment: .leading, spacing: 22) {
+            HStack {
+                Label("Saldo akun", systemImage: AppSymbol.wallet.rawValue)
+                    .font(.subheadline.weight(.medium))
+                    .padding(.horizontal, 14).padding(.vertical, 9)
+                    .background(.white.opacity(0.08), in: Capsule())
+                Spacer()
+                Button { app.hideAmounts.toggle() } label: {
+                    Image(systemName: app.hideAmounts ? "eye.slash" : "eye")
+                        .frame(width: 44, height: 44).background(.white.opacity(0.14), in: Circle())
+                }.buttonStyle(.plain)
+                    .accessibilityLabel(app.hideAmounts ? "Tampilkan nominal" : "Sembunyikan nominal")
+            }
+            NavigationLink { AccountManagementView() } label: {
+                HStack(alignment: .center) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        MoneyText(amount: app.snapshot.overview.accountBalance, style: .largeTitle.bold(), color: .danarapiOnBalance)
+                        Text("\(app.activeAccounts.count) akun aktif")
+                            .font(.caption.weight(.medium)).foregroundStyle(Color.danarapiOnBalance.opacity(0.85))
+                    }
+                    Spacer(minLength: 8)
+                    Image(systemName: "chevron.right").font(.subheadline.weight(.semibold))
+                        .frame(width: 44, height: 44).background(.white.opacity(0.14), in: Circle())
+                }.contentShape(Rectangle())
+            }.buttonStyle(.plain).accessibilityIdentifier("home.accounts")
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 12) { reviewAction; incomeAction }
+                VStack(spacing: 12) { reviewAction; incomeAction }
+            }
+        }
+        .foregroundStyle(Color.danarapiOnBalance)
+        .padding(24)
+        .background {
+            RoundedRectangle(cornerRadius: DesignTokens.cornerCard + 4, style: .continuous)
+                .fill(LinearGradient(colors: [.danarapiBalanceStart, .danarapiBalanceEnd], startPoint: .topLeading, endPoint: .bottomTrailing))
+                .overlay {
+                    RoundedRectangle(cornerRadius: DesignTokens.cornerCard + 4, style: .continuous)
+                        .fill(RadialGradient(colors: [.white.opacity(0.13), .clear], center: .topTrailing, startRadius: 0, endRadius: 300))
+                }
+        }
+        .shadow(color: Color.danarapiPrimary.opacity(0.18), radius: 16, y: 8)
+    }
+
+    private var reviewAction: some View {
+        NavigationLink { ReviewListView(embedded: true) } label: {
+            HStack(spacing: 8) {
+                Image(systemName: AppSymbol.receipt.rawValue)
+                Text("Tinjau")
+                if app.snapshot.reviewItems.count + app.sharedProofCount > 0 {
+                    Text("\(app.snapshot.reviewItems.count + app.sharedProofCount)").font(.caption.bold())
+                        .padding(.horizontal, 8).padding(.vertical, 3)
+                        .foregroundStyle(Color.danarapiBalanceEnd).background(Color.danarapiOnBalance, in: Capsule())
+                }
+            }
+            .font(.subheadline.weight(.semibold))
+            .frame(maxWidth: .infinity, minHeight: 50)
+            .padding(.horizontal, 12)
+            .background(.white.opacity(0.1), in: Capsule())
+            .overlay { Capsule().stroke(.white.opacity(0.25), lineWidth: 1) }
+        }.buttonStyle(.plain).accessibilityLabel("Tinjauan").accessibilityIdentifier("home.reviews")
+    }
+
+    private var incomeAction: some View {
+        Button { addingIncome = true } label: {
+            Label("Tambah saldo", systemImage: "plus.circle")
+                .font(.footnote.weight(.semibold))
+                .lineLimit(1).minimumScaleFactor(0.85)
+                .frame(maxWidth: .infinity, minHeight: 50)
+                .padding(.horizontal, 12)
+                .foregroundStyle(Color.danarapiBalanceStart)
+                .background(Color.danarapiOnBalance, in: Capsule())
+        }.buttonStyle(.plain)
     }
 
     private var metrics: some View {
         VStack(spacing: 12) {
             LazyVGrid(columns: dynamicTypeSize >= .xxxLarge ? [GridItem(.flexible())] : [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                NavigationLink { TransactionsView(initialKind: .income, currentMonth: true, embedded: true) } label: { metric("Pemasukan", app.monthlyReport?.personalIncome, "arrow.down.left", .danarapiSurface, .danarapiPrimary) }.buttonStyle(.plain).accessibilityIdentifier("home.income")
-                NavigationLink { TransactionsView(initialKind: .expense, currentMonth: true, embedded: true) } label: { metric("Pengeluaran", app.monthlyReport?.personalExpense, "arrow.up.right", .danarapiSurface, .danarapiInk) }.buttonStyle(.plain).accessibilityIdentifier("home.expense")
-                NavigationLink { GoalsView() } label: { metric("Target terkumpul", (app.snapshot.goals ?? []).reduce(0) { $0 + $1.savedAmount }, "target", .danarapiSky, .danarapiPrimary) }.buttonStyle(.plain).accessibilityIdentifier("home.goals")
-                NavigationLink { BudgetListView() } label: { metric("Total anggaran bulan ini", currentBudgets.reduce(0) { $0 + $1.limitAmount }, "chart.pie", .danarapiSky, .danarapiPrimary) }.buttonStyle(.plain).accessibilityIdentifier("home.budgets")
+                NavigationLink { TransactionsView(initialKind: .income, currentMonth: true, embedded: true) } label: { metric("Pemasukan", app.monthlyReport?.personalIncome, AppSymbol.income.rawValue, .danarapiSurface, .danarapiPrimary) }.buttonStyle(.plain).accessibilityIdentifier("home.income")
+                NavigationLink { TransactionsView(initialKind: .expense, currentMonth: true, embedded: true) } label: { metric("Pengeluaran", app.monthlyReport?.personalExpense, AppSymbol.expense.rawValue, .danarapiSurface, .danarapiInk) }.buttonStyle(.plain).accessibilityIdentifier("home.expense")
+                NavigationLink { GoalsView() } label: { metric("Target terkumpul", (app.snapshot.goals ?? []).reduce(0) { $0 + $1.savedAmount }, AppSymbol.goal.rawValue, .danarapiSurface, .danarapiPrimary) }.buttonStyle(.plain).accessibilityIdentifier("home.goals")
+                NavigationLink { BudgetListView() } label: { metric("Total anggaran", currentBudgets.reduce(0) { $0 + $1.limitAmount }, AppSymbol.budget.rawValue, .danarapiSurface, .danarapiInk) }.buttonStyle(.plain).accessibilityIdentifier("home.budgets")
             }
             if app.monthlyReportError != nil {
                 Button("Muat ringkasan", systemImage: "arrow.clockwise") { Task { await app.refresh() } }
@@ -79,8 +132,15 @@ struct HomeView: View {
 
     private func metric(_ title: String, _ amount: Int64?, _ icon: String, _ background: Color, _ color: Color) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack { Image(systemName: icon).foregroundStyle(color); Spacer(); Image(systemName: "chevron.right").font(.caption2.weight(.semibold)).foregroundStyle(Color.danarapiMuted) }
-            Text(title).font(.caption).foregroundStyle(Color.danarapiMuted)
+            HStack {
+                SymbolBadge(symbol: icon,
+                    color: icon == AppSymbol.expense.rawValue || icon == AppSymbol.budget.rawValue ? .danarapiChartExpense : .danarapiPrimary,
+                    background: icon == AppSymbol.expense.rawValue || icon == AppSymbol.budget.rawValue ? .danarapiPeach : .danarapiMint,
+                    size: 42)
+                Spacer()
+                Image(systemName: "chevron.right").font(.caption2.weight(.semibold)).foregroundStyle(Color.danarapiMuted.opacity(0.6))
+            }
+            Text(title).font(.subheadline).foregroundStyle(Color.danarapiMuted).padding(.top, 6)
             if let amount { MoneyText(amount: amount, style: .headline, color: color) }
             else { Text("—").font(.headline).foregroundStyle(Color.danarapiMuted).accessibilityLabel("Belum dimuat") }
         }.frame(maxWidth: .infinity, alignment: .leading).danarapiCard(background)
@@ -90,7 +150,7 @@ struct HomeView: View {
     private var budgets: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack { Text("Anggaran bulan ini").font(.title3.bold()); Spacer(); NavigationLink("Atur") { BudgetListView() }.font(.subheadline.bold()) }
-            if currentBudgets.isEmpty { EmptyRow(icon: "chart.bar", text: "Belum ada anggaran."); NavigationLink("Buat anggaran") { BudgetListView() } }
+            if currentBudgets.isEmpty { EmptyRow(icon: AppSymbol.reports.rawValue, text: "Belum ada anggaran."); NavigationLink("Buat anggaran") { BudgetListView() } }
             ForEach(currentBudgets) { budget in
                 VStack(alignment: .leading, spacing: 7) {
                     HStack { Text(app.snapshot.categories.first(where: { $0.id == budget.categoryID })?.name ?? "Kategori"); Spacer(); Text("\(Int(budget.ratio * 100))%").font(.caption.weight(.semibold)) }
@@ -106,7 +166,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack { Text("Target tabungan").font(.title3.bold()); Spacer(); NavigationLink("Atur") { GoalsView() }.font(.subheadline.bold()) }
             ForEach(app.snapshot.goals ?? []) { goal in GoalCard(goal: goal, onProgress: { progressGoal = goal }, onEdit: { editingGoal = goal }) }
-            if (app.snapshot.goals ?? []).isEmpty { NavigationLink { GoalsView() } label: { Label("Buat target pertama", systemImage: "target").frame(maxWidth: .infinity, alignment: .leading).padding(18).background(Color.danarapiSky, in: RoundedRectangle(cornerRadius: 20)) } }
+            if (app.snapshot.goals ?? []).isEmpty { NavigationLink { GoalsView() } label: { Label("Buat target pertama", systemImage: AppSymbol.goal.rawValue).frame(maxWidth: .infinity, alignment: .leading).padding(18).background(Color.danarapiSky, in: RoundedRectangle(cornerRadius: 20)) } }
         }
     }
 
@@ -114,7 +174,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Tagihan bersama").font(.title3.bold())
             let bills = app.snapshot.splitBills
-            if bills.isEmpty { EmptyRow(icon: "person.3", text: "Belum ada tagihan bersama.") }
+            if bills.isEmpty { EmptyRow(icon: AppSymbol.split.rawValue, text: "Belum ada tagihan bersama.") }
             ForEach(bills.prefix(3)) { bill in
                 NavigationLink { SplitBillDetailView(billID: bill.id) } label: {
                     HStack { VStack(alignment: .leading) { Text(bill.title).font(.headline); Text("Bagian Saya").font(.caption).foregroundStyle(Color.danarapiMuted) }; Spacer(); MoneyText(amount: bill.selfShare, style: .subheadline.bold(), color: .danarapiPrimary) }
@@ -125,10 +185,19 @@ struct HomeView: View {
 
     private var recentTransactions: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Transaksi terbaru").font(.title3.bold())
-            if app.snapshot.transactions.isEmpty { EmptyRow(icon: "tray", text: "Belum ada transaksi. Catat yang pertama, yuk.") }
-            ForEach(app.snapshot.transactions.prefix(5)) { item in TransactionRow(item: item) }
-        }.danarapiCard()
+            HStack {
+                Text("Transaksi terbaru").font(.title3.bold())
+                Spacer()
+                NavigationLink { TransactionsView(embedded: true) } label: { Text("Lihat semua").font(.subheadline.weight(.semibold)) }
+            }
+            VStack(spacing: 0) {
+                if app.snapshot.transactions.isEmpty { EmptyRow(icon: "tray", text: "Belum ada transaksi. Catat yang pertama, yuk.") }
+                ForEach(Array(app.snapshot.transactions.prefix(5).enumerated()), id: \.element.id) { index, item in
+                    if index > 0 { Divider().padding(.vertical, 12) }
+                    NavigationLink { TransactionDetailView(itemID: item.id) } label: { TransactionRow(item: item) }.buttonStyle(.plain)
+                }
+            }.danarapiCard()
+        }
     }
 }
 

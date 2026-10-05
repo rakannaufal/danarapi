@@ -2,6 +2,13 @@
 
 Vue 3 + TypeScript + Vite, UI mandiri: sidebar desktop, navigasi bawah ponsel, tema Sistem/Terang/Gelap. Bahasa Indonesia, Rupiah integer/string desimal, periode sesuai zona waktu pilihan. PostgreSQL/RPC tetap otoritas finansial akun nyata.
 
+Menu Kalkulator (`#calculators`): 38 jenis, pencarian, kategori, favorit,
+riwayat per akun, informasi rumus, dan dalil kalkulator Islam. Pengaturan tersedia
+di sidebar dan menu profil; layar kecil memakai gear karena sidebar tersembunyi.
+Logo dan wordmark hanya di sidebar pada halaman akun.
+Kontrak dan batas metode:
+`docs/calculators.md`.
+
 ## Menjalankan
 
 ```sh
@@ -9,7 +16,7 @@ npm ci --prefix apps/web
 npm run web:dev
 ```
 
-Buka `http://127.0.0.1:5173`, pilih **Coba Demo**. Demo tidak memerlukan akun atau server. Fixture `tests/fixtures/demo-seed-v1.json` menyediakan 200 transaksi sintetis tiga bulan; perubahan hanya di memori sampai reload/reset/keluar. Tidak memakai localStorage untuk data keuangan.
+Buka `http://127.0.0.1:5173`, pilih **Coba Demo**. Demo tidak memerlukan akun atau server. Skenario bersama pada `tests/fixtures/demo-seed-v1.json` mengisi tiga akun, tiga target, tujuh anggaran per bulan, transaksi/transfer tiga bulan, tiga split bill dengan status berbeda, tiga draft tinjauan, dan enam aturan merchant. Tanggal mengikuti bulan berjalan; transaksi setelah hari ini belum dimasukkan. Saldo, progres, anggaran, dan laporan dihitung dari ledger. Perubahan hanya di memori sampai reload/reset/keluar. Tidak memakai localStorage untuk data keuangan. Fixture lama 200 transaksi bertanggal tetap dipertahankan untuk regresi finansial. Regenerasi keduanya: `node scripts/generate-demo-fixture.mjs`.
 
 Konfigurasi publik Supabase sudah tersedia di `src/cloud.ts`; override opsional melalui `VITE_SUPABASE_URL` dan `VITE_SUPABASE_PUBLISHABLE_KEY` dalam `.env.local` root (`VITE_SUPABASE_ANON_KEY` tetap didukung). Akun nyata memakai Google, seluruh migrations dan fungsi `ledger`, `ios-data`, `export-data`, `receipt-scan`. Atur provider, redirect aplikasi dan `ALLOWED_ORIGINS` sesuai `docs/supabase-cloud-setup.md`. Akun baru memperoleh Tunai; saldo awal opsional melalui Pengaturan → Akun.
 

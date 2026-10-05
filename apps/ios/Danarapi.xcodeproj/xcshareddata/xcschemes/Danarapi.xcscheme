@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "2700"
+   LastUpgradeVersion = "1300"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1E97C0A39403001E66966FD3"
+               BlueprintIdentifier = "119087C3205F7B8C614924F2"
                BuildableName = "Danarapi.app"
                BlueprintName = "Danarapi"
                ReferencedContainer = "container:Danarapi.xcodeproj">
@@ -28,7 +28,7 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "699C6B7224D89A4AF3852B17"
+               BlueprintIdentifier = "AE9684FA5A7794C25CB41D4F"
                BuildableName = "DanarapiAppTests.xctest"
                BlueprintName = "DanarapiAppTests"
                ReferencedContainer = "container:Danarapi.xcodeproj">
@@ -42,7 +42,7 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "41C7E54DEE809ADC4AB7E0D0"
+               BlueprintIdentifier = "8A2BC42274B06F5EA5C0AED1"
                BuildableName = "DanarapiAppUITests.xctest"
                BlueprintName = "DanarapiAppUITests"
                ReferencedContainer = "container:Danarapi.xcodeproj">
@@ -58,7 +58,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1E97C0A39403001E66966FD3"
+            BlueprintIdentifier = "119087C3205F7B8C614924F2"
             BuildableName = "Danarapi.app"
             BlueprintName = "Danarapi"
             ReferencedContainer = "container:Danarapi.xcodeproj">
@@ -69,7 +69,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "699C6B7224D89A4AF3852B17"
+               BlueprintIdentifier = "AE9684FA5A7794C25CB41D4F"
                BuildableName = "DanarapiAppTests.xctest"
                BlueprintName = "DanarapiAppTests"
                ReferencedContainer = "container:Danarapi.xcodeproj">
@@ -79,7 +79,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "41C7E54DEE809ADC4AB7E0D0"
+               BlueprintIdentifier = "8A2BC42274B06F5EA5C0AED1"
                BuildableName = "DanarapiAppUITests.xctest"
                BlueprintName = "DanarapiAppUITests"
                ReferencedContainer = "container:Danarapi.xcodeproj">
@@ -101,7 +101,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1E97C0A39403001E66966FD3"
+            BlueprintIdentifier = "119087C3205F7B8C614924F2"
             BuildableName = "Danarapi.app"
             BlueprintName = "Danarapi"
             ReferencedContainer = "container:Danarapi.xcodeproj">
@@ -118,7 +118,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1E97C0A39403001E66966FD3"
+            BlueprintIdentifier = "119087C3205F7B8C614924F2"
             BuildableName = "Danarapi.app"
             BlueprintName = "Danarapi"
             ReferencedContainer = "container:Danarapi.xcodeproj">

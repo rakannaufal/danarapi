@@ -2,6 +2,8 @@ import { normalizeError } from "../_shared/errors.ts";
 import { corsFor } from "../_shared/cors.ts";
 
 const RPC_BY_OPERATION: Record<string, string> = {
+  edit_financial_account: "api_edit_financial_account",
+  delete_financial_record: "api_delete_financial_record",
   calculate_item_split: "api_calculate_item_split",
   save_item_split_bill: "api_save_item_split_bill",
   save_goal: "api_save_goal",

@@ -6,6 +6,72 @@ import SwiftUI
 
 final class PlanningTests: XCTestCase {
     @MainActor
+    func testShowcasePagesContainConsistentCurrentAndHistoricalData() async throws {
+        let previous = UserDefaults.standard.string(forKey: "financeTimezone")
+        UserDefaults.standard.set("Asia/Jakarta", forKey: "financeTimezone")
+        defer {
+            if let previous { UserDefaults.standard.set(previous, forKey: "financeTimezone") }
+            else { UserDefaults.standard.removeObject(forKey: "financeTimezone") }
+        }
+        let formatter = ISO8601DateFormatter()
+        for text in ["2026-10-05T01:00:00Z", "2027-01-01T00:00:00Z", "2028-02-29T16:59:00Z", "2026-09-30T17:01:00Z"] {
+            let now = try XCTUnwrap(formatter.date(from: text))
+            let repo = DemoRepository(showcaseDate: now)
+            let data = try await repo.dashboard()
+            XCTAssertEqual(data.accounts.count, 3)
+            let goals = data.goals ?? []
+            XCTAssertEqual(goals.count, 3)
+            XCTAssertEqual(data.reviewItems.count, 3)
+            XCTAssertEqual(data.merchantRules.count, 6)
+            XCTAssertTrue(data.accounts.allSatisfy { $0.balance > 0 })
+            XCTAssertEqual(data.budgets.filter { MonthPeriod.start($0.month) == MonthPeriod.start(now) }.count, 7)
+            XCTAssertEqual(Set(data.splitBills.map(\.status)), Set([.unsettled, .partiallySettled, .settled]))
+            var all = data.transactions
+            var cursor = data.nextTransactionCursor
+            while let next = cursor {
+                let page = try await repo.transactionPage(after: next)
+                all += page.items
+                cursor = page.nextCursor
+            }
+            XCTAssertEqual(Set(all.map { MonthPeriod.key($0.occurredAt) }).count, 3)
+            XCTAssertTrue(all.allSatisfy { $0.occurredAt <= now })
+            XCTAssertTrue(data.transfers.allSatisfy { $0.occurredAt <= now })
+            for bill in data.splitBills {
+                XCTAssertEqual(bill.members.reduce(0) { $0 + $1.shareAmount }, bill.total)
+                XCTAssertTrue(bill.settlements.allSatisfy { $0.occurredAt <= now })
+            }
+            let report = try await repo.report(since: MonthPeriod.start(now), until: MonthPeriod.end(now))
+            XCTAssertGreaterThan(report.personalIncome, 0)
+            XCTAssertGreaterThan(report.personalExpense, 0)
+            let opening = data.accounts.reduce(Int64(0)) { $0 + $1.openingBalance }
+            XCTAssertEqual(data.overview.netPosition, opening + data.overview.personalIncome - data.overview.personalExpense)
+            for goal in goals {
+                XCTAssertEqual(goal.savedAmount, all.filter { $0.goalID == goal.id }.reduce(0) { $0 + $1.amount })
+                XCTAssertNotNil(goal.targetDate)
+            }
+            if text == "2026-10-05T01:00:00Z" {
+                XCTAssertEqual(report.personalIncome, 8_500_000)
+                XCTAssertEqual(report.personalExpense, 5_108_000)
+                XCTAssertEqual(data.overview.receivables, 110_000)
+                XCTAssertEqual(data.overview.payables, 60_000)
+            }
+        }
+    }
+
+    @MainActor
+    func testShowcaseResetRetainsPopulatedPages() async throws {
+        let repo = DemoRepository(showcaseDate: .now)
+        let before = try await repo.dashboard()
+        let goal = try XCTUnwrap(before.goals?.first)
+        try await repo.deleteGoal(id: goal.id, expectedVersion: goal.version)
+        try await repo.resetDemo()
+        let after = try await repo.dashboard()
+        XCTAssertEqual(after.accounts, before.accounts)
+        XCTAssertEqual(after.goals, before.goals)
+        XCTAssertEqual(after.overview, before.overview)
+    }
+
+    @MainActor
     func testDemoShowsOnboardingOnEveryEntryWithoutCompletingAccountTour() async throws {
         let suiteName = "demo-onboarding-tests-\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
@@ -73,11 +139,16 @@ final class PlanningTests: XCTestCase {
         XCTAssertTrue(content.contains("periode_akhir"))
     }
     func testSharedVisualTokensUseBrandPalette() {
-        XCTAssertEqual(DesignTokens.version, "1.3.0")
+        XCTAssertEqual(DesignTokens.version, "1.4.0")
         XCTAssertEqual(DesignTokenCatalog.bundled?.hex("canvas", theme: "light"), 0xFBFCFB)
         XCTAssertEqual(DesignTokenCatalog.bundled?.hex("canvas", theme: "dark"), 0x0A1624)
-        XCTAssertEqual(DesignTokens.cornerControl, 12)
+        XCTAssertEqual(DesignTokens.cornerControl, 24)
         XCTAssertEqual(DesignTokens.minimumTouch, 44)
+    }
+    func testAppleSymbolCatalogContainsAvailableIcons() {
+        for symbol in AppSymbol.allCases {
+            XCTAssertNotNil(UIImage(systemName: symbol.rawValue), "Missing SF Symbol: \(symbol.rawValue)")
+        }
     }
     @MainActor
     func testRupiahFieldKeepsCanonicalValueAndCaret() {

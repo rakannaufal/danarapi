@@ -8,6 +8,7 @@ import './dashboard.css';
 import './product.css';
 import './interface.css';
 import './brand.css';
+import './theme.css';
 
 for (const [theme, values] of Object.entries(tokens.color)) {
   const style = document.createElement('style');

@@ -1,6 +1,34 @@
 # Verifikasi iOS R1
 
-## Status lokal pembaruan goals dan split per menu
+## Persentase anggaran dan interaksi laporan, 5 Oktober 2026
+
+Anggaran iOS menampilkan persentase total, setiap kategori, dan detail kategori; penggunaan di atas 100% tidak dipotong pada label. Web menambahkan persentase total dan memperjelas badge kategori. Diagram donat iOS mendukung ketukan sektor dan legenda; diagram batang mendukung pemilihan periode/kategori. Web mendukung hover, klik, Enter, dan Space langsung pada sektor/batang. Rincian memakai kategori/periode, nominal, dan persentase; nominal tetap mengikuti pengaturan sembunyikan nominal.
+
+Arus kas memakai font sistem Apple, label sekunder, nominal berukuran konsisten dan rata kanan; arus bersih lebih tegas. iOS beralih ke susunan vertikal pada ukuran teks aksesibilitas; web ponsel memakai satu baris per metrik.
+
+- iPhone 13 "Rakan": 69 XCTest aplikasi dan UI pemilihan bulan lulus (`/tmp/danarapi-ios-report-interaction.xcresult`). Uji ketukan sektor serta persentase list/detail juga lulus (`/tmp/danarapi-ios-report-tap.xcresult`). Regresi kontribusi target pada alokasi lulus (`/tmp/danarapi-ios-report-goal-regression.xcresult`). Screenshot: `/tmp/danarapi-ios-report-evidence/`.
+- Web: 17 pemeriksaan layout/dashboard lulus; tiga pemeriksaan interaksi langsung, keyboard, nominal tersembunyi, Axe, persentase, dan keselarasan arus kas lulus setelah memperbaiki posisi pointer pengujian (`/tmp/danarapi-report-web-e2e.log`, `/tmp/danarapi-report-web-interaction-final.log`).
+- Typecheck, lint, build web, dan `git diff --check` lulus. Build masih memberi peringatan ukuran chunk yang sudah ada.
+
+## Verifikasi iPhone fisik, 5 Oktober 2026
+
+Perangkat: iPhone 13 "Rakan", iOS 27.0 (`24A437`), UDID `00008110-000504112EBA201E`. Pengujian melalui Xcode langsung pada perangkat.
+
+| Pemeriksaan | Hasil | Bukti |
+| --- | --- | --- |
+| XCTest aplikasi terbaru | 69/69 lulus | `/tmp/danarapi-ios-demo-verified.log`, `/tmp/danarapi-ios-demo-verified.xcresult` |
+| UI terbaru | 3/3 lulus | Navigasi inti; navbar dari detail dan Scan; saldo/pemasukan/pengeluaran membuka halaman sesuai. Bundle yang sama, `TEST SUCCEEDED` |
+| Data Demo | Lulus | Awal bulan/tahun, Februari kabisat, pergantian hari Jakarta, pagination, tidak ada transaksi masa depan, progres dari kontribusi, status pelunasan, dan rekonsiliasi posisi bersih. Nominal Oktober cocok dengan skenario web |
+| Revamp sebelum pembaruan data | 66 XCTest + 20 UI lulus | `/tmp/danarapi-ios-revamp-device-final.xcresult`; navbar, onboarding, keyboard, forms, scanner, tema terang/gelap |
+| Ikon Apple dan gear | 67 XCTest + 3 UI lulus | `/tmp/danarapi-ios-apple-icons-final.xcresult`; katalog simbol tersedia pada perangkat |
+| Web terbaru | 100 tes data + 11 UI Chromium lulus | `/tmp/danarapi-demo-web-tests-final.log`, `/tmp/danarapi-demo-web-e2e-final.log`; seluruh halaman, viewport 320/390/834/1440, teks 200%, tema terang/gelap, Axe |
+| Build/typecheck/lint web | Lulus | `/tmp/danarapi-demo-web-build-final.log`, `/tmp/danarapi-demo-web-lint-final.log`; Vite tetap memberi peringatan ukuran chunk |
+
+Skenario Demo menggunakan bulan perangkat saat masuk/reset. Tiga akun, tiga target, tujuh anggaran per bulan, transaksi/transfer tiga bulan, tiga status split bill, tiga draft tinjauan, dan enam aturan merchant memakai rencana bersama `scripts/demo-showcase.mjs`. Fixture bertanggal tetap disimpan untuk regresi. Draft belum memengaruhi saldo. Pemindaian kamera/AI akun nyata, biometrik, VoiceOver manual, integrasi Supabase nyata, dan Data Protection tetap memerlukan QA tersendiri.
+
+Artefak `/tmp` bersifat sementara. Perintah verifikasi terbaru memakai `-destination 'platform=iOS,id=00008110-000504112EBA201E'`, signing perangkat, dan `-parallel-testing-enabled NO`.
+
+## Arsip pembaruan goals dan split per menu, 1 Oktober 2026
 
 | Pemeriksaan | Status | Bukti/keterbatasan |
 | --- | --- | --- |
@@ -85,3 +113,27 @@ Laporan crash `DanarapiAppUITests-Runner-2026-09-30-214759.ips` menyatakan termi
 - UUID peserta huruf besar dari iOS dinormalisasi sebelum penyimpanan. Constraint deferred menjaga konsistensi menu/porsi, termasuk mutasi lewat RPC lama.
 - Calculator dan trigger validasi memakai `SECURITY DEFINER` dengan search path tetap; akses schema `private` tetap dicabut dari `authenticated`. Migration `008` juga memperbaiki konteks kedua trigger deferred split lama agar commit akun nyata dapat memvalidasi ledger tanpa membuka schema privat.
 - Role `authenticated` menguji goals, split dan constraint deferred; kategori pengeluaran aktif diterima untuk anggaran, sedangkan kategori pemasukan, arsip dan milik akun lain ditolak.
+
+## Share bukti transaksi - 5 Oktober 2026
+
+Verifikasi akhir pada iPhone 13 Rakan (`00008110-000504112EBA201E`), iOS 27.0: **89 XCTest aplikasi dan 3 UI test Share lulus**, tanpa Simulator. Result bundle: `/tmp/danarapi-ios-share-final-verified.xcresult`; log: `/tmp/danarapi-ios-share-final-verified.log`. Build web (`vue-tsc --noEmit` dan Vite) juga lulus setelah persentase kategori disamakan dengan teks tebal Anggaran.
+
+- Share Sheet iOS benar-benar menjalankan extension Danarapi untuk teks, PNG dan PDF sintetis. Draft lokal tetap tersedia setelah app ditutup dan dibuka ulang; OCR/text PDF membaca nominal 150000, bukan biaya admin 2500 atau saldo 9000000.
+- Akun Demo menampilkan bukti lokal tetapi tidak dapat mengunggah bukti pribadi. Preview bukti teks diuji. Ketiga bukti sintetis dibersihkan melalui aksi Hapus lokal setelah pengujian.
+- Tes aplikasi memeriksa batch atomik, restart, penulisan bersamaan, deduplikasi, kuota/batas ukuran, path traversal, kerusakan payload, akun tujuan, parser konservatif, dan saldo yang tetap sama setelah draft masuk.
+- Transport stub memverifikasi pergantian akun menghentikan permintaan berikutnya, upload timeout tidak menggandakan lampiran, draft selesai tidak dibuka ulang, konfirmasi pemasukan mempertahankan jenisnya, serta retry transfer mempertahankan UUID dan rincian yang tersimpan.
+- Bukti visual alur perangkat sebelumnya: `/tmp/danarapi-ios-share-evidence/`. Share extension dan draft lokal diperiksa secara visual; font Apple, tombol teal dan navbar tetap tersedia.
+
+Tidak ada transaksi bank nyata, login BSI, atau unggahan bukti pribadi selama pengujian. Alur share langsung dari aplikasi BSI dan konfirmasi ledger ke Supabase akun nyata belum diuji end-to-end; transport jaringan diuji dengan respons sintetis. Panduan penggunaan dan batas: `docs/ios-share-receipts.md`.
+
+## Perbaikan kiriman Share bank - 5 Oktober 2026
+
+Screenshot `IMG_4643.PNG` menunjukkan extension tersedia di Share BSI tetapi persiapan lampiran ditolak. Screenshot tidak mengungkap jenis UTI atau isi lampiran sebenarnya; penyebab persis di aplikasi BSI belum dapat disimpulkan dari gambar tersebut. Pembaca sebelumnya hanya mencoba satu representasi berkas sementara dan menolak provider pendamping yang tidak dikenal.
+
+Perbaikan `SharedIntake/ShareItemReader.swift` mencoba semua representasi gambar/PDF, data langsung, objek `UIImage`, item legacy, serta file URL/objek `NSURL`. Gambar yang dapat dibaca ImageIO tetapi belum didukung penyimpanan disalin ke JPEG. URL pendamping tidak diambil melalui jaringan; keterangan kosong tidak membuang gambar yang valid. Satu lampiran rusak tetap menggagalkan batch secara jelas. Timeout, pembatalan, batas ukuran dan perlindungan callback ganda diuji.
+
+UI kegagalan sekarang menyatakan bahwa belum ada draft tersimpan, menyediakan **Coba baca ulang**, serta **Detail format kiriman** yang hanya menampilkan identifier UTI. Tombol Simpan tidak ditampilkan ketika tidak ada bukti yang berhasil dibaca. Bukti masih memakai alur draft dan konfirmasi akun yang sama.
+
+Pada iPhone 13 Rakan, 14 tes pembaca provider dan dua UI test tambahan (gambar native serta gambar dengan tautan pendamping) lulus: `/tmp/danarapi-ios-bsi-provider-final.xcresult`. Bukti sintetis berhasil dibaca menjadi nominal 150000, tersimpan setelah relaunch, lalu dibersihkan. Screenshot diperiksa di `/tmp/danarapi-ios-bsi-share-evidence/`.
+
+Regresi seluruh 103 tes aplikasi dan tiga UI test teks/foto/PDF lulus dalam `/tmp/danarapi-ios-bsi-share-regression.xcresult`. Total lima alur Share perangkat lulus bersama dua UI test tambahan di atas. Alur BSI sebenarnya perlu dibagikan ulang dari perangkat pengguna setelah versi perbaikan terpasang; pengujian otomatis memakai payload sintetis, tanpa membuka rekening atau membuat pembayaran bank.

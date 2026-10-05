@@ -107,6 +107,7 @@ struct RupiahTextField: UIViewRepresentable {
 struct MoneyField: View {
     let title: String
     @Binding var value: String
+    var signed = false
     var focus: FocusState<String?>.Binding? = nil
     var focusID = "amount"
     @FocusState private var focusedField: String?
@@ -117,9 +118,9 @@ struct MoneyField: View {
                 .fixedSize(horizontal: false, vertical: true)
             HStack(alignment: .firstTextBaseline, spacing: 6) {
                 Text("Rp").font(.title2.bold()).foregroundStyle(Color.danarapiMuted)
-                RupiahTextField("0", text: $value, large: true, focus: activeFocus, focusID: focusID, accessibilityName: title, accessibilityID: "money.\(title)")
+                RupiahTextField("0", text: $value, signed: signed, large: true, focus: activeFocus, focusID: focusID, accessibilityName: title, accessibilityID: "money.\(title)")
                     .focused(activeFocus, equals: focusID)
-                    .keyboardType(.numberPad)
+                    .keyboardType(signed ? .numbersAndPunctuation : .numberPad)
                     .font(.system(.largeTitle, design: .default).bold().monospacedDigit())
                     .accessibilityLabel(title)
                     .accessibilityIdentifier("money.\(title)")
@@ -222,42 +223,69 @@ struct TransferFormView: View {
     @Environment(AppModel.self) private var app
     @Environment(\.dismiss) private var dismiss
     let editing: TransferRecord?
+    let reviewItem: ReviewItem?
     let onSaved: () -> Void
     @State private var amount = ""
     @State private var fromID = ""
     @State private var toID = ""
     @State private var occurredAt = Date.now
     @State private var note = ""
+    @State private var sharedAttempt = false
 
-    init(editing: TransferRecord? = nil, onSaved: @escaping () -> Void = {}) {
+    init(editing: TransferRecord? = nil, reviewItem: ReviewItem? = nil, onSaved: @escaping () -> Void = {}) {
         self.editing = editing
+        self.reviewItem = reviewItem
         self.onSaved = onSaved
-        _amount = State(initialValue: editing.map { String($0.amount) } ?? "")
+        _amount = State(initialValue: editing.map { String($0.amount) } ?? reviewItem?.amount.value ?? "")
         _fromID = State(initialValue: editing?.fromAccountID ?? "")
         _toID = State(initialValue: editing?.toAccountID ?? "")
-        _occurredAt = State(initialValue: editing?.occurredAt ?? .now)
-        _note = State(initialValue: editing?.note ?? "")
+        _occurredAt = State(initialValue: editing?.occurredAt ?? ImportService.receiptDate(reviewItem?.date.value) ?? .now)
+        _note = State(initialValue: editing?.note ?? (reviewItem == nil ? "" : "Transfer dari bukti Share"))
     }
 
     var body: some View {
         Form {
-            Section { MoneyField(title: "Nominal transfer", value: $amount).listRowInsets(EdgeInsets()).listRowBackground(Color.clear) }
+            if let reviewItem {
+                Section {
+                    SharedOriginalButton(itemID: reviewItem.id)
+                    Text("Hanya transfer antar dua akun milik Anda. Transfer ke penerima lain adalah pengeluaran. Biaya admin dicatat terpisah sebagai pengeluaran.").font(.footnote).foregroundStyle(Color.danarapiMuted)
+                    if sharedAttempt { Text("Percobaan transfer sebelumnya memakai rincian ini. Retry mempertahankan rincian agar tidak menggandakan saldo.").font(.footnote).foregroundStyle(Color.danarapiExpense) }
+                }
+            }
+            Section { MoneyField(title: "Nominal transfer", value: $amount).listRowInsets(EdgeInsets()).listRowBackground(Color.clear) }.disabled(sharedAttempt)
             Section("Rincian") {
                 Picker("Dari akun", selection: $fromID) { Text("Pilih akun").tag(""); ForEach(app.activeAccounts) { Text($0.name).tag($0.id) } }
                 Picker("Ke akun", selection: $toID) { Text("Pilih akun").tag(""); ForEach(app.activeAccounts) { Text($0.name).tag($0.id) } }
                 DatePicker("Tanggal", selection: $occurredAt)
                 TextField("Catatan (opsional)", text: $note)
                 if fromID == toID && !fromID.isEmpty { Label("Akun asal dan tujuan harus berbeda.", systemImage: "exclamationmark.triangle").foregroundStyle(Color.danarapiExpense) }
-            }
+            }.disabled(sharedAttempt)
             Section { Button(editing == nil ? "Simpan transfer" : "Simpan perubahan") { Task { await save() } }.buttonStyle(PrimaryButtonStyle()).disabled(Int64(amount) == nil || fromID.isEmpty || toID.isEmpty || fromID == toID).listRowInsets(EdgeInsets()).listRowBackground(Color.clear) }
         }
         .scrollContentBackground(.hidden).background(Color.danarapiCanvas).navigationTitle("Transfer").navigationBarTitleDisplayMode(.inline)
-        .onAppear { if fromID.isEmpty { fromID = app.activeAccounts.first?.id ?? "" }; if toID.isEmpty { toID = app.activeAccounts.dropFirst().first?.id ?? "" } }
+        .onAppear {
+            if let reviewItem,
+               let record = try? app.sharedInbox?.records(ownerID: app.ownerID).first(where: { $0.id == reviewItem.id }),
+               let data = record.transferDraft, let draft = try? JSONDecoder.danarapi.decode(TransferDraft.self, from: data) {
+                amount = String(draft.amount); fromID = draft.fromAccountID; toID = draft.toAccountID
+                occurredAt = draft.occurredAt; note = draft.note ?? ""; sharedAttempt = true
+            } else if reviewItem == nil {
+                if fromID.isEmpty { fromID = app.activeAccounts.first?.id ?? "" }
+                if toID.isEmpty { toID = app.activeAccounts.dropFirst().first?.id ?? "" }
+            }
+        }
     }
 
     private func save() async {
         guard let parsed = Int64(amount) else { return }
-        if await app.createTransfer(TransferDraft(id: editing?.id, fromAccountID: fromID, toAccountID: toID, amount: parsed, occurredAt: occurredAt, note: note.nilIfBlank, expectedVersion: editing?.version)) { onSaved(); dismiss() }
+        let draft = TransferDraft(id: editing?.id, fromAccountID: fromID, toAccountID: toID, amount: parsed, occurredAt: occurredAt, note: note.nilIfBlank, expectedVersion: editing?.version)
+        let saved: Bool
+        if let reviewItem {
+            saved = await app.confirmSharedReviewTransfer(reviewItem, transfer: draft)
+            if let record = try? app.sharedInbox?.records(ownerID: app.ownerID).first(where: { $0.id == reviewItem.id }), record.transferDraft != nil { sharedAttempt = true }
+        }
+        else { saved = await app.createTransfer(draft) }
+        if saved { onSaved(); dismiss() }
     }
 }
 

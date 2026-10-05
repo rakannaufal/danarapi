@@ -36,7 +36,7 @@ struct RootView: View {
                 }
                 else {
                     MainTabView()
-                        .disabled(app.isLoading || app.isLocked)
+                        .disabled(app.isLocked)
                         .accessibilityHidden(app.isLocked)
                 }
               }
@@ -47,6 +47,7 @@ struct RootView: View {
                     .padding(20)
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 18))
                     .accessibilityAddTraits(.updatesFrequently)
+                    .allowsHitTesting(false)
             }
 
             if app.isLocked {

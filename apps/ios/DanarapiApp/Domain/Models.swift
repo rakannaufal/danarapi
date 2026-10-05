@@ -367,6 +367,14 @@ struct FinancialOverview: Codable, Equatable, Sendable {
     static let zero = FinancialOverview(accountBalance: 0, receivables: 0, payables: 0, netPosition: 0, personalIncome: 0, personalExpense: 0)
 }
 
+struct BalanceAdjustment: Codable, Sendable {
+    var id: String
+    var accountID: String
+    @DecimalString var signedAmount: Int64
+    var reason: String
+    var occurredAt: Date
+}
+
 struct DashboardSnapshot: Codable, Sendable {
     var accounts: [FinancialAccount]
     var categories: [Category]
@@ -383,6 +391,7 @@ struct DashboardSnapshot: Codable, Sendable {
     var monthlyReport: ReportSummary? = nil
     var reportMonth: String? = nil
     var timezone: String? = nil
+    var adjustments: [BalanceAdjustment]? = nil
 
     @discardableResult
     mutating func reconcileAcknowledgedReview(_ item: ReviewItem, replacingExisting: Bool = false) -> Bool {

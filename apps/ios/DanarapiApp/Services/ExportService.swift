@@ -76,6 +76,9 @@ enum ExportService {
 
     private static func cashFlowCSV(_ snapshot: DashboardSnapshot) -> String {
         var rows = ["event_id,source_bill_id,occurred_at,type,amount,account,note"]
+        for adjustment in snapshot.adjustments ?? [] {
+            rows.append(row([adjustment.id, "", iso(adjustment.occurredAt), "adjustment", String(adjustment.signedAmount), accountName(adjustment.accountID, snapshot), adjustment.reason], numericColumns: [4]))
+        }
         for item in snapshot.transactions where !item.deleted {
             let signed = item.kind == .income ? item.amount : -item.amount
             rows.append(row([item.id, "", iso(item.occurredAt), item.kind.rawValue, String(signed), accountName(item.accountID, snapshot), item.note ?? ""], numericColumns: [4]))
@@ -141,6 +144,7 @@ enum ExportService {
             "schema_version": "1.0.0", "currency": "IDR", "synthetic": true,
             "overview": ["account_balance": String(snapshot.overview.accountBalance), "receivables": String(snapshot.overview.receivables), "payables": String(snapshot.overview.payables), "net_position": String(snapshot.overview.netPosition), "personal_income": String(snapshot.overview.personalIncome), "personal_expense": String(snapshot.overview.personalExpense)],
             "accounts": snapshot.accounts.map { ["id": $0.id, "name": $0.name, "kind": $0.kind.rawValue, "opening_balance": String($0.openingBalance), "balance": String($0.balance), "opened_at": iso($0.openedAt), "archived": $0.archived, "version": $0.version] },
+            "adjustments": (snapshot.adjustments ?? []).map { ["id": $0.id, "account_id": $0.accountID, "signed_amount": String($0.signedAmount), "reason": $0.reason, "occurred_at": iso($0.occurredAt)] },
             "categories": snapshot.categories.map { ["id": $0.id, "name": $0.name, "kind": $0.kind.rawValue, "archived": $0.archived, "sort_order": $0.sortOrder, "version": $0.version] },
             "transactions": snapshot.transactions.map { ["id": $0.id, "kind": $0.kind.rawValue, "amount": String($0.amount), "account_id": $0.accountID, "category_id": $0.categoryID, "occurred_at": iso($0.occurredAt), "merchant": jsonValue($0.merchant), "note": jsonValue($0.note), "source": $0.source, "version": $0.version] },
             "transfers": snapshot.transfers.map { ["id": $0.id, "from_account_id": $0.fromAccountID, "to_account_id": $0.toAccountID, "amount": String($0.amount), "occurred_at": iso($0.occurredAt), "note": jsonValue($0.note), "version": $0.version] },

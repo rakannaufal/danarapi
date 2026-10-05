@@ -6,6 +6,7 @@ import { allocationBreakdown } from '../../../supabase/functions/_shared/plannin
 
 export type Kind = 'income' | 'expense';
 export interface Account { id: string; name: string; kind: string; openingBalance: string; balance: string; openedAt: string; archived: boolean; version: number }
+export interface BalanceAdjustment { id: string; accountID: string; signedAmount: string; reason: string; occurredAt: string }
 export interface Category { id: string; name: string; kind: Kind; systemKey?: string | null; archived: boolean; sortOrder: number; version: number }
 export interface Transaction { id: string; kind: Kind; amount: string; accountID: string; categoryID: string; goalID?: string | null; occurredAt: string; merchant?: string; note?: string; source: string; deleted: boolean; version: number }
 export interface Transfer { id: string; fromAccountID: string; toAccountID: string; amount: string; occurredAt: string; note?: string; deleted: boolean; version: number }
@@ -18,7 +19,7 @@ export interface Budget { id: string; categoryID: string; month: string; limitAm
 export interface SavingsGoal { id: string; name: string; targetAmount: string; savedAmount: string; openingAmount?: string; targetDate: string | null; version: number }
 export interface MerchantRule { id: string; matchType: string; normalizedPattern: string; categoryID: string; priority: number; version: number }
 export interface Overview { accountBalance: string; receivables: string; payables: string; netPosition: string; personalIncome: string; personalExpense: string }
-export interface Snapshot { accounts: Account[]; categories: Category[]; transactions: Transaction[]; transfers: Transfer[]; splitBills: Bill[]; reviewItems: Review[]; budgets: Budget[]; goals?: SavingsGoal[]; merchantRules: MerchantRule[]; overview: Overview; syncedAt?: string | null; timezone?: string }
+export interface Snapshot { adjustments?: BalanceAdjustment[]; accounts: Account[]; categories: Category[]; transactions: Transaction[]; transfers: Transfer[]; splitBills: Bill[]; reviewItems: Review[]; budgets: Budget[]; goals?: SavingsGoal[]; merchantRules: MerchantRule[]; overview: Overview; syncedAt?: string | null; timezone?: string }
 export interface Report { personalIncome: string; personalExpense: string; categories: { categoryID: string; amount: string }[]; allocations?: { id: string; name: string; amount: string }[] }
 export interface Filter { query: string; kind: string; account: string; category: string; from: string; to: string }
 export interface ListRow { id: string; kind: string; amount: string; accountID: string; categoryID: string; goalID?: string | null; occurredAt: string; merchant?: string; note?: string; version: number }
@@ -79,6 +80,7 @@ export function derive(data: Snapshot, timezone = 'Asia/Jakarta'): Snapshot {
   }
   const cash = new Map(data.accounts.map(account => [account.id, BigInt(account.openingBalance)]));
   const addCash = (account: string, amount: bigint) => cash.set(account, (cash.get(account) ?? 0n) + amount);
+  for (const adjustment of data.adjustments ?? []) addCash(adjustment.accountID, BigInt(adjustment.signedAmount));
   for (const transaction of data.transactions.filter(row => !row.deleted)) addCash(transaction.accountID, BigInt(transaction.amount) * (transaction.kind === 'income' ? 1n : -1n));
   for (const transfer of data.transfers.filter(row => !row.deleted)) { addCash(transfer.fromAccountID, -BigInt(transfer.amount)); addCash(transfer.toAccountID, BigInt(transfer.amount)); }
   let receivables = 0n, payables = 0n;
@@ -106,7 +108,7 @@ export function derive(data: Snapshot, timezone = 'Asia/Jakarta'): Snapshot {
 export function assertDecimalPayload(value: unknown, key = ''): void {
   if (Array.isArray(value)) { for (const row of value) assertDecimalPayload(row, key); return; }
   if (value && typeof value === 'object') { if (key === 'amount' && 'value' in value && value.value !== null && typeof value.value !== 'string') throw new Error('Kontrak ekstraksi: nominal harus string desimal.'); for (const [childKey, child] of Object.entries(value)) assertDecimalPayload(child, childKey); return; }
-  if (['amount', 'total', 'balance', 'openingBalance', 'openingAmount', 'shareAmount', 'settledAmount', 'resolvedAmount', 'limitAmount', 'spentAmount', 'targetAmount', 'savedAmount', 'accountBalance', 'receivables', 'payables', 'netPosition', 'personalIncome', 'personalExpense'].includes(key) && (typeof value !== 'string' || !/^-?(0|[1-9][0-9]*)$/.test(value))) throw new Error(`Kontrak backend tidak valid: ${key} harus string desimal.`);
+  if (['amount', 'signedAmount', 'total', 'balance', 'openingBalance', 'openingAmount', 'shareAmount', 'settledAmount', 'resolvedAmount', 'limitAmount', 'spentAmount', 'targetAmount', 'savedAmount', 'accountBalance', 'receivables', 'payables', 'netPosition', 'personalIncome', 'personalExpense'].includes(key) && (typeof value !== 'string' || !/^-?(0|[1-9][0-9]*)$/.test(value))) throw new Error(`Kontrak backend tidak valid: ${key} harus string desimal.`);
 }
 export function filterRows(data: Snapshot, filter: Filter, timezone = 'Asia/Jakarta'): ListRow[] {
   const rows: ListRow[] = [

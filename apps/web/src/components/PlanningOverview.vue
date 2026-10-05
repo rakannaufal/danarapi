@@ -7,7 +7,7 @@ import GoalCard from './GoalCard.vue';
 import Money from './Money.vue';
 import Icon from './Icon.vue';
 import type { PlanningEntry } from '../product.ts';
-const props = defineProps<{ month: string; targetsOnly?: boolean }>();
+const props = defineProps<{ month: string; targetsOnly?: boolean; overview?: boolean }>();
 defineEmits<{ goal: [goal?: SavingsGoal]; budget: []; progress: [goal: SavingsGoal]; entry: [entry: PlanningEntry] }>();
 const tick = ref(Date.now());
 let timer: ReturnType<typeof setInterval> | undefined;
@@ -23,11 +23,11 @@ const totalTarget = computed(() => goals.value.reduce((sum, row) => sum + BigInt
 const monthLabel = computed(() => new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${props.month}-01T00:00:00Z`)));
 </script>
 <template>
-  <div class="planning-grid" :class="{ 'targets-only': targetsOnly }">
+  <div class="planning-grid" :class="{ 'targets-only': targetsOnly, 'home-planning': overview }">
     <section class="card plan-panel" aria-label="Target tabungan">
-      <div class="section-heading"><h2><Icon name="target" /> Target</h2><button class="text-button" @click="$emit('goal')"><Icon name="plus" :size="16" /> Tambah</button></div>
-      <div v-if="goals.length" class="plan-summary"><span class="muted">{{ goals.length }} target · terkumpul</span><strong><Money :amount="totalSaved" /></strong><span class="fine-print">dari <Money :amount="totalTarget" /></span></div>
-      <div v-else class="plan-empty"><span class="icon-tile sky"><Icon name="target" :size="26" /></span><h3>Belum ada target</h3><button class="secondary" @click="$emit('goal')">Buat target</button></div>
+      <div class="section-heading"><h2><Icon v-if="!overview" name="target" /> {{ overview ? 'Target tabungan' : 'Target' }}</h2><button class="text-button" @click="$emit('goal')"><Icon name="plus" :size="16" /> Tambah</button></div>
+      <div v-if="goals.length && !overview" class="plan-summary"><span class="muted">{{ goals.length }} target · terkumpul</span><strong><Money :amount="totalSaved" /></strong><span class="fine-print">dari <Money :amount="totalTarget" /></span></div>
+      <div v-if="!goals.length" class="plan-empty"><span class="icon-tile mint"><Icon name="target" :size="26" /></span><h3>Belum ada target</h3><button class="secondary" @click="$emit('goal')">Buat target</button></div>
       <div class="goal-list"><GoalCard v-for="goal in goals" :key="goal.id" :goal="goal" :day="day" @edit="$emit('goal', $event)" @progress="$emit('progress', $event)" @entry="$emit('entry',$event)" /></div>
     </section>
     <section v-if="!targetsOnly" class="card plan-panel" aria-label="Anggaran bulanan">

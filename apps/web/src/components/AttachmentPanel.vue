@@ -45,5 +45,22 @@ async function view(row: typeof rows.value[number]) {
     preview.value = { url: URL.createObjectURL(blob), name: row.name, mime: row.mime };
   } catch (cause) { error.value = message(cause); }
 }
+async function remove(row: typeof rows.value[number]) {
+  if (!window.confirm(`Hapus lampiran ${row.name}? Catatan transaksi dan saldo tetap tersimpan.`)) return;
+  saving.value = true; error.value = '';
+  try {
+    if (state.mode === 'demo') attachments.delete(row.id);
+    else {
+      if (!client || !row.storageKey) throw new Error('Lampiran tidak tersedia.');
+      const removed = await client.storage.from('attachments').remove([row.storageKey]);
+      if (removed.error) throw removed.error;
+      const deleted = await client.from('attachments').delete().eq('id', row.id).select('id');
+      if (deleted.error) throw deleted.error;
+      if (!deleted.data.length) throw new Error('Lampiran berubah. Muat ulang sebelum menghapus.');
+    }
+    closePreview(); await load(); state.notice = 'Lampiran dihapus; saldo tidak berubah.';
+  } catch (cause) { error.value = message(cause); }
+  finally { saving.value = false; }
+}
 </script>
-<template><section class="entry-form attachment-panel"><h3>Lampiran bukti</h3><p class="fine-print">Berkas ditautkan ke catatan ini. Tidak mengekstrak atau mengubah transaksi. JPEG, PNG, PDF; maksimal 5 MB.</p><p v-if="loading" role="status">Memuat lampiran…</p><p v-else-if="!rows.length" class="muted">Belum ada lampiran.</p><button v-for="row in rows" :key="row.id" type="button" class="secondary" @click="view(row)">Lihat {{ row.name }}</button><label>Tambahkan lampiran<input type="file" accept="image/jpeg,image/png,application/pdf" :disabled="saving || loading || (state.mode !== 'demo' && !state.online)" @change="add"></label><p v-if="saving" role="status">Menyimpan lampiran…</p><p v-if="error" role="alert" class="error-text">{{ error }}</p><button v-if="error && !saving" class="secondary" type="button" @click="load">Muat ulang lampiran</button><section v-if="preview" class="attachment-preview"><div class="section-heading"><h4>{{ preview.name }}</h4><button class="secondary" type="button" @click="closePreview">Tutup pratinjau</button></div><iframe v-if="preview.mime === 'application/pdf'" :src="preview.url" title="Pratinjau PDF" sandbox=""></iframe><img v-else :src="preview.url" :alt="`Bukti ${preview.name}`"></section></section></template>
+<template><section class="entry-form attachment-panel"><h3>Lampiran bukti</h3><p class="fine-print">Berkas ditautkan ke catatan ini. Tidak mengekstrak atau mengubah transaksi. JPEG, PNG, PDF; maksimal 5 MB.</p><p v-if="loading" role="status">Memuat lampiran…</p><p v-else-if="!rows.length" class="muted">Belum ada lampiran.</p><div v-for="row in rows" :key="row.id" class="button-row"><button type="button" class="secondary" @click="view(row)">Lihat {{ row.name }}</button><button type="button" class="text-button danger-text" :disabled="saving || loading || (state.mode !== 'demo' && !state.online)" @click="remove(row)">Hapus lampiran</button></div><label>Tambahkan lampiran<input type="file" accept="image/jpeg,image/png,application/pdf" :disabled="saving || loading || (state.mode !== 'demo' && !state.online)" @change="add"></label><p v-if="saving" role="status">Menyimpan lampiran…</p><p v-if="error" role="alert" class="error-text">{{ error }}</p><button v-if="error && !saving" class="secondary" type="button" @click="load">Muat ulang lampiran</button><section v-if="preview" class="attachment-preview"><div class="section-heading"><h4>{{ preview.name }}</h4><button class="secondary" type="button" @click="closePreview">Tutup pratinjau</button></div><iframe v-if="preview.mime === 'application/pdf'" :src="preview.url" title="Pratinjau PDF" sandbox=""></iframe><img v-else :src="preview.url" :alt="`Bukti ${preview.name}`"></section></section></template>

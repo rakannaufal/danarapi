@@ -27,9 +27,11 @@ struct ScanHubView: View {
     @State private var showSignIn = false
     let existingReviewID: String?
     let onReread: (() -> Void)?
+    let onClose: (() -> Void)?
 
-    init(initialMode: ScanMode = .receipt, existingReviewID: String? = nil, onReread: (() -> Void)? = nil) {
+    init(initialMode: ScanMode = .receipt, existingReviewID: String? = nil, onReread: (() -> Void)? = nil, onClose: (() -> Void)? = nil) {
         _mode = State(initialValue: initialMode); self.existingReviewID = existingReviewID; self.onReread = onReread
+        self.onClose = onClose
     }
 
     var body: some View {
@@ -48,8 +50,11 @@ struct ScanHubView: View {
             }
             .background(Color.danarapiCanvas).navigationTitle(existingReviewID == nil ? "Scan" : "Baca ulang struk")
             .navigationBarTitleDisplayMode(.inline)
+            .danarapiMainHeader(enabled: onClose != nil && existingReviewID == nil)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Tutup") { dismiss() }.disabled(processing) }
+                if onClose == nil || existingReviewID != nil {
+                    ToolbarItem(placement: .cancellationAction) { Button("Tutup") { if let onClose { onClose() } else { dismiss() } }.disabled(processing) }
+                }
                 ToolbarItem(placement: .primaryAction) {
                     Button { showReviews = true } label: {
                         HStack(spacing: 5) {
@@ -127,7 +132,7 @@ struct ScanHubView: View {
                 }
                 HStack(spacing: 12) {
                     Button { showGallery = true } label: {
-                        Label("Galeri", systemImage: "photo.on.rectangle").frame(maxWidth: .infinity, minHeight: 48)
+                        Label("Galeri", systemImage: AppSymbol.gallery.rawValue).frame(maxWidth: .infinity, minHeight: 48)
                     }
                     .background(Color.danarapiSurface, in: RoundedRectangle(cornerRadius: 12))
                     Button { showPDF = true } label: {
@@ -238,7 +243,7 @@ struct QRScannerView: View {
             }
 
             Button { showGallery = true } label: {
-                Label("Galeri QRIS", systemImage: "photo.on.rectangle")
+                Label("Galeri QRIS", systemImage: AppSymbol.gallery.rawValue)
                     .font(.subheadline.weight(.medium)).frame(maxWidth: .infinity, minHeight: 48)
                     .background(Color.danarapiSurface, in: RoundedRectangle(cornerRadius: 12))
             }
@@ -499,7 +504,7 @@ struct ImportView: View {
             Section("Pilih berkas") {
                 Button { Task { await openPhotoCamera() } } label: { Label("Ambil foto bukti", systemImage: "camera") }
                 PhotosPicker(selection: $pickerItem, matching: .images) {
-                    Label("Pilih gambar", systemImage: "photo")
+                    Label("Pilih gambar", systemImage: AppSymbol.gallery.rawValue)
                 }
                 .onChange(of: pickerItem) { _, item in Task { await importImage(item) } }
                 Button { showFiles = true } label: { Label("Pilih PDF", systemImage: "doc.richtext") }
@@ -511,6 +516,7 @@ struct ImportView: View {
             }
         }
         .overlay { if processing { ProgressView("Memeriksa berkas…").padding().background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16)) } }
+        .danarapiListSurface()
         .navigationTitle("Impor")
         .navigationBarTitleDisplayMode(.inline)
         .disabled(processing)

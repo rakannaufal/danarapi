@@ -79,7 +79,7 @@ Tampilan web dan iOS memakai font sistem, palet netral, aksen biru, dan penjelas
 
 ## Data demo
 
-`tests/fixtures/demo-seed-v1.json` berisi tepat 200 transaksi sintetis selama tiga bulan, anggaran, serta split bill belum/sebagian lunas. `supabase/seed.sql` membuat akun lokal sintetis terpisah. Tidak ada bukti bayar atau data keuangan nyata.
+`tests/fixtures/demo-seed-v1.json` menyediakan skenario Demo iOS/web yang mengikuti bulan berjalan: tiga akun, tiga target, tujuh anggaran bulanan, transaksi/transfer tiga bulan, tiga status split bill, draft tinjauan, dan aturan merchant. Semua nominal diturunkan dari ledger; transaksi masa depan tidak dimasukkan. Fixture tetap 200 transaksi juga tersedia untuk regresi finansial. Regenerasi: `node scripts/generate-demo-fixture.mjs`. `supabase/seed.sql` membuat akun lokal sintetis terpisah. Tidak ada bukti bayar atau data keuangan nyata.
 
 ## Status verifikasi
 

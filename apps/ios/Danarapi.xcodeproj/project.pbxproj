@@ -3,347 +3,466 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
-        D900B173B7E048A598008C11 = {isa = PBXBuildFile; fileRef = D900B173B7E048A598008C12; };
-        D900B173B7E048A598008C13 = {isa = PBXBuildFile; fileRef = D900B173B7E048A598008C14; };
-        D900B173B7E048A598008C07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D900B173B7E048A598008C08 /* Assets.xcassets */; };
-		D900B173B7E048A598008C01 /* GoogleSignInLogo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D900B173B7E048A598008C02 /* GoogleSignInLogo@3x.png */; };
-		D900B173B7E048A598008C03 /* GoogleSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D900B173B7E048A598008C04 /* GoogleSans-Medium.ttf */; };
-		D900B173B7E048A598008C05 /* Google-Sans-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = D900B173B7E048A598008C06 /* Google-Sans-OFL.txt */; };
-		00A61E95FE9AC8F2D99787ED /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D2A082A590EF1A1B8C81AA4 /* MainTabView.swift */; };
-		05958E14C306DE7591C38773 /* ItemSplitFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA2078AD861EAA73BF52B5F /* ItemSplitFormView.swift */; };
-		08DA74B639E978584ABF4713 /* SplitBillViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51F5A6C28CE7598B5371910 /* SplitBillViews.swift */; };
-		1386B2F4C80FFB76146B966C /* AuthViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9997A7C2B826B1ACC397D6EF /* AuthViews.swift */; };
-		17DB159D34BAC16921F288D9 /* ScannerImportViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D4BF2A24DE5C69F7F0B702 /* ScannerImportViews.swift */; };
-		199F71FA17867F5CF3CB20F2 /* OutboxChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032E072784B484B443926F29 /* OutboxChangeView.swift */; };
-		19BAEBA4A67F69CD5BDA64C7 /* TransactionForms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D073A486A783E3A606B1FC /* TransactionForms.swift */; };
-		201A44442F2294B817DFCCDE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1411081084237F7EC0D0766B /* Foundation.framework */; };
-		20BA2C37FB48A156282007D0 /* ledger-v1.json in Resources */ = {isa = PBXBuildFile; fileRef = 2BE81CC3546AFFEBACF2B9F7 /* ledger-v1.json */; };
-		279E4B10A24C28F3B0AA3441 /* AppLockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05716C3F05820F25D2C0B44A /* AppLockService.swift */; };
-		2BCB7185C4857FDFBCCF8450 /* RemoteRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC70CBC7B697459B9CBA765 /* RemoteRepository.swift */; };
-		2C6C47AF7F977FBEE7D69C9B /* ReviewViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C538AA4E9B4800AA357F7914 /* ReviewViews.swift */; };
-		340457D3BE2506C61A46869B /* Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC8AF5F63D67F68717DF47A /* Split.swift */; };
-		37224FE7AB21F0D31F756DE7 /* demo-seed-v1.json in Resources */ = {isa = PBXBuildFile; fileRef = 3B35AF210FAFD8D42554F39B /* demo-seed-v1.json */; };
-		55B7044EAC01913871CEC464 /* design-tokens.json in Resources */ = {isa = PBXBuildFile; fileRef = B6D041F843B409D3B8CBD5FC /* design-tokens.json */; };
-		5D2DFA6B51A7E7200ECDF020 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DBC4AF75905A73921500B9 /* NetworkMonitor.swift */; };
-		6060D67D931BE0757381A03A /* TransportContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6DE5AF9A61DD7577F3BF7A /* TransportContractTests.swift */; };
-		62386AA76D128BE03814ED01 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCF455537CDC9A02861ABD8 /* GoalsView.swift */; };
-		6B69C17BE6814655F5ABA75B /* OfflineStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDAE430C2F6D118EA8E86D85 /* OfflineStore.swift */; };
-		6D8AD9B6A282B459BE8B8C0C /* KeychainSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957C5C4A69D26F52733A28FF /* KeychainSessionStore.swift */; };
-		747D0161BDE221F961D91DC0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 67E051D041D8FBF67D50DEDD /* PrivacyInfo.xcprivacy */; };
-		79316F929A87346D5F52E970 /* Money.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFACD854CF63DDC014A8E473 /* Money.swift */; };
-		7B788CFD099FABEF6E76B098 /* PlanningTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF25F9F1F806A13BC61FFE /* PlanningTests.swift */; };
-		7BF128DBA622489B92B4331F /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9EE5947699FDB61790CEC8 /* Repository.swift */; };
-		80F08692D83161865BB6C128 /* SupabaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C2A64C8896BB999C0DC5D4 /* SupabaseClient.swift */; };
-		8519FADA9318F8C976FE8EFF /* DanarapiAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8573A5DFF1B9DD3120821C89 /* DanarapiAppTests.swift */; };
-		907414BE21068162966F15BE /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F354F153E9C8E36FAD933145 /* DesignSystem.swift */; };
-		91201EC29A0CF33D68AA0985 /* ImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFAA1A73E00B222763F09F29 /* ImportService.swift */; };
-		92664893C1C4E857A2D603AF /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07FD1E9E108CA5310380FBB /* SettingsView.swift */; };
-		96A47565FFA967DC976D8E0F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1411081084237F7EC0D0766B /* Foundation.framework */; };
-		96FCDD8EFF15CBA10CDE7584 /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225D46BF13B1804C6CBC42DF /* ExportService.swift */; };
-		AED33DDCEA0D079F72045238 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DB9BBA39C0FE9480E281AE /* Models.swift */; };
-		AEF86BD76BD3D8796F45AE97 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3126C5B1B4839C66696785 /* RootView.swift */; };
-		AF1CE63257E1E9E10596BA57 /* LedgerFixtureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326A50B5559DB62E431CCB54 /* LedgerFixtureTests.swift */; };
-		B667EEE1E2FFD325E185641B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1411081084237F7EC0D0766B /* Foundation.framework */; };
-		C242C73EE5FF782A030C4878 /* DanarapiAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A163745022C103B11F092904 /* DanarapiAppUITests.swift */; };
-		CE4D2D40C7BB4F3DA490616E /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8247604AF16B2503E34FD1 /* AppModel.swift */; };
-		D7B7A1483B529A2A4D26615C /* item-split-v1.json in Resources */ = {isa = PBXBuildFile; fileRef = 174FF01E11F40A9C7B17AEBD /* item-split-v1.json */; };
-		DA12C12DE9EB18BF16938611 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC6D66133AF51AD44125283 /* HomeView.swift */; };
-		DA432EE466DCE2912212F461 /* TransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524A1E5531C786FFBE1ED7F3 /* TransactionsView.swift */; };
-		DA9BB8BB1A59A17C3EFEDAAB /* DanarapiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653BF24E8442CB1C1DA4837A /* DanarapiApp.swift */; };
-		DF5E002640F4F3EA183111A4 /* DemoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C60282EE51801BCE77C30CE3 /* DemoRepository.swift */; };
-		E6E7116FCDF03472EA9265D6 /* ReceiptParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE5DDC0E6B15707BC620BA96 /* ReceiptParser.swift */; };
-		ED0CBB6051EC12CA081DD7DA /* import-v1.json in Resources */ = {isa = PBXBuildFile; fileRef = D56C91222CDE38E20950DF44 /* import-v1.json */; };
-		EE8CF5B2EACE122254B229DB /* ItemSplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85ED9FE90C93E50D6CD496B4 /* ItemSplit.swift */; };
-		F41D7AB109B3EB6B91FD238B /* QRISParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4925BC9B2F03229E1A3B32 /* QRISParser.swift */; };
-		F488DCB35617A5BBD33CE8B6 /* ReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1149EC19AF1CF464B6A67DBF /* ReportsView.swift */; };
-		FE305267953E4349FB874720 /* MonthPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C7FFB1DA5C04B8604F5D36 /* MonthPeriod.swift */; };
+		005783A39FCF69235AAF0855 /* catalog.json in Resources */ = {isa = PBXBuildFile; fileRef = 799245D55DC72981775A483F /* catalog.json */; };
+		00FC6441211D7B9AC55E3003 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8337388B2304F33705303871 /* DesignSystem.swift */; };
+		0610C7A801AE0CE3775E2054 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0192216FEAB3522146F5DE91 /* Foundation.framework */; };
+		067623D846BA566C899BFCF5 /* product-content.json in Resources */ = {isa = PBXBuildFile; fileRef = 2361594072CF0A98F899EC23 /* product-content.json */; };
+		08EA73CFEAC8DCF5C7EDFD9A /* ScannerImportViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01EE0D9428EA6D6C45130F46 /* ScannerImportViews.swift */; };
+		1155F122529A1DDBACBE829D /* ItemSplitFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AD0342B1D2AA3350FD317 /* ItemSplitFormView.swift */; };
+		19DDE67EB180F968EB83B3BD /* ItemSplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5951476A51E8C9A1A385170 /* ItemSplit.swift */; };
+		1E23DD7C316838D8C982BFB7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0A67B35DB5242315A4D51D99 /* PrivacyInfo.xcprivacy */; };
+		22E99C54B09073770D9EC528 /* GoogleSignInLogo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A9E46B25C68C0BBEC7BEFF71 /* GoogleSignInLogo@3x.png */; };
+		2A32746071190A1FED311937 /* GoogleSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 907877B6162C574512E0C5D3 /* GoogleSans-Medium.ttf */; };
+		3065F1A7CF78DA84B5C7DEA6 /* ReceiptParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84130E4702432D5B0F33AD9D /* ReceiptParser.swift */; };
+		3183610C073DCE90B3C957E1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0192216FEAB3522146F5DE91 /* Foundation.framework */; };
+		365212F1E8D7C42AA362AB2F /* DanarapiAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C82E662A85A084ED68BB5F4 /* DanarapiAppUITests.swift */; };
+		3CF230E330C23E15F96EC4E7 /* Google-Sans-OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5F3415A56C4737A0F02A2D4D /* Google-Sans-OFL.txt */; };
+		4BD29E861CFFCA567F8A80D0 /* ProductViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C0EA3C1A100063D6392833 /* ProductViews.swift */; };
+		4CA411B712A95592A2C0B3E6 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86230F44A848284529235426 /* Models.swift */; };
+		551BB7434A72E8B878FD85A4 /* Calculators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17819FDA5DC1F057E7978B1 /* Calculators.swift */; };
+		56DB8AF1A49DCBE95836A92F /* ReviewViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655E6F47BF55ED6A8F96A96E /* ReviewViews.swift */; };
+		58A3FCA6618DD2617C0B5DF1 /* demo-seed-v1.json in Resources */ = {isa = PBXBuildFile; fileRef = BBE1DA65578FADE1CF56F445 /* demo-seed-v1.json */; };
+		5B70BA64894AB8F1FE7CD1C9 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74B32CC7A3D0B841E1E9C680 /* RootView.swift */; };
+		5D70E088AED2C9514C6B427E /* engine.js in Resources */ = {isa = PBXBuildFile; fileRef = 8808D52BDC59D2DCFF492216 /* engine.js */; };
+		648042DFE0396235F524EDBE /* AuthViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F479A0C7B6EC4701E88DF6C /* AuthViews.swift */; };
+		64E1939C9856082BA4303A7F /* ledger-v1.json in Resources */ = {isa = PBXBuildFile; fileRef = 9DCA6C037D75A0746E19FFB4 /* ledger-v1.json */; };
+		6773E24FE8C91178DA60F9A5 /* CalculatorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B5BBB9713269A7CE61AE8F /* CalculatorsView.swift */; };
+		69476ACC7F9B905CDCD6FADC /* OfflineStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674CD6DC390668AC5367AAB0 /* OfflineStore.swift */; };
+		6D27C739723520FC9DD45D6F /* ShareItemReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC86CB0C0F88C6EA01C96985 /* ShareItemReaderTests.swift */; };
+		6E83A12F708D2D74711856C4 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9EAD307021581320152CBAE /* MainTabView.swift */; };
+		71C083859ACCBF664373D733 /* Money.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88231BBD7EE34938A045A5E3 /* Money.swift */; };
+		73694E52F8739A2C0F881010 /* item-split-v1.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C2F8C6E058BD427E49B6F2C /* item-split-v1.json */; };
+		756DE914C30B47A8CF677066 /* SharedInboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673513FC7F23A9EABA080429 /* SharedInboxView.swift */; };
+		775003B688ABA025D20D7FCB /* SharedInbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835FD06E3113849AA54F9644 /* SharedInbox.swift */; };
+		79A0AD2E26891653E59FDCF7 /* SharedInboxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830CDE6245953F71725ABF67 /* SharedInboxTests.swift */; };
+		7A1387C8F7A44456339DAC0F /* ShareTestingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DAB9F51CC95C4085668F43 /* ShareTestingView.swift */; };
+		7ADB3F04D2448CA7D3DED5A8 /* ShareItemReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A519580C558AC754F65B62 /* ShareItemReader.swift */; };
+		7D3A179E28BC2A7558C766F6 /* DanarapiShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FC2EF9A01D9207E1A17A8C10 /* DanarapiShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7F4DC6FC8ECEC1C61CB0FAC0 /* TransportContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25359900A4228718E98E4296 /* TransportContractTests.swift */; };
+		804681D20BB5B704C61CBA51 /* DanarapiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1446407F6B633D60C4E7D796 /* DanarapiApp.swift */; };
+		82A55C3716D30F7EE2FB2FFF /* AppLockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3330707B5316A2CF08F5DFC6 /* AppLockService.swift */; };
+		852CC684C2A622E9DA3B7BB8 /* RemoteRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED4A041DE1E645FBDCACBB8 /* RemoteRepository.swift */; };
+		87716E3E3DF3A568CACB16E5 /* design-tokens.json in Resources */ = {isa = PBXBuildFile; fileRef = 897A9C9CFACD34F34449F04D /* design-tokens.json */; };
+		8973C2E8108BBAD4EF4FF372 /* KeychainSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4EEF5B7B9E0C4969DD9CAE /* KeychainSessionStore.swift */; };
+		8F05FD76C28FDC4CD0A6567B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0A67B35DB5242315A4D51D99 /* PrivacyInfo.xcprivacy */; };
+		8F8DD5DFB0ADC8D64D91A7F4 /* LedgerFixtureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC2A95AA6F834D0F608F18A0 /* LedgerFixtureTests.swift */; };
+		91178F23B1BFC462A50D6930 /* PlanningTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717BA81AAA90129758F940E7 /* PlanningTests.swift */; };
+		9434A5BF925F28F4F88A0460 /* TransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F349D32D80F3B7EB69485D43 /* TransactionsView.swift */; };
+		948C83216DB0BF5F4882CCC1 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4C21BE14FA1E089FF683EB /* NetworkMonitor.swift */; };
+		9504CE65335495A1E5FFB95C /* BankProof.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0242529C6E0A127813A62E3D /* BankProof.swift */; };
+		98092912F94F50171447F9B1 /* SharedInbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835FD06E3113849AA54F9644 /* SharedInbox.swift */; };
+		A08634688B89D11B1436D053 /* BankProofTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A83139FE6BE518CBAD659DF /* BankProofTests.swift */; };
+		A174BE74466AF21E02FA6425 /* DanarapiAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A65F71F2C2751AC48CCD603 /* DanarapiAppTests.swift */; };
+		A24545323611EE9C9C27A33E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0192216FEAB3522146F5DE91 /* Foundation.framework */; };
+		A34DA29CB9FC34C7989507E4 /* MonthPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C687DACF7456865B5FB7C6 /* MonthPeriod.swift */; };
+		AAFE1DBDEF716512FF826AB8 /* SharedReceiptUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F361C77D01D788ABA9D86C /* SharedReceiptUITests.swift */; };
+		ABFC8DB21728875E8D446338 /* ShareItemReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A519580C558AC754F65B62 /* ShareItemReader.swift */; };
+		AFC5057272BF49FB8F556A94 /* SplitBillViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914F4A344B7A1E848C158844 /* SplitBillViews.swift */; };
+		B4B7EE35B67E4ADE4B0F20B1 /* OutboxChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18E9083AF2AA8ED4A663417 /* OutboxChangeView.swift */; };
+		B614480EFAE5755F8ABDC2FC /* TransactionForms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C920CCBCD4D9AA2A86E9A8A /* TransactionForms.swift */; };
+		B6926C266F130CD176F57B28 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE6D354877C9697725E5A7E /* SettingsView.swift */; };
+		B798F7E9F9B1FD03A2E8BB7E /* SharedReceiptReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2183AF28F6F9A8647B772C44 /* SharedReceiptReader.swift */; };
+		C96A2A18EC685645DF419446 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAB38F66B49D8E4EEACA909 /* GoalsView.swift */; };
+		CCB2678474C19F4D31670D19 /* DemoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8889AC625D3FFD68EEF6BB7B /* DemoRepository.swift */; };
+		CFC7F0BF27DFDC51518EFE24 /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DBFEA3EA174D417BB785FF /* ExportService.swift */; };
+		D5986806F9655CC5B468C282 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44714DB0C5EFD4747C27B5F7 /* Assets.xcassets */; };
+		D6EE360507658F24404745FD /* SupabaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72B5130FE122CC7222570CC2 /* SupabaseClient.swift */; };
+		D723D95386A3AFF66EF3FCD6 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9A7E5730739EB988187887 /* HomeView.swift */; };
+		D9E9AC56679B575F1D08BF0A /* ImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B440D43A9410DE5EE4CDFD52 /* ImportService.swift */; };
+		DA06C73EB8F401D1B3F4BA96 /* Split.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F65C667815CD8C4C66CB2C2 /* Split.swift */; };
+		DB1B034A1A25F543182C4D64 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0192216FEAB3522146F5DE91 /* Foundation.framework */; };
+		DD581C427B173D1C8BA22DC9 /* ReportsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39E81890E9D49B47406E278 /* ReportsView.swift */; };
+		DE4A73121C12B4A77780BC3F /* import-v1.json in Resources */ = {isa = PBXBuildFile; fileRef = 6C995834C357013FC7878EFF /* import-v1.json */; };
+		E1C8D917EDD5DDD9B72B24DB /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E1A9B12B8F67B69CE575A4 /* AppModel.swift */; };
+		E980BF205BC82EA3C22640C0 /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54C087E1ED02AC375241F73E /* Repository.swift */; };
+		F07FE1977856B654161C5A12 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97699D33C13D6760953AFBA4 /* ShareViewController.swift */; };
+		F2195460243C70708BAD1A10 /* QRISParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 693274D7900B075AB6048E4F /* QRISParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		E595D6D8F65D1D154E9E0BA5 /* PBXContainerItemProxy */ = {
+		884EF89E198F3B1DC616002E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 6ADEB84ABE446C908CB0DC87 /* Project object */;
+			containerPortal = D24FDFDFA1979DD9895AC53C /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 1E97C0A39403001E66966FD3;
+			remoteGlobalIDString = 119087C3205F7B8C614924F2;
 			remoteInfo = Danarapi;
 		};
-		FC1A13BFF424D952950CEC11 /* PBXContainerItemProxy */ = {
+		C1688800C69FC392D82F868A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 6ADEB84ABE446C908CB0DC87 /* Project object */;
+			containerPortal = D24FDFDFA1979DD9895AC53C /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 1E97C0A39403001E66966FD3;
+			remoteGlobalIDString = 7550CC751DFDEEFD8CADF6B3;
+			remoteInfo = DanarapiShare;
+		};
+		C50116DA002054401B78C3F0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D24FDFDFA1979DD9895AC53C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 119087C3205F7B8C614924F2;
 			remoteInfo = Danarapi;
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		622490EDE0E4DA8B83CDB6CE /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				7D3A179E28BC2A7558C766F6 /* DanarapiShare.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-        D900B173B7E048A598008C12 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanarapiApp/UI/ProductViews.swift; sourceTree = "<group>"; };
-        D900B173B7E048A598008C14 = {isa = PBXFileReference; lastKnownFileType = text.json; name = "product-content.json"; path = "../../contracts/product-content.json"; sourceTree = "<group>"; };
-        D900B173B7E048A598008C08 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = DanarapiApp/Assets.xcassets; sourceTree = "<group>"; };
-		D900B173B7E048A598008C02 /* GoogleSignInLogo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DanarapiApp/Resources/GoogleSignInLogo@3x.png"; sourceTree = "<group>"; };
-		D900B173B7E048A598008C04 /* GoogleSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DanarapiApp/Resources/GoogleSans-Medium.ttf"; sourceTree = "<group>"; };
-		D900B173B7E048A598008C06 /* Google-Sans-OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "../../apps/web/public/licenses/Google-Sans-OFL.txt"; sourceTree = "<group>"; };
-		032E072784B484B443926F29 /* OutboxChangeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OutboxChangeView.swift; path = DanarapiApp/UI/OutboxChangeView.swift; sourceTree = "<group>"; };
-		04D073A486A783E3A606B1FC /* TransactionForms.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TransactionForms.swift; path = DanarapiApp/UI/TransactionForms.swift; sourceTree = "<group>"; };
-		05716C3F05820F25D2C0B44A /* AppLockService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppLockService.swift; path = DanarapiApp/Services/AppLockService.swift; sourceTree = "<group>"; };
-		1149EC19AF1CF464B6A67DBF /* ReportsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReportsView.swift; path = DanarapiApp/UI/ReportsView.swift; sourceTree = "<group>"; };
-		1411081084237F7EC0D0766B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		174FF01E11F40A9C7B17AEBD /* item-split-v1.json */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json; name = "item-split-v1.json"; path = "../../tests/fixtures/item-split-v1.json"; sourceTree = "<group>"; };
-		1EC8AF5F63D67F68717DF47A /* Split.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Split.swift; path = Sources/DanarapiContracts/Split.swift; sourceTree = "<group>"; };
-		225D46BF13B1804C6CBC42DF /* ExportService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExportService.swift; path = DanarapiApp/Services/ExportService.swift; sourceTree = "<group>"; };
-		2BE81CC3546AFFEBACF2B9F7 /* ledger-v1.json */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json; name = "ledger-v1.json"; path = "../../tests/fixtures/ledger-v1.json"; sourceTree = "<group>"; };
-		326A50B5559DB62E431CCB54 /* LedgerFixtureTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LedgerFixtureTests.swift; path = DanarapiAppTests/LedgerFixtureTests.swift; sourceTree = "<group>"; };
-		3A6DE5AF9A61DD7577F3BF7A /* TransportContractTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TransportContractTests.swift; path = DanarapiAppTests/TransportContractTests.swift; sourceTree = "<group>"; };
-		3B35AF210FAFD8D42554F39B /* demo-seed-v1.json */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json; name = "demo-seed-v1.json"; path = "../../tests/fixtures/demo-seed-v1.json"; sourceTree = "<group>"; };
-		49D4BF2A24DE5C69F7F0B702 /* ScannerImportViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ScannerImportViews.swift; path = DanarapiApp/UI/ScannerImportViews.swift; sourceTree = "<group>"; };
-		524A1E5531C786FFBE1ED7F3 /* TransactionsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TransactionsView.swift; path = DanarapiApp/UI/TransactionsView.swift; sourceTree = "<group>"; };
-		52C2A64C8896BB999C0DC5D4 /* SupabaseClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SupabaseClient.swift; path = DanarapiApp/Data/SupabaseClient.swift; sourceTree = "<group>"; };
-		653BF24E8442CB1C1DA4837A /* DanarapiApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DanarapiApp.swift; path = DanarapiApp/App/DanarapiApp.swift; sourceTree = "<group>"; };
-		67E051D041D8FBF67D50DEDD /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = DanarapiApp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		6D2A082A590EF1A1B8C81AA4 /* MainTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MainTabView.swift; path = DanarapiApp/UI/MainTabView.swift; sourceTree = "<group>"; };
-		6F9EE5947699FDB61790CEC8 /* Repository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Repository.swift; path = DanarapiApp/Domain/Repository.swift; sourceTree = "<group>"; };
-		6FCF455537CDC9A02861ABD8 /* GoalsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GoalsView.swift; path = DanarapiApp/UI/GoalsView.swift; sourceTree = "<group>"; };
-		748E7E6F380DB1D6A639B3B6 /* DanarapiAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DanarapiAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		78C624AA687B38A6D60A9672 /* DanarapiAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DanarapiAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		8573A5DFF1B9DD3120821C89 /* DanarapiAppTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DanarapiAppTests.swift; path = DanarapiAppTests/DanarapiAppTests.swift; sourceTree = "<group>"; };
-		85DB9BBA39C0FE9480E281AE /* Models.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Models.swift; path = DanarapiApp/Domain/Models.swift; sourceTree = "<group>"; };
-		85ED9FE90C93E50D6CD496B4 /* ItemSplit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ItemSplit.swift; path = Sources/DanarapiContracts/ItemSplit.swift; sourceTree = "<group>"; };
-		8881C4BBF09660070B1079C0 /* Base.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Base.xcconfig; path = Configuration/Base.xcconfig; sourceTree = "<group>"; };
-		957C5C4A69D26F52733A28FF /* KeychainSessionStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = KeychainSessionStore.swift; path = DanarapiApp/Data/KeychainSessionStore.swift; sourceTree = "<group>"; };
-		9997A7C2B826B1ACC397D6EF /* AuthViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AuthViews.swift; path = DanarapiApp/UI/AuthViews.swift; sourceTree = "<group>"; };
-		A163745022C103B11F092904 /* DanarapiAppUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DanarapiAppUITests.swift; path = DanarapiAppUITests/DanarapiAppUITests.swift; sourceTree = "<group>"; };
-		AA4925BC9B2F03229E1A3B32 /* QRISParser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QRISParser.swift; path = DanarapiApp/Services/QRISParser.swift; sourceTree = "<group>"; };
-		AFACD854CF63DDC014A8E473 /* Money.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Money.swift; path = Sources/DanarapiContracts/Money.swift; sourceTree = "<group>"; };
-		B6D041F843B409D3B8CBD5FC /* design-tokens.json */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json; name = "design-tokens.json"; path = "../../contracts/design-tokens.json"; sourceTree = "<group>"; };
-		BDC6D66133AF51AD44125283 /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeView.swift; path = DanarapiApp/UI/HomeView.swift; sourceTree = "<group>"; };
-		BF3126C5B1B4839C66696785 /* RootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RootView.swift; path = DanarapiApp/UI/RootView.swift; sourceTree = "<group>"; };
-		C538AA4E9B4800AA357F7914 /* ReviewViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReviewViews.swift; path = DanarapiApp/UI/ReviewViews.swift; sourceTree = "<group>"; };
-		C5BF25F9F1F806A13BC61FFE /* PlanningTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlanningTests.swift; path = DanarapiAppTests/PlanningTests.swift; sourceTree = "<group>"; };
-		C60282EE51801BCE77C30CE3 /* DemoRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DemoRepository.swift; path = DanarapiApp/Domain/DemoRepository.swift; sourceTree = "<group>"; };
-		CEC70CBC7B697459B9CBA765 /* RemoteRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RemoteRepository.swift; path = DanarapiApp/Data/RemoteRepository.swift; sourceTree = "<group>"; };
-		CFAA1A73E00B222763F09F29 /* ImportService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImportService.swift; path = DanarapiApp/Services/ImportService.swift; sourceTree = "<group>"; };
-		D51F5A6C28CE7598B5371910 /* SplitBillViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SplitBillViews.swift; path = DanarapiApp/UI/SplitBillViews.swift; sourceTree = "<group>"; };
-		D56C91222CDE38E20950DF44 /* import-v1.json */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json; name = "import-v1.json"; path = "../../tests/fixtures/import-v1.json"; sourceTree = "<group>"; };
-		D5DBC4AF75905A73921500B9 /* NetworkMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NetworkMonitor.swift; path = DanarapiApp/Data/NetworkMonitor.swift; sourceTree = "<group>"; };
-		DCA2078AD861EAA73BF52B5F /* ItemSplitFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ItemSplitFormView.swift; path = DanarapiApp/UI/ItemSplitFormView.swift; sourceTree = "<group>"; };
-		DE5DDC0E6B15707BC620BA96 /* ReceiptParser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReceiptParser.swift; path = DanarapiApp/Services/ReceiptParser.swift; sourceTree = "<group>"; };
-		E07FD1E9E108CA5310380FBB /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = DanarapiApp/UI/SettingsView.swift; sourceTree = "<group>"; };
-		E3D0A8CDF8D2018ABAC11C81 /* Danarapi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Danarapi.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		EE8247604AF16B2503E34FD1 /* AppModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppModel.swift; path = DanarapiApp/App/AppModel.swift; sourceTree = "<group>"; };
-		F354F153E9C8E36FAD933145 /* DesignSystem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DesignSystem.swift; path = DanarapiApp/UI/DesignSystem.swift; sourceTree = "<group>"; };
-		F8C7FFB1DA5C04B8604F5D36 /* MonthPeriod.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MonthPeriod.swift; path = DanarapiApp/Domain/MonthPeriod.swift; sourceTree = "<group>"; };
-		FDAE430C2F6D118EA8E86D85 /* OfflineStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OfflineStore.swift; path = DanarapiApp/Data/OfflineStore.swift; sourceTree = "<group>"; };
+		0192216FEAB3522146F5DE91 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		01EE0D9428EA6D6C45130F46 /* ScannerImportViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ScannerImportViews.swift; path = DanarapiApp/UI/ScannerImportViews.swift; sourceTree = "<group>"; };
+		0242529C6E0A127813A62E3D /* BankProof.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BankProof.swift; path = DanarapiApp/Services/BankProof.swift; sourceTree = "<group>"; };
+		0A67B35DB5242315A4D51D99 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = DanarapiApp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		0C920CCBCD4D9AA2A86E9A8A /* TransactionForms.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TransactionForms.swift; path = DanarapiApp/UI/TransactionForms.swift; sourceTree = "<group>"; };
+		10DBFEA3EA174D417BB785FF /* ExportService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExportService.swift; path = DanarapiApp/Services/ExportService.swift; sourceTree = "<group>"; };
+		1446407F6B633D60C4E7D796 /* DanarapiApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DanarapiApp.swift; path = DanarapiApp/App/DanarapiApp.swift; sourceTree = "<group>"; };
+		2183AF28F6F9A8647B772C44 /* SharedReceiptReader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SharedReceiptReader.swift; path = DanarapiApp/Services/SharedReceiptReader.swift; sourceTree = "<group>"; };
+		2361594072CF0A98F899EC23 /* product-content.json */ = {isa = PBXFileReference; includeInIndex = 1; name = "product-content.json"; path = "../../contracts/product-content.json"; sourceTree = "<group>"; };
+		25359900A4228718E98E4296 /* TransportContractTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TransportContractTests.swift; path = DanarapiAppTests/TransportContractTests.swift; sourceTree = "<group>"; };
+		29F361C77D01D788ABA9D86C /* SharedReceiptUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SharedReceiptUITests.swift; path = DanarapiAppUITests/SharedReceiptUITests.swift; sourceTree = "<group>"; };
+		2AF62B622DC829157ABD47B6 /* Danarapi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Danarapi.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		31A519580C558AC754F65B62 /* ShareItemReader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShareItemReader.swift; path = SharedIntake/ShareItemReader.swift; sourceTree = "<group>"; };
+		3330707B5316A2CF08F5DFC6 /* AppLockService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppLockService.swift; path = DanarapiApp/Services/AppLockService.swift; sourceTree = "<group>"; };
+		3F65C667815CD8C4C66CB2C2 /* Split.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Split.swift; path = Sources/DanarapiContracts/Split.swift; sourceTree = "<group>"; };
+		43B261BBF0700EE6D7B6FB13 /* DanarapiAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DanarapiAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		44714DB0C5EFD4747C27B5F7 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = DanarapiApp/Assets.xcassets; sourceTree = "<group>"; };
+		54C087E1ED02AC375241F73E /* Repository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Repository.swift; path = DanarapiApp/Domain/Repository.swift; sourceTree = "<group>"; };
+		5A83139FE6BE518CBAD659DF /* BankProofTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BankProofTests.swift; path = DanarapiAppTests/BankProofTests.swift; sourceTree = "<group>"; };
+		5EE6D354877C9697725E5A7E /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = DanarapiApp/UI/SettingsView.swift; sourceTree = "<group>"; };
+		5F3415A56C4737A0F02A2D4D /* Google-Sans-OFL.txt */ = {isa = PBXFileReference; includeInIndex = 1; name = "Google-Sans-OFL.txt"; path = "../../apps/web/public/licenses/Google-Sans-OFL.txt"; sourceTree = "<group>"; };
+		62DAB9F51CC95C4085668F43 /* ShareTestingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShareTestingView.swift; path = DanarapiApp/UI/ShareTestingView.swift; sourceTree = "<group>"; };
+		655E6F47BF55ED6A8F96A96E /* ReviewViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReviewViews.swift; path = DanarapiApp/UI/ReviewViews.swift; sourceTree = "<group>"; };
+		673513FC7F23A9EABA080429 /* SharedInboxView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SharedInboxView.swift; path = DanarapiApp/UI/SharedInboxView.swift; sourceTree = "<group>"; };
+		674CD6DC390668AC5367AAB0 /* OfflineStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OfflineStore.swift; path = DanarapiApp/Data/OfflineStore.swift; sourceTree = "<group>"; };
+		693274D7900B075AB6048E4F /* QRISParser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QRISParser.swift; path = DanarapiApp/Services/QRISParser.swift; sourceTree = "<group>"; };
+		6C995834C357013FC7878EFF /* import-v1.json */ = {isa = PBXFileReference; includeInIndex = 1; name = "import-v1.json"; path = "../../tests/fixtures/import-v1.json"; sourceTree = "<group>"; };
+		6E4EEF5B7B9E0C4969DD9CAE /* KeychainSessionStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = KeychainSessionStore.swift; path = DanarapiApp/Data/KeychainSessionStore.swift; sourceTree = "<group>"; };
+		6F479A0C7B6EC4701E88DF6C /* AuthViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AuthViews.swift; path = DanarapiApp/UI/AuthViews.swift; sourceTree = "<group>"; };
+		717BA81AAA90129758F940E7 /* PlanningTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlanningTests.swift; path = DanarapiAppTests/PlanningTests.swift; sourceTree = "<group>"; };
+		72B5130FE122CC7222570CC2 /* SupabaseClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SupabaseClient.swift; path = DanarapiApp/Data/SupabaseClient.swift; sourceTree = "<group>"; };
+		73C687DACF7456865B5FB7C6 /* MonthPeriod.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MonthPeriod.swift; path = DanarapiApp/Domain/MonthPeriod.swift; sourceTree = "<group>"; };
+		74B32CC7A3D0B841E1E9C680 /* RootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RootView.swift; path = DanarapiApp/UI/RootView.swift; sourceTree = "<group>"; };
+		799245D55DC72981775A483F /* catalog.json */ = {isa = PBXFileReference; includeInIndex = 1; name = catalog.json; path = ../../contracts/calculators/catalog.json; sourceTree = "<group>"; };
+		7C2F8C6E058BD427E49B6F2C /* item-split-v1.json */ = {isa = PBXFileReference; includeInIndex = 1; name = "item-split-v1.json"; path = "../../tests/fixtures/item-split-v1.json"; sourceTree = "<group>"; };
+		7D9A7E5730739EB988187887 /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeView.swift; path = DanarapiApp/UI/HomeView.swift; sourceTree = "<group>"; };
+		80922653872C2DEE61C655CF /* Share.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = Share.entitlements; path = Configuration/Share.entitlements; sourceTree = "<group>"; };
+		830CDE6245953F71725ABF67 /* SharedInboxTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SharedInboxTests.swift; path = DanarapiAppTests/SharedInboxTests.swift; sourceTree = "<group>"; };
+		8337388B2304F33705303871 /* DesignSystem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DesignSystem.swift; path = DanarapiApp/UI/DesignSystem.swift; sourceTree = "<group>"; };
+		835FD06E3113849AA54F9644 /* SharedInbox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SharedInbox.swift; path = SharedIntake/SharedInbox.swift; sourceTree = "<group>"; };
+		84130E4702432D5B0F33AD9D /* ReceiptParser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReceiptParser.swift; path = DanarapiApp/Services/ReceiptParser.swift; sourceTree = "<group>"; };
+		86230F44A848284529235426 /* Models.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Models.swift; path = DanarapiApp/Domain/Models.swift; sourceTree = "<group>"; };
+		8808D52BDC59D2DCFF492216 /* engine.js */ = {isa = PBXFileReference; includeInIndex = 1; name = engine.js; path = ../../contracts/calculators/engine.js; sourceTree = "<group>"; };
+		88231BBD7EE34938A045A5E3 /* Money.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Money.swift; path = Sources/DanarapiContracts/Money.swift; sourceTree = "<group>"; };
+		8889AC625D3FFD68EEF6BB7B /* DemoRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DemoRepository.swift; path = DanarapiApp/Domain/DemoRepository.swift; sourceTree = "<group>"; };
+		897A9C9CFACD34F34449F04D /* design-tokens.json */ = {isa = PBXFileReference; includeInIndex = 1; name = "design-tokens.json"; path = "../../contracts/design-tokens.json"; sourceTree = "<group>"; };
+		8C82E662A85A084ED68BB5F4 /* DanarapiAppUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DanarapiAppUITests.swift; path = DanarapiAppUITests/DanarapiAppUITests.swift; sourceTree = "<group>"; };
+		907877B6162C574512E0C5D3 /* GoogleSans-Medium.ttf */ = {isa = PBXFileReference; includeInIndex = 1; name = "GoogleSans-Medium.ttf"; path = "DanarapiApp/Resources/GoogleSans-Medium.ttf"; sourceTree = "<group>"; };
+		914F4A344B7A1E848C158844 /* SplitBillViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SplitBillViews.swift; path = DanarapiApp/UI/SplitBillViews.swift; sourceTree = "<group>"; };
+		9502B60D7B406FED0F2301AC /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = DanarapiShare/Info.plist; sourceTree = "<group>"; };
+		97699D33C13D6760953AFBA4 /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShareViewController.swift; path = DanarapiShare/ShareViewController.swift; sourceTree = "<group>"; };
+		9A65F71F2C2751AC48CCD603 /* DanarapiAppTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DanarapiAppTests.swift; path = DanarapiAppTests/DanarapiAppTests.swift; sourceTree = "<group>"; };
+		9BAB38F66B49D8E4EEACA909 /* GoalsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GoalsView.swift; path = DanarapiApp/UI/GoalsView.swift; sourceTree = "<group>"; };
+		9CF7D8360B0BF1E4C152B9CE /* Base.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Base.xcconfig; path = Configuration/Base.xcconfig; sourceTree = "<group>"; };
+		9DCA6C037D75A0746E19FFB4 /* ledger-v1.json */ = {isa = PBXFileReference; includeInIndex = 1; name = "ledger-v1.json"; path = "../../tests/fixtures/ledger-v1.json"; sourceTree = "<group>"; };
+		A39E81890E9D49B47406E278 /* ReportsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReportsView.swift; path = DanarapiApp/UI/ReportsView.swift; sourceTree = "<group>"; };
+		A4B5BBB9713269A7CE61AE8F /* CalculatorsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CalculatorsView.swift; path = DanarapiApp/UI/CalculatorsView.swift; sourceTree = "<group>"; };
+		A9E46B25C68C0BBEC7BEFF71 /* GoogleSignInLogo@3x.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = "GoogleSignInLogo@3x.png"; path = "DanarapiApp/Resources/GoogleSignInLogo@3x.png"; sourceTree = "<group>"; };
+		B440D43A9410DE5EE4CDFD52 /* ImportService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ImportService.swift; path = DanarapiApp/Services/ImportService.swift; sourceTree = "<group>"; };
+		B5E1A9B12B8F67B69CE575A4 /* AppModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppModel.swift; path = DanarapiApp/App/AppModel.swift; sourceTree = "<group>"; };
+		BBE1DA65578FADE1CF56F445 /* demo-seed-v1.json */ = {isa = PBXFileReference; includeInIndex = 1; name = "demo-seed-v1.json"; path = "../../tests/fixtures/demo-seed-v1.json"; sourceTree = "<group>"; };
+		BC2A95AA6F834D0F608F18A0 /* LedgerFixtureTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LedgerFixtureTests.swift; path = DanarapiAppTests/LedgerFixtureTests.swift; sourceTree = "<group>"; };
+		CD4C21BE14FA1E089FF683EB /* NetworkMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NetworkMonitor.swift; path = DanarapiApp/Data/NetworkMonitor.swift; sourceTree = "<group>"; };
+		D05AD0342B1D2AA3350FD317 /* ItemSplitFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ItemSplitFormView.swift; path = DanarapiApp/UI/ItemSplitFormView.swift; sourceTree = "<group>"; };
+		D8C0EA3C1A100063D6392833 /* ProductViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProductViews.swift; path = DanarapiApp/UI/ProductViews.swift; sourceTree = "<group>"; };
+		DC86CB0C0F88C6EA01C96985 /* ShareItemReaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShareItemReaderTests.swift; path = DanarapiAppTests/ShareItemReaderTests.swift; sourceTree = "<group>"; };
+		E17819FDA5DC1F057E7978B1 /* Calculators.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Calculators.swift; path = DanarapiApp/Domain/Calculators.swift; sourceTree = "<group>"; };
+		E18E9083AF2AA8ED4A663417 /* OutboxChangeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OutboxChangeView.swift; path = DanarapiApp/UI/OutboxChangeView.swift; sourceTree = "<group>"; };
+		E2E338145241B5A8F8F5BC7D /* DanarapiAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DanarapiAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5951476A51E8C9A1A385170 /* ItemSplit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ItemSplit.swift; path = Sources/DanarapiContracts/ItemSplit.swift; sourceTree = "<group>"; };
+		EED4A041DE1E645FBDCACBB8 /* RemoteRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RemoteRepository.swift; path = DanarapiApp/Data/RemoteRepository.swift; sourceTree = "<group>"; };
+		F349D32D80F3B7EB69485D43 /* TransactionsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TransactionsView.swift; path = DanarapiApp/UI/TransactionsView.swift; sourceTree = "<group>"; };
+		F9EAD307021581320152CBAE /* MainTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MainTabView.swift; path = DanarapiApp/UI/MainTabView.swift; sourceTree = "<group>"; };
+		FC2EF9A01D9207E1A17A8C10 /* DanarapiShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DanarapiShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		12D9455F4B13784004A45209 /* Frameworks */ = {
+		1DD1F25D101EF0C3F0CE5D67 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				201A44442F2294B817DFCCDE /* Foundation.framework in Frameworks */,
+				A24545323611EE9C9C27A33E /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AF9C5F69EF44D56F9DDA4DBC /* Frameworks */ = {
+		40963EEC797DCACE8FD9DE8F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B667EEE1E2FFD325E185641B /* Foundation.framework in Frameworks */,
+				DB1B034A1A25F543182C4D64 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D03C589F61B3DC9F7B63B1E0 /* Frameworks */ = {
+		48EACA2CAC6428370D5502BF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96A47565FFA967DC976D8E0F /* Foundation.framework in Frameworks */,
+				3183610C073DCE90B3C957E1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EECE1CCB393DF418975E2DA2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0610C7A801AE0CE3775E2054 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		18380A43016D941093750172 /* Shared Resources */ = {
+		1B86C6FD237320704BF0D2AA /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				D900B173B7E048A598008C02 /* GoogleSignInLogo@3x.png */,
-				D900B173B7E048A598008C04 /* GoogleSans-Medium.ttf */,
-				D900B173B7E048A598008C06 /* Google-Sans-OFL.txt */,
-				67E051D041D8FBF67D50DEDD /* PrivacyInfo.xcprivacy */,
-				B6D041F843B409D3B8CBD5FC /* design-tokens.json */,
-                D900B173B7E048A598008C12,
-                D900B173B7E048A598008C14,
-				3B35AF210FAFD8D42554F39B /* demo-seed-v1.json */,
-				D56C91222CDE38E20950DF44 /* import-v1.json */,
-				2BE81CC3546AFFEBACF2B9F7 /* ledger-v1.json */,
-				174FF01E11F40A9C7B17AEBD /* item-split-v1.json */,
-			);
-			name = "Shared Resources";
-			sourceTree = "<group>";
-		};
-		8E7F6297B56434D4CE1D8951 /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				1411081084237F7EC0D0766B /* Foundation.framework */,
+				0192216FEAB3522146F5DE91 /* Foundation.framework */,
 			);
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		A91BBD8805A2AA0BC55D3465 /* Frameworks */ = {
+		1EFFE367C27B94495DBBBE1A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8E7F6297B56434D4CE1D8951 /* iOS */,
+				1B86C6FD237320704BF0D2AA /* iOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C9972265A9734689454F6498 = {
+		427F519766A5E3BF8906259F /* Share Intake */ = {
 			isa = PBXGroup;
 			children = (
-				DCA3DBAD0D0D49DC266745F6 /* Products */,
-				A91BBD8805A2AA0BC55D3465 /* Frameworks */,
-				8881C4BBF09660070B1079C0 /* Base.xcconfig */,
-				D307205550B4048E1EB64299 /* Application */,
-				EE70320C4375E126DD1A01A0 /* Tests */,
-				18380A43016D941093750172 /* Shared Resources */,
-				D900B173B7E048A598008C08 /* Assets.xcassets */,
+				31A519580C558AC754F65B62 /* ShareItemReader.swift */,
+				835FD06E3113849AA54F9644 /* SharedInbox.swift */,
 			);
+			name = "Share Intake";
 			sourceTree = "<group>";
 		};
-		D307205550B4048E1EB64299 /* Application */ = {
+		6DE9B6C192491D1C5A55F9DA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EE8247604AF16B2503E34FD1 /* AppModel.swift */,
-				653BF24E8442CB1C1DA4837A /* DanarapiApp.swift */,
-				957C5C4A69D26F52733A28FF /* KeychainSessionStore.swift */,
-				D5DBC4AF75905A73921500B9 /* NetworkMonitor.swift */,
-				FDAE430C2F6D118EA8E86D85 /* OfflineStore.swift */,
-				CEC70CBC7B697459B9CBA765 /* RemoteRepository.swift */,
-				52C2A64C8896BB999C0DC5D4 /* SupabaseClient.swift */,
-				C60282EE51801BCE77C30CE3 /* DemoRepository.swift */,
-				85DB9BBA39C0FE9480E281AE /* Models.swift */,
-				F8C7FFB1DA5C04B8604F5D36 /* MonthPeriod.swift */,
-				6F9EE5947699FDB61790CEC8 /* Repository.swift */,
-				05716C3F05820F25D2C0B44A /* AppLockService.swift */,
-				225D46BF13B1804C6CBC42DF /* ExportService.swift */,
-				CFAA1A73E00B222763F09F29 /* ImportService.swift */,
-				AA4925BC9B2F03229E1A3B32 /* QRISParser.swift */,
-				DE5DDC0E6B15707BC620BA96 /* ReceiptParser.swift */,
-				9997A7C2B826B1ACC397D6EF /* AuthViews.swift */,
-				F354F153E9C8E36FAD933145 /* DesignSystem.swift */,
-				6FCF455537CDC9A02861ABD8 /* GoalsView.swift */,
-				BDC6D66133AF51AD44125283 /* HomeView.swift */,
-				DCA2078AD861EAA73BF52B5F /* ItemSplitFormView.swift */,
-				6D2A082A590EF1A1B8C81AA4 /* MainTabView.swift */,
-				032E072784B484B443926F29 /* OutboxChangeView.swift */,
-				1149EC19AF1CF464B6A67DBF /* ReportsView.swift */,
-				C538AA4E9B4800AA357F7914 /* ReviewViews.swift */,
-				BF3126C5B1B4839C66696785 /* RootView.swift */,
-				49D4BF2A24DE5C69F7F0B702 /* ScannerImportViews.swift */,
-				E07FD1E9E108CA5310380FBB /* SettingsView.swift */,
-				D51F5A6C28CE7598B5371910 /* SplitBillViews.swift */,
-				04D073A486A783E3A606B1FC /* TransactionForms.swift */,
-				524A1E5531C786FFBE1ED7F3 /* TransactionsView.swift */,
-				85ED9FE90C93E50D6CD496B4 /* ItemSplit.swift */,
-				AFACD854CF63DDC014A8E473 /* Money.swift */,
-				1EC8AF5F63D67F68717DF47A /* Split.swift */,
-			);
-			name = Application;
-			sourceTree = "<group>";
-		};
-		DCA3DBAD0D0D49DC266745F6 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				E3D0A8CDF8D2018ABAC11C81 /* Danarapi.app */,
-				78C624AA687B38A6D60A9672 /* DanarapiAppTests.xctest */,
-				748E7E6F380DB1D6A639B3B6 /* DanarapiAppUITests.xctest */,
+				2AF62B622DC829157ABD47B6 /* Danarapi.app */,
+				FC2EF9A01D9207E1A17A8C10 /* DanarapiShare.appex */,
+				43B261BBF0700EE6D7B6FB13 /* DanarapiAppTests.xctest */,
+				E2E338145241B5A8F8F5BC7D /* DanarapiAppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		EE70320C4375E126DD1A01A0 /* Tests */ = {
+		8AF066C0E50077F5536052AD = {
 			isa = PBXGroup;
 			children = (
-				8573A5DFF1B9DD3120821C89 /* DanarapiAppTests.swift */,
-				326A50B5559DB62E431CCB54 /* LedgerFixtureTests.swift */,
-				C5BF25F9F1F806A13BC61FFE /* PlanningTests.swift */,
-				3A6DE5AF9A61DD7577F3BF7A /* TransportContractTests.swift */,
-				A163745022C103B11F092904 /* DanarapiAppUITests.swift */,
+				6DE9B6C192491D1C5A55F9DA /* Products */,
+				1EFFE367C27B94495DBBBE1A /* Frameworks */,
+				9CF7D8360B0BF1E4C152B9CE /* Base.xcconfig */,
+				E08C5698C95CCE85A1BD42AD /* Application */,
+				427F519766A5E3BF8906259F /* Share Intake */,
+				A56C4E18BE0B042B25EB8ABC /* Share Extension */,
+				A388B910D79D9AD5BCD2F828 /* Tests */,
+				D7EEBC9376D9A92BCC51051C /* Shared Resources */,
+			);
+			sourceTree = "<group>";
+		};
+		A388B910D79D9AD5BCD2F828 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				5A83139FE6BE518CBAD659DF /* BankProofTests.swift */,
+				9A65F71F2C2751AC48CCD603 /* DanarapiAppTests.swift */,
+				BC2A95AA6F834D0F608F18A0 /* LedgerFixtureTests.swift */,
+				717BA81AAA90129758F940E7 /* PlanningTests.swift */,
+				DC86CB0C0F88C6EA01C96985 /* ShareItemReaderTests.swift */,
+				830CDE6245953F71725ABF67 /* SharedInboxTests.swift */,
+				25359900A4228718E98E4296 /* TransportContractTests.swift */,
+				8C82E662A85A084ED68BB5F4 /* DanarapiAppUITests.swift */,
+				29F361C77D01D788ABA9D86C /* SharedReceiptUITests.swift */,
 			);
 			name = Tests;
+			sourceTree = "<group>";
+		};
+		A56C4E18BE0B042B25EB8ABC /* Share Extension */ = {
+			isa = PBXGroup;
+			children = (
+				97699D33C13D6760953AFBA4 /* ShareViewController.swift */,
+				9502B60D7B406FED0F2301AC /* Info.plist */,
+				80922653872C2DEE61C655CF /* Share.entitlements */,
+			);
+			name = "Share Extension";
+			sourceTree = "<group>";
+		};
+		D7EEBC9376D9A92BCC51051C /* Shared Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0A67B35DB5242315A4D51D99 /* PrivacyInfo.xcprivacy */,
+				897A9C9CFACD34F34449F04D /* design-tokens.json */,
+				BBE1DA65578FADE1CF56F445 /* demo-seed-v1.json */,
+				6C995834C357013FC7878EFF /* import-v1.json */,
+				9DCA6C037D75A0746E19FFB4 /* ledger-v1.json */,
+				7C2F8C6E058BD427E49B6F2C /* item-split-v1.json */,
+				44714DB0C5EFD4747C27B5F7 /* Assets.xcassets */,
+				2361594072CF0A98F899EC23 /* product-content.json */,
+				799245D55DC72981775A483F /* catalog.json */,
+				8808D52BDC59D2DCFF492216 /* engine.js */,
+				907877B6162C574512E0C5D3 /* GoogleSans-Medium.ttf */,
+				A9E46B25C68C0BBEC7BEFF71 /* GoogleSignInLogo@3x.png */,
+				5F3415A56C4737A0F02A2D4D /* Google-Sans-OFL.txt */,
+			);
+			name = "Shared Resources";
+			sourceTree = "<group>";
+		};
+		E08C5698C95CCE85A1BD42AD /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				B5E1A9B12B8F67B69CE575A4 /* AppModel.swift */,
+				1446407F6B633D60C4E7D796 /* DanarapiApp.swift */,
+				6E4EEF5B7B9E0C4969DD9CAE /* KeychainSessionStore.swift */,
+				CD4C21BE14FA1E089FF683EB /* NetworkMonitor.swift */,
+				674CD6DC390668AC5367AAB0 /* OfflineStore.swift */,
+				EED4A041DE1E645FBDCACBB8 /* RemoteRepository.swift */,
+				72B5130FE122CC7222570CC2 /* SupabaseClient.swift */,
+				E17819FDA5DC1F057E7978B1 /* Calculators.swift */,
+				8889AC625D3FFD68EEF6BB7B /* DemoRepository.swift */,
+				86230F44A848284529235426 /* Models.swift */,
+				73C687DACF7456865B5FB7C6 /* MonthPeriod.swift */,
+				54C087E1ED02AC375241F73E /* Repository.swift */,
+				3330707B5316A2CF08F5DFC6 /* AppLockService.swift */,
+				0242529C6E0A127813A62E3D /* BankProof.swift */,
+				10DBFEA3EA174D417BB785FF /* ExportService.swift */,
+				B440D43A9410DE5EE4CDFD52 /* ImportService.swift */,
+				693274D7900B075AB6048E4F /* QRISParser.swift */,
+				84130E4702432D5B0F33AD9D /* ReceiptParser.swift */,
+				2183AF28F6F9A8647B772C44 /* SharedReceiptReader.swift */,
+				6F479A0C7B6EC4701E88DF6C /* AuthViews.swift */,
+				A4B5BBB9713269A7CE61AE8F /* CalculatorsView.swift */,
+				8337388B2304F33705303871 /* DesignSystem.swift */,
+				9BAB38F66B49D8E4EEACA909 /* GoalsView.swift */,
+				7D9A7E5730739EB988187887 /* HomeView.swift */,
+				D05AD0342B1D2AA3350FD317 /* ItemSplitFormView.swift */,
+				F9EAD307021581320152CBAE /* MainTabView.swift */,
+				E18E9083AF2AA8ED4A663417 /* OutboxChangeView.swift */,
+				D8C0EA3C1A100063D6392833 /* ProductViews.swift */,
+				A39E81890E9D49B47406E278 /* ReportsView.swift */,
+				655E6F47BF55ED6A8F96A96E /* ReviewViews.swift */,
+				74B32CC7A3D0B841E1E9C680 /* RootView.swift */,
+				01EE0D9428EA6D6C45130F46 /* ScannerImportViews.swift */,
+				5EE6D354877C9697725E5A7E /* SettingsView.swift */,
+				62DAB9F51CC95C4085668F43 /* ShareTestingView.swift */,
+				673513FC7F23A9EABA080429 /* SharedInboxView.swift */,
+				914F4A344B7A1E848C158844 /* SplitBillViews.swift */,
+				0C920CCBCD4D9AA2A86E9A8A /* TransactionForms.swift */,
+				F349D32D80F3B7EB69485D43 /* TransactionsView.swift */,
+				E5951476A51E8C9A1A385170 /* ItemSplit.swift */,
+				88231BBD7EE34938A045A5E3 /* Money.swift */,
+				3F65C667815CD8C4C66CB2C2 /* Split.swift */,
+			);
+			name = Application;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1E97C0A39403001E66966FD3 /* Danarapi */ = {
+		119087C3205F7B8C614924F2 /* Danarapi */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9CF4B2941E8D58EBF22B9550 /* Build configuration list for PBXNativeTarget "Danarapi" */;
+			buildConfigurationList = 17D1FB59B7B93FCAA288146B /* Build configuration list for PBXNativeTarget "Danarapi" */;
 			buildPhases = (
-				4E3C115851E35793A3238269 /* Sources */,
-				D03C589F61B3DC9F7B63B1E0 /* Frameworks */,
-				03F1E7011428D69D922947B0 /* Resources */,
+				FA1D23056501A257BEB63785 /* Sources */,
+				EECE1CCB393DF418975E2DA2 /* Frameworks */,
+				0D8351CD97ABB1C36119C80B /* Resources */,
+				622490EDE0E4DA8B83CDB6CE /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				2EBE33DF8A70BFF078BA9882 /* PBXTargetDependency */,
 			);
 			name = Danarapi;
 			productName = Danarapi;
-			productReference = E3D0A8CDF8D2018ABAC11C81 /* Danarapi.app */;
+			productReference = 2AF62B622DC829157ABD47B6 /* Danarapi.app */;
 			productType = "com.apple.product-type.application";
 		};
-		41C7E54DEE809ADC4AB7E0D0 /* DanarapiAppUITests */ = {
+		7550CC751DFDEEFD8CADF6B3 /* DanarapiShare */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 288D8DAD9654197BE1C3CFDA /* Build configuration list for PBXNativeTarget "DanarapiAppUITests" */;
+			buildConfigurationList = 935F44B8FD5E513BC82310E7 /* Build configuration list for PBXNativeTarget "DanarapiShare" */;
 			buildPhases = (
-				98366186F2E49092489EC45B /* Sources */,
-				12D9455F4B13784004A45209 /* Frameworks */,
-				4AEC55B248E345B176EC22DE /* Resources */,
+				995D0BCF097A1BE90A5A0CB4 /* Sources */,
+				1DD1F25D101EF0C3F0CE5D67 /* Frameworks */,
+				AF6AB553F2150C023FF8FFFB /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				6AB42754D7CFD127B333D0AF /* PBXTargetDependency */,
+			);
+			name = DanarapiShare;
+			productName = DanarapiShare;
+			productReference = FC2EF9A01D9207E1A17A8C10 /* DanarapiShare.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		8A2BC42274B06F5EA5C0AED1 /* DanarapiAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ADDFE504E4FBD54008BBBA48 /* Build configuration list for PBXNativeTarget "DanarapiAppUITests" */;
+			buildPhases = (
+				96C8025A2CCE743A46E9612A /* Sources */,
+				40963EEC797DCACE8FD9DE8F /* Frameworks */,
+				F137FFCF71BC00410EFB6D61 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				16F2AE6F52EE510E822267BD /* PBXTargetDependency */,
 			);
 			name = DanarapiAppUITests;
 			productName = DanarapiAppUITests;
-			productReference = 748E7E6F380DB1D6A639B3B6 /* DanarapiAppUITests.xctest */;
+			productReference = E2E338145241B5A8F8F5BC7D /* DanarapiAppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		699C6B7224D89A4AF3852B17 /* DanarapiAppTests */ = {
+		AE9684FA5A7794C25CB41D4F /* DanarapiAppTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4D9EC8586FF1BF0F1106D7C0 /* Build configuration list for PBXNativeTarget "DanarapiAppTests" */;
+			buildConfigurationList = 6D2E0303E1487AAF6885916F /* Build configuration list for PBXNativeTarget "DanarapiAppTests" */;
 			buildPhases = (
-				CC4CBECD512734604B8BF4AD /* Sources */,
-				AF9C5F69EF44D56F9DDA4DBC /* Frameworks */,
-				E74BDBCCB09975099B972BCC /* Resources */,
+				771FEECBBCCF18264BE3D49C /* Sources */,
+				48EACA2CAC6428370D5502BF /* Frameworks */,
+				C939317C8D75A97E6F341BC6 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				1CCE7D959F77B0C5A28938B2 /* PBXTargetDependency */,
+				CA2A5BEBA3AECF1F007297FD /* PBXTargetDependency */,
 			);
 			name = DanarapiAppTests;
 			productName = DanarapiAppTests;
-			productReference = 78C624AA687B38A6D60A9672 /* DanarapiAppTests.xctest */;
+			productReference = 43B261BBF0700EE6D7B6FB13 /* DanarapiAppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		6ADEB84ABE446C908CB0DC87 /* Project object */ = {
+		D24FDFDFA1979DD9895AC53C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1300;
-				LastUpgradeCheck = 2700;
+				LastUpgradeCheck = 1300;
 			};
-			buildConfigurationList = 0F3875C6CCD72D3C0044970A /* Build configuration list for PBXProject "Danarapi" */;
+			buildConfigurationList = 60D606E05EC2E531D62A4EAC /* Build configuration list for PBXProject "Danarapi" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -351,45 +470,56 @@
 				en,
 				Base,
 			);
-			mainGroup = C9972265A9734689454F6498;
-			productRefGroup = DCA3DBAD0D0D49DC266745F6 /* Products */;
+			mainGroup = 8AF066C0E50077F5536052AD;
+			productRefGroup = 6DE9B6C192491D1C5A55F9DA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1E97C0A39403001E66966FD3 /* Danarapi */,
-				699C6B7224D89A4AF3852B17 /* DanarapiAppTests */,
-				41C7E54DEE809ADC4AB7E0D0 /* DanarapiAppUITests */,
+				119087C3205F7B8C614924F2 /* Danarapi */,
+				7550CC751DFDEEFD8CADF6B3 /* DanarapiShare */,
+				AE9684FA5A7794C25CB41D4F /* DanarapiAppTests */,
+				8A2BC42274B06F5EA5C0AED1 /* DanarapiAppUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		03F1E7011428D69D922947B0 /* Resources */ = {
+		0D8351CD97ABB1C36119C80B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D900B173B7E048A598008C01 /* GoogleSignInLogo@3x.png in Resources */,
-				D900B173B7E048A598008C07 /* Assets.xcassets in Resources */,
-				D900B173B7E048A598008C03 /* GoogleSans-Medium.ttf in Resources */,
-				D900B173B7E048A598008C05 /* Google-Sans-OFL.txt in Resources */,
-				747D0161BDE221F961D91DC0 /* PrivacyInfo.xcprivacy in Resources */,
-				55B7044EAC01913871CEC464 /* design-tokens.json in Resources */,
-                D900B173B7E048A598008C13,
-				37224FE7AB21F0D31F756DE7 /* demo-seed-v1.json in Resources */,
-				ED0CBB6051EC12CA081DD7DA /* import-v1.json in Resources */,
-				20BA2C37FB48A156282007D0 /* ledger-v1.json in Resources */,
-				D7B7A1483B529A2A4D26615C /* item-split-v1.json in Resources */,
+				1E23DD7C316838D8C982BFB7 /* PrivacyInfo.xcprivacy in Resources */,
+				87716E3E3DF3A568CACB16E5 /* design-tokens.json in Resources */,
+				58A3FCA6618DD2617C0B5DF1 /* demo-seed-v1.json in Resources */,
+				DE4A73121C12B4A77780BC3F /* import-v1.json in Resources */,
+				64E1939C9856082BA4303A7F /* ledger-v1.json in Resources */,
+				73694E52F8739A2C0F881010 /* item-split-v1.json in Resources */,
+				D5986806F9655CC5B468C282 /* Assets.xcassets in Resources */,
+				067623D846BA566C899BFCF5 /* product-content.json in Resources */,
+				005783A39FCF69235AAF0855 /* catalog.json in Resources */,
+				5D70E088AED2C9514C6B427E /* engine.js in Resources */,
+				2A32746071190A1FED311937 /* GoogleSans-Medium.ttf in Resources */,
+				22E99C54B09073770D9EC528 /* GoogleSignInLogo@3x.png in Resources */,
+				3CF230E330C23E15F96EC4E7 /* Google-Sans-OFL.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4AEC55B248E345B176EC22DE /* Resources */ = {
+		AF6AB553F2150C023FF8FFFB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8F05FD76C28FDC4CD0A6567B /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C939317C8D75A97E6F341BC6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E74BDBCCB09975099B972BCC /* Resources */ = {
+		F137FFCF71BC00410EFB6D61 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -399,101 +529,128 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4E3C115851E35793A3238269 /* Sources */ = {
+		771FEECBBCCF18264BE3D49C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE4D2D40C7BB4F3DA490616E /* AppModel.swift in Sources */,
-                D900B173B7E048A598008C11,
-				DA9BB8BB1A59A17C3EFEDAAB /* DanarapiApp.swift in Sources */,
-				6D8AD9B6A282B459BE8B8C0C /* KeychainSessionStore.swift in Sources */,
-				5D2DFA6B51A7E7200ECDF020 /* NetworkMonitor.swift in Sources */,
-				6B69C17BE6814655F5ABA75B /* OfflineStore.swift in Sources */,
-				2BCB7185C4857FDFBCCF8450 /* RemoteRepository.swift in Sources */,
-				80F08692D83161865BB6C128 /* SupabaseClient.swift in Sources */,
-				DF5E002640F4F3EA183111A4 /* DemoRepository.swift in Sources */,
-				AED33DDCEA0D079F72045238 /* Models.swift in Sources */,
-				FE305267953E4349FB874720 /* MonthPeriod.swift in Sources */,
-				7BF128DBA622489B92B4331F /* Repository.swift in Sources */,
-				279E4B10A24C28F3B0AA3441 /* AppLockService.swift in Sources */,
-				96FCDD8EFF15CBA10CDE7584 /* ExportService.swift in Sources */,
-				91201EC29A0CF33D68AA0985 /* ImportService.swift in Sources */,
-				F41D7AB109B3EB6B91FD238B /* QRISParser.swift in Sources */,
-				E6E7116FCDF03472EA9265D6 /* ReceiptParser.swift in Sources */,
-				1386B2F4C80FFB76146B966C /* AuthViews.swift in Sources */,
-				907414BE21068162966F15BE /* DesignSystem.swift in Sources */,
-				62386AA76D128BE03814ED01 /* GoalsView.swift in Sources */,
-				DA12C12DE9EB18BF16938611 /* HomeView.swift in Sources */,
-				05958E14C306DE7591C38773 /* ItemSplitFormView.swift in Sources */,
-				00A61E95FE9AC8F2D99787ED /* MainTabView.swift in Sources */,
-				199F71FA17867F5CF3CB20F2 /* OutboxChangeView.swift in Sources */,
-				F488DCB35617A5BBD33CE8B6 /* ReportsView.swift in Sources */,
-				2C6C47AF7F977FBEE7D69C9B /* ReviewViews.swift in Sources */,
-				AEF86BD76BD3D8796F45AE97 /* RootView.swift in Sources */,
-				17DB159D34BAC16921F288D9 /* ScannerImportViews.swift in Sources */,
-				92664893C1C4E857A2D603AF /* SettingsView.swift in Sources */,
-				08DA74B639E978584ABF4713 /* SplitBillViews.swift in Sources */,
-				19BAEBA4A67F69CD5BDA64C7 /* TransactionForms.swift in Sources */,
-				DA432EE466DCE2912212F461 /* TransactionsView.swift in Sources */,
-				EE8CF5B2EACE122254B229DB /* ItemSplit.swift in Sources */,
-				79316F929A87346D5F52E970 /* Money.swift in Sources */,
-				340457D3BE2506C61A46869B /* Split.swift in Sources */,
+				A08634688B89D11B1436D053 /* BankProofTests.swift in Sources */,
+				A174BE74466AF21E02FA6425 /* DanarapiAppTests.swift in Sources */,
+				8F8DD5DFB0ADC8D64D91A7F4 /* LedgerFixtureTests.swift in Sources */,
+				91178F23B1BFC462A50D6930 /* PlanningTests.swift in Sources */,
+				6D27C739723520FC9DD45D6F /* ShareItemReaderTests.swift in Sources */,
+				79A0AD2E26891653E59FDCF7 /* SharedInboxTests.swift in Sources */,
+				7F4DC6FC8ECEC1C61CB0FAC0 /* TransportContractTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		98366186F2E49092489EC45B /* Sources */ = {
+		96C8025A2CCE743A46E9612A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C242C73EE5FF782A030C4878 /* DanarapiAppUITests.swift in Sources */,
+				365212F1E8D7C42AA362AB2F /* DanarapiAppUITests.swift in Sources */,
+				AAFE1DBDEF716512FF826AB8 /* SharedReceiptUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CC4CBECD512734604B8BF4AD /* Sources */ = {
+		995D0BCF097A1BE90A5A0CB4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8519FADA9318F8C976FE8EFF /* DanarapiAppTests.swift in Sources */,
-				AF1CE63257E1E9E10596BA57 /* LedgerFixtureTests.swift in Sources */,
-				7B788CFD099FABEF6E76B098 /* PlanningTests.swift in Sources */,
-				6060D67D931BE0757381A03A /* TransportContractTests.swift in Sources */,
+				ABFC8DB21728875E8D446338 /* ShareItemReader.swift in Sources */,
+				98092912F94F50171447F9B1 /* SharedInbox.swift in Sources */,
+				F07FE1977856B654161C5A12 /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FA1D23056501A257BEB63785 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1C8D917EDD5DDD9B72B24DB /* AppModel.swift in Sources */,
+				804681D20BB5B704C61CBA51 /* DanarapiApp.swift in Sources */,
+				8973C2E8108BBAD4EF4FF372 /* KeychainSessionStore.swift in Sources */,
+				948C83216DB0BF5F4882CCC1 /* NetworkMonitor.swift in Sources */,
+				69476ACC7F9B905CDCD6FADC /* OfflineStore.swift in Sources */,
+				852CC684C2A622E9DA3B7BB8 /* RemoteRepository.swift in Sources */,
+				D6EE360507658F24404745FD /* SupabaseClient.swift in Sources */,
+				551BB7434A72E8B878FD85A4 /* Calculators.swift in Sources */,
+				CCB2678474C19F4D31670D19 /* DemoRepository.swift in Sources */,
+				4CA411B712A95592A2C0B3E6 /* Models.swift in Sources */,
+				A34DA29CB9FC34C7989507E4 /* MonthPeriod.swift in Sources */,
+				E980BF205BC82EA3C22640C0 /* Repository.swift in Sources */,
+				82A55C3716D30F7EE2FB2FFF /* AppLockService.swift in Sources */,
+				9504CE65335495A1E5FFB95C /* BankProof.swift in Sources */,
+				CFC7F0BF27DFDC51518EFE24 /* ExportService.swift in Sources */,
+				D9E9AC56679B575F1D08BF0A /* ImportService.swift in Sources */,
+				F2195460243C70708BAD1A10 /* QRISParser.swift in Sources */,
+				3065F1A7CF78DA84B5C7DEA6 /* ReceiptParser.swift in Sources */,
+				B798F7E9F9B1FD03A2E8BB7E /* SharedReceiptReader.swift in Sources */,
+				648042DFE0396235F524EDBE /* AuthViews.swift in Sources */,
+				6773E24FE8C91178DA60F9A5 /* CalculatorsView.swift in Sources */,
+				00FC6441211D7B9AC55E3003 /* DesignSystem.swift in Sources */,
+				C96A2A18EC685645DF419446 /* GoalsView.swift in Sources */,
+				D723D95386A3AFF66EF3FCD6 /* HomeView.swift in Sources */,
+				1155F122529A1DDBACBE829D /* ItemSplitFormView.swift in Sources */,
+				6E83A12F708D2D74711856C4 /* MainTabView.swift in Sources */,
+				B4B7EE35B67E4ADE4B0F20B1 /* OutboxChangeView.swift in Sources */,
+				4BD29E861CFFCA567F8A80D0 /* ProductViews.swift in Sources */,
+				DD581C427B173D1C8BA22DC9 /* ReportsView.swift in Sources */,
+				56DB8AF1A49DCBE95836A92F /* ReviewViews.swift in Sources */,
+				5B70BA64894AB8F1FE7CD1C9 /* RootView.swift in Sources */,
+				08EA73CFEAC8DCF5C7EDFD9A /* ScannerImportViews.swift in Sources */,
+				B6926C266F130CD176F57B28 /* SettingsView.swift in Sources */,
+				7A1387C8F7A44456339DAC0F /* ShareTestingView.swift in Sources */,
+				756DE914C30B47A8CF677066 /* SharedInboxView.swift in Sources */,
+				AFC5057272BF49FB8F556A94 /* SplitBillViews.swift in Sources */,
+				B614480EFAE5755F8ABDC2FC /* TransactionForms.swift in Sources */,
+				9434A5BF925F28F4F88A0460 /* TransactionsView.swift in Sources */,
+				19DDE67EB180F968EB83B3BD /* ItemSplit.swift in Sources */,
+				71C083859ACCBF664373D733 /* Money.swift in Sources */,
+				DA06C73EB8F401D1B3F4BA96 /* Split.swift in Sources */,
+				7ADB3F04D2448CA7D3DED5A8 /* ShareItemReader.swift in Sources */,
+				775003B688ABA025D20D7FCB /* SharedInbox.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		1CCE7D959F77B0C5A28938B2 /* PBXTargetDependency */ = {
+		16F2AE6F52EE510E822267BD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Danarapi;
-			target = 1E97C0A39403001E66966FD3 /* Danarapi */;
-			targetProxy = FC1A13BFF424D952950CEC11 /* PBXContainerItemProxy */;
+			target = 119087C3205F7B8C614924F2 /* Danarapi */;
+			targetProxy = 884EF89E198F3B1DC616002E /* PBXContainerItemProxy */;
 		};
-		6AB42754D7CFD127B333D0AF /* PBXTargetDependency */ = {
+		2EBE33DF8A70BFF078BA9882 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = DanarapiShare;
+			target = 7550CC751DFDEEFD8CADF6B3 /* DanarapiShare */;
+			targetProxy = C1688800C69FC392D82F868A /* PBXContainerItemProxy */;
+		};
+		CA2A5BEBA3AECF1F007297FD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Danarapi;
-			target = 1E97C0A39403001E66966FD3 /* Danarapi */;
-			targetProxy = E595D6D8F65D1D154E9E0BA5 /* PBXContainerItemProxy */;
+			target = 119087C3205F7B8C614924F2 /* Danarapi */;
+			targetProxy = C50116DA002054401B78C3F0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		038983AB3D7D1EC06C1CCA47 /* Release */ = {
+		355D9FB25C30D383045DD466 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8881C4BBF09660070B1079C0 /* Base.xcconfig */;
+			baseConfigurationReference = 9CF7D8360B0BF1E4C152B9CE /* Base.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = Configuration/Share.entitlements;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = VQUAVQ29WZ;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = DanarapiApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = id.danarapi.app;
 				PRODUCT_NAME = Danarapi;
 				SDKROOT = iphoneos;
@@ -505,9 +662,75 @@
 			};
 			name = Release;
 		};
-		0B4B984156350A3A80D7DEAC /* Debug */ = {
+		4CB25D6B1202B03C8EA9E8CB /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8881C4BBF09660070B1079C0 /* Base.xcconfig */;
+			baseConfigurationReference = 9CF7D8360B0BF1E4C152B9CE /* Base.xcconfig */;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = Configuration/Share.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VQUAVQ29WZ;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = DanarapiShare/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = id.danarapi.app.share;
+				PRODUCT_NAME = DanarapiShare;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		7E08F0171BBA7E015FC2586B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9CF7D8360B0BF1E4C152B9CE /* Base.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VQUAVQ29WZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = id.danarapi.app.tests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Danarapi.app/Danarapi";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9A43EE90A61D89CD5DEA5260 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9CF7D8360B0BF1E4C152B9CE /* Base.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = Configuration/Share.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = VQUAVQ29WZ;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = DanarapiApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = id.danarapi.app;
+				PRODUCT_NAME = Danarapi;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CA317102A18FAF8A1A03B71F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9CF7D8360B0BF1E4C152B9CE /* Base.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -540,11 +763,64 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		CC48AF91E7E457177E6DA9EB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9CF7D8360B0BF1E4C152B9CE /* Base.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -563,76 +839,35 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		16F1E2CB4DF643663EA61422 /* Release */ = {
+		DA1756DD820BC9AA62102930 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8881C4BBF09660070B1079C0 /* Base.xcconfig */;
+			baseConfigurationReference = 9CF7D8360B0BF1E4C152B9CE /* Base.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 5.0;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = VQUAVQ29WZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = id.danarapi.app.uitests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TEST_TARGET_NAME = Danarapi;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		1F55EC60FE11AAD317DF89BD /* Debug */ = {
+		DFFA72F960F2FED799AD0DC0 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8881C4BBF09660070B1079C0 /* Base.xcconfig */;
+			baseConfigurationReference = 9CF7D8360B0BF1E4C152B9CE /* Base.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VQUAVQ29WZ;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -643,71 +878,35 @@
 			};
 			name = Debug;
 		};
-		584E36450DD4FEE625CBB4B7 /* Debug */ = {
+		E5CA5423EB0BAF1FBC4A3580 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8881C4BBF09660070B1079C0 /* Base.xcconfig */;
+			baseConfigurationReference = 9CF7D8360B0BF1E4C152B9CE /* Base.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
-				DEVELOPMENT_ASSET_PATHS = "";
+				CODE_SIGN_ENTITLEMENTS = Configuration/Share.entitlements;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VQUAVQ29WZ;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = DanarapiApp/Info.plist;
+				INFOPLIST_FILE = DanarapiShare/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = id.danarapi.app;
-				PRODUCT_NAME = Danarapi;
+				PRODUCT_BUNDLE_IDENTIFIER = id.danarapi.app.share;
+				PRODUCT_NAME = DanarapiShare;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SKIP_INSTALL = YES;
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		5F6650EF53724CB513E1E431 /* Release */ = {
+		ECE33EFD77FDBFE119DE7711 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8881C4BBF09660070B1079C0 /* Base.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				DEVELOPMENT_TEAM = VQUAVQ29WZ;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				PRODUCT_BUNDLE_IDENTIFIER = id.danarapi.app.uitests;
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 6.0;
-				TEST_TARGET_NAME = Danarapi;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		96F1C9B21E74BBFFBEDE2F87 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8881C4BBF09660070B1079C0 /* Base.xcconfig */;
+			baseConfigurationReference = 9CF7D8360B0BF1E4C152B9CE /* Base.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_OBJC_WEAK = NO;
-				DEVELOPMENT_TEAM = VQUAVQ29WZ;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				PRODUCT_BUNDLE_IDENTIFIER = id.danarapi.app.tests;
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 6.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Danarapi.app/Danarapi";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		B25B77F5FE84AD34BACB5EB9 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8881C4BBF09660070B1079C0 /* Base.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VQUAVQ29WZ;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -721,43 +920,52 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0F3875C6CCD72D3C0044970A /* Build configuration list for PBXProject "Danarapi" */ = {
+		17D1FB59B7B93FCAA288146B /* Build configuration list for PBXNativeTarget "Danarapi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0B4B984156350A3A80D7DEAC /* Debug */,
-				16F1E2CB4DF643663EA61422 /* Release */,
+				355D9FB25C30D383045DD466 /* Release */,
+				9A43EE90A61D89CD5DEA5260 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		288D8DAD9654197BE1C3CFDA /* Build configuration list for PBXNativeTarget "DanarapiAppUITests" */ = {
+		60D606E05EC2E531D62A4EAC /* Build configuration list for PBXProject "Danarapi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5F6650EF53724CB513E1E431 /* Release */,
-				1F55EC60FE11AAD317DF89BD /* Debug */,
+				CC48AF91E7E457177E6DA9EB /* Debug */,
+				CA317102A18FAF8A1A03B71F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4D9EC8586FF1BF0F1106D7C0 /* Build configuration list for PBXNativeTarget "DanarapiAppTests" */ = {
+		6D2E0303E1487AAF6885916F /* Build configuration list for PBXNativeTarget "DanarapiAppTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				96F1C9B21E74BBFFBEDE2F87 /* Release */,
-				B25B77F5FE84AD34BACB5EB9 /* Debug */,
+				7E08F0171BBA7E015FC2586B /* Release */,
+				ECE33EFD77FDBFE119DE7711 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9CF4B2941E8D58EBF22B9550 /* Build configuration list for PBXNativeTarget "Danarapi" */ = {
+		935F44B8FD5E513BC82310E7 /* Build configuration list for PBXNativeTarget "DanarapiShare" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				038983AB3D7D1EC06C1CCA47 /* Release */,
-				584E36450DD4FEE625CBB4B7 /* Debug */,
+				4CB25D6B1202B03C8EA9E8CB /* Release */,
+				E5CA5423EB0BAF1FBC4A3580 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ADDFE504E4FBD54008BBBA48 /* Build configuration list for PBXNativeTarget "DanarapiAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA1756DD820BC9AA62102930 /* Release */,
+				DFFA72F960F2FED799AD0DC0 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 6ADEB84ABE446C908CB0DC87 /* Project object */;
+	rootObject = D24FDFDFA1979DD9895AC53C /* Project object */;
 }

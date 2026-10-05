@@ -238,7 +238,8 @@ async function action(operation: string, payload: Json, authorization: string) {
       if (!rows.length) throw new Error("Review tidak lagi menunggu pemeriksaan.");
       await rest(`review_items?id=eq.${encodeURIComponent(String(payload.id))}&status=eq.pending`, authorization, { method: "PATCH", headers: { prefer: "return=minimal" }, body: JSON.stringify({ extracted_fields: { ...(rows[0].extracted_fields as Json), amount: payload.amount, merchant: payload.merchant, date: payload.date, receipt: payload.receipt ? storeReceipt(normalizeReceipt(payload.receipt)) : null }, raw_reference: payload.rawReference ?? null }) }); return;
     }
-    case "delete_review_item": await remove("review_items", String(payload.id), undefined, authorization); return;
+    case "delete_review_item": await deleteReviewDraft(String(payload.id), authorization); return;
+    case "delete_budget": await rpc("api_delete_budget", { p_id: payload.id, p_expected_limit: payload.expected_limit }, authorization); return;
     case "reject_review_item": await patch("review_items", String(payload.id), undefined, { status: "rejected", rejected_at: new Date().toISOString() }, authorization); return;
     case "restore_review_item": await patch("review_items", String(payload.id), undefined, { status: "pending", rejected_at: null }, authorization); return;
     case "merge_review_item": if (payload.bill_id) await rpc("api_merge_review_item_to_bill", { p_client_mutation_id: payload.id, p_review_item_id: payload.id, p_split_bill_id: payload.bill_id }, authorization); else await rpc("api_merge_review_item", { p_client_mutation_id: payload.id, p_review_item_id: payload.id, p_transaction_id: payload.transaction_id }, authorization); return;
@@ -274,6 +275,26 @@ async function saveMerchantRule(payload: Json, authorization: string) {
   const values = { match_type: matchType, normalized_pattern: pattern, category_id: categoryId, priority };
   if (version > 0) await patch("merchant_rules", String(payload.id), version, values, authorization);
   else await rest("merchant_rules", authorization, { method: "POST", headers: { prefer: "return=minimal" }, body: JSON.stringify({ id: payload.id, ...values }) });
+}
+
+async function deleteReviewDraft(id: string, authorization: string) {
+  // Claim only the caller's draft before deleting files, preventing concurrent posting.
+  await rpc("api_discard_review", { p_id: id }, authorization);
+  const attachments = await restAll(`attachments?select=user_id,storage_key&review_item_id=eq.${encodeURIComponent(id)}&order=id.asc`, authorization);
+  const baseURL = required("SUPABASE_URL"), serviceKey = required("SUPABASE_SERVICE_ROLE_KEY");
+  const headers = { authorization: `Bearer ${serviceKey}`, apikey: serviceKey, "content-type": "application/json" };
+  const storageHeaders = { authorization, apikey: required("SUPABASE_ANON_KEY"), "content-type": "application/json" };
+  for (const attachment of attachments) {
+    const key = String(attachment.storage_key);
+    if (!key.startsWith(`${attachment.user_id}/`) || key.split('/').some(part => !part || part === '.' || part === '..' || part.includes('\\'))) throw { code: "VALIDATION", message: "Path lampiran tidak valid." };
+    const removed = await fetch(`${baseURL}/storage/v1/object/attachments`, { method: "DELETE", headers: storageHeaders, body: JSON.stringify({ prefixes: [key] }) });
+    if (!removed.ok && removed.status !== 404) throw { code: "INTERNAL", message: "Pembersihan lampiran belum selesai. Coba hapus lagi." };
+    const checked = await fetch(`${baseURL}/storage/v1/object/authenticated/attachments/${key.split('/').map(encodeURIComponent).join('/')}`, { headers: storageHeaders });
+    const missing = checked.status === 404 || (checked.status === 400 && String((await checked.json().catch(() => ({}))).statusCode) === "404");
+    if (!missing) { await checked.body?.cancel(); throw { code: "INTERNAL", message: "Penghapusan lampiran belum terverifikasi. Coba hapus lagi." }; }
+  }
+  const completed = await fetch(`${baseURL}/rest/v1/rpc/finish_expired_review`, { method: "POST", headers, body: JSON.stringify({ p_review_id: id }) });
+  if (!completed.ok) throw { code: "INTERNAL", message: "Penghapusan draft belum selesai. Coba lagi." };
 }
 
 async function patch(table: string, id: string, version: number | undefined, values: Json, authorization: string) {

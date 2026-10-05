@@ -22,6 +22,7 @@ export function exportCSVs(data: Snapshot, from = '0001-01-01', to = '9999-12-31
   const resolutions: unknown[][] = [['event_id', 'source_bill_id', 'member_id', 'kind', 'amount', 'occurred_at', 'reversed', 'reason']];
   for (const row of data.transactions.filter(row => !row.deleted && includes(row.occurredAt))) { if (row.kind === 'expense') expenses.push([row.id, '', row.occurredAt, row.kind, row.amount, categoryName(row.categoryID), row.merchant, false]); cash.push([row.id, '', row.occurredAt, row.kind, row.kind === 'income' ? row.amount : `-${row.amount}`, accountName(row.accountID), row.note]); }
   for (const row of data.transfers.filter(row => !row.deleted && includes(row.occurredAt))) { cash.push([`${row.id}-out`, '', row.occurredAt, 'transfer_out', `-${row.amount}`, accountName(row.fromAccountID), row.note]); cash.push([`${row.id}-in`, '', row.occurredAt, 'transfer_in', row.amount, accountName(row.toAccountID), row.note]); }
+  for (const row of (data.adjustments ?? []).filter(row => includes(row.occurredAt))) cash.push([row.id, '', row.occurredAt, 'adjustment', row.signedAmount, accountName(row.accountID), row.reason]);
   for (const bill of data.splitBills.filter(row => !row.deleted)) {
     const owed = obligations(bill);
     if (includes(bill.occurredAt)) {

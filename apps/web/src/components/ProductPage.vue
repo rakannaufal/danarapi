@@ -83,6 +83,5 @@ async function acknowledgeRetention() {
       <section v-if="tickets.length" class="card"><h2>Laporan Anda</h2><details v-for="ticket in tickets" :key="ticket.id" class="product-ticket"><summary>{{ ticket.topic }} · {{ ticket.status === 'resolved' ? 'Selesai' : ticket.status === 'in_progress' ? 'Ditangani' : 'Menunggu' }} · {{ new Date(ticket.createdAt).toLocaleDateString('id-ID') }}</summary><p>{{ ticket.description }}</p><p v-if="ticket.reply"><strong>Balasan</strong><br>{{ ticket.reply }}</p><small class="muted">{{ ticket.id }}</small></details></section>
     </template>
     <p v-if="error" class="error-text" role="alert">{{ error }}</p>
-    <nav class="product-links" aria-label="Tentang dan bantuan"><a v-for="link in productLinks" :key="link.id" :href="`#${link.id}`" :aria-current="pageID === link.id ? 'page' : undefined" @click.prevent="emit('navigate', link.id)">{{ link.title }}</a><a href="#home" @click.prevent="emit('navigate', 'home')">{{ state.mode === 'signedOut' ? 'Kembali ke masuk' : 'Beranda' }}</a></nav>
   </article>
 </template>

@@ -46,6 +46,14 @@ actor RemoteRepository: FinanceRepository {
     func scanReceipt(images: [ReceiptScanImage]) async throws -> ReceiptScanResponse {
         try await client.request(path: "/functions/v1/receipt-scan", body: ReceiptScanRequest(images: images), timeout: 110)
     }
+    func scanBankProof(_ request: BankProofRequest, ownerID: String) async throws -> BankProofResponse {
+        let data = try await client.data(path: "/functions/v1/receipt-scan", body: JSONEncoder().encode(request), expectedUserID: ownerID, timeout: 110)
+        return try JSONDecoder().decode(BankProofResponse.self, from: data)
+    }
+    func setSharedProofAIConsent(ownerID: String, policyVersion: String) async throws {
+        let body = try JSONSerialization.data(withJSONObject: ["operation": "set_ai_consent", "payload": ["granted": true, "policyVersion": policyVersion]])
+        _ = try await client.data(path: "/functions/v1/ios-data", body: body, expectedUserID: ownerID)
+    }
 
     func createAccount(_ draft: AccountDraft) async throws {
         try await ledger("create_account", payload: [
@@ -60,6 +68,21 @@ actor RemoteRepository: FinanceRepository {
     func updateAccount(_ account: FinancialAccount) async throws {
         try await dataAction("update_account", payload: try dictionary(account))
     }
+
+    func editAccount(_ account: FinancialAccount, expectedBalance: Int64, reason: String) async throws {
+        try await ledger("edit_financial_account", payload: ["p_client_mutation_id": UUID().uuidString, "p_account_id": account.id, "p_expected_version": account.version, "p_expected_balance": String(expectedBalance), "p_name": account.name, "p_kind": account.kind.rawValue, "p_balance": String(account.balance), "p_reason": reason])
+    }
+
+    func deleteAccount(id: String, expectedVersion: Int) async throws {
+        try await ledger("delete_financial_record", payload: ["p_client_mutation_id": UUID().uuidString, "p_entity": "account", "p_id": id, "p_expected_version": expectedVersion])
+    }
+
+    func deleteCategory(id: String, expectedVersion: Int) async throws {
+        try await ledger("delete_financial_record", payload: ["p_client_mutation_id": UUID().uuidString, "p_entity": "category", "p_id": id, "p_expected_version": expectedVersion])
+    }
+
+    func deleteReviewItem(id: String) async throws { try await dataAction("delete_review_item", payload: ["id": id]) }
+    func deleteBudget(id: String, expectedLimit: Int64) async throws { try await dataAction("delete_budget", payload: ["id": id, "expected_limit": String(expectedLimit)]) }
 
     func archiveAccount(id: String, expectedVersion: Int) async throws {
         try await dataAction("archive_account", payload: ["id": id, "expected_version": expectedVersion])
@@ -209,12 +232,44 @@ actor RemoteRepository: FinanceRepository {
             throw error
         }
     }
+    func addSharedReviewItem(_ item: ReviewItem, attachment: ReviewAttachment?, ownerID: String) async throws {
+        // Keep the pending row on upload failure: the inbox retries with this same UUID.
+        let body = try JSONSerialization.data(withJSONObject: ["operation": "add_review_item", "payload": try dictionary(item)])
+        _ = try await client.data(path: "/functions/v1/ios-data", body: body, expectedUserID: ownerID)
+        struct StatusRow: Decodable { let status: String }
+        let statusData = try await client.data(path: "/rest/v1/review_items?id=eq.\(item.id)&select=status", method: "GET", expectedUserID: ownerID)
+        let rows = try JSONDecoder().decode([StatusRow].self, from: statusData)
+        guard rows.first?.status == "pending" else { throw AppError.validation("Draft Share sudah diproses pada akun ini. Hapus salinan lokal bila tidak diperlukan.") }
+        guard let attachment else { return }
+        let hash = SHA256.hash(data: attachment.data).map { String(format: "%02x", $0) }.joined()
+        let existing = try await client.data(path: "/rest/v1/attachments?review_item_id=eq.\(item.id)&sha256=eq.\(hash)&select=id", method: "GET", expectedUserID: ownerID)
+        struct AttachmentRow: Decodable { let id: String }
+        if try !JSONDecoder().decode([AttachmentRow].self, from: existing).isEmpty { return }
+        _ = try await client.data(path: "/functions/v1/ios-data/attachment", body: attachment.data, contentType: attachment.mimeType, headers: ["x-review-item-id": item.id, "x-file-name": attachment.name], expectedUserID: ownerID)
+    }
     func rejectReviewItem(id: String) async throws { try await dataAction("reject_review_item", payload: ["id": id]) }
     func updateReviewItem(_ item: ReviewItem) async throws { try await dataAction("update_review_item", payload: try dictionary(item)) }
     func restoreReviewItem(id: String) async throws { try await dataAction("restore_review_item", payload: ["id": id]) }
 
     func confirmReviewItem(id: String, transaction: TransactionDraft) async throws {
         try await dataAction("confirm_review_item", payload: ["id": id, "transaction": try dictionary(transaction)])
+    }
+    func confirmSharedReviewItem(id: String, transaction: TransactionDraft, ownerID: String) async throws {
+        let body = try JSONSerialization.data(withJSONObject: ["operation": "confirm_review_item", "payload": ["id": id, "transaction": try dictionary(transaction)]])
+        _ = try await client.data(path: "/functions/v1/ios-data", body: body, expectedUserID: ownerID)
+    }
+
+    func confirmSharedReviewTransfer(id: String, transfer: TransferDraft, ownerID: String) async throws {
+        // The review UUID remains the mutation ID across restarts, even if completion fails.
+        let payload: [String: Any] = ["p_client_mutation_id": id, "p_from_account_id": transfer.fromAccountID, "p_to_account_id": transfer.toAccountID, "p_amount": String(transfer.amount), "p_occurred_at": ISO8601DateFormatter().string(from: transfer.occurredAt), "p_note": jsonValue(transfer.note)]
+        let body = try JSONSerialization.data(withJSONObject: ["operation": "create_transfer", "payload": payload], options: [.sortedKeys])
+        _ = try await client.data(path: "/functions/v1/ledger", body: body, expectedUserID: ownerID)
+        do {
+            let completion = try JSONSerialization.data(withJSONObject: ["operation": "complete_review_item", "payload": ["id": id]])
+            _ = try await client.data(path: "/functions/v1/ios-data", body: completion, expectedUserID: ownerID)
+        } catch {
+            throw AppError.validation("Transfer telah tersimpan; penyelesaian draft belum berhasil. Coba lagi dengan rincian yang sama agar tidak membuat transfer ganda.")
+        }
     }
 
     func mergeReviewItem(id: String, into transactionID: String) async throws { try await dataAction("merge_review_item", payload: ["id": id, "transaction_id": transactionID]) }

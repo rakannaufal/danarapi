@@ -1,0 +1,2642 @@
+{
+  "version": "2026-10-05.1",
+  "categories": [
+    {
+      "id": "shopping",
+      "title": "Belanja dan promo",
+      "icon": "tag"
+    },
+    {
+      "id": "daily",
+      "title": "Biaya sehari-hari",
+      "icon": "house"
+    },
+    {
+      "id": "personal",
+      "title": "Keuangan pribadi",
+      "icon": "wallet"
+    },
+    {
+      "id": "debt",
+      "title": "Cicilan dan utang",
+      "icon": "bank"
+    },
+    {
+      "id": "business",
+      "title": "Usaha dan penjualan",
+      "icon": "chart"
+    },
+    {
+      "id": "zakat",
+      "title": "Zakat",
+      "icon": "moon"
+    },
+    {
+      "id": "obligations",
+      "title": "Fidyah dan kafarat",
+      "icon": "moon"
+    },
+    {
+      "id": "inheritance",
+      "title": "Warisan dan wasiat",
+      "icon": "people"
+    }
+  ],
+  "sources": {
+    "q9_103": {
+      "title": "At-Taubah 9:103",
+      "status": "Al-Qur'an",
+      "url": "https://quran.com/9/103",
+      "meaning": "Perintah mengambil zakat dari harta untuk membersihkan dan menyucikan pemiliknya."
+    },
+    "q2_267": {
+      "title": "Al-Baqarah 2:267",
+      "status": "Al-Qur'an",
+      "url": "https://quran.com/2/267",
+      "meaning": "Perintah menginfakkan sebagian hasil usaha yang baik dan hasil bumi."
+    },
+    "b1454": {
+      "title": "Shahih al-Bukhari 1454",
+      "status": "Sahih",
+      "url": "https://sunnah.com/bukhari:1454",
+      "meaning": "Surat Abu Bakar memuat ketentuan zakat unta, kambing, serta perak sebesar seperempat dari sepersepuluh (2,5%)."
+    },
+    "d1573": {
+      "title": "Sunan Abu Dawud 1573",
+      "status": "Sahih menurut al-Albani",
+      "url": "https://sunnah.com/abudawud:1573",
+      "meaning": "Riwayat Ali menyebut zakat dua ratus dirham setelah satu tahun dan dua puluh dinar dengan zakat setengah dinar."
+    },
+    "d1576": {
+      "title": "Sunan Abu Dawud 1576",
+      "status": "Sahih menurut al-Albani",
+      "url": "https://sunnah.com/abudawud:1576",
+      "meaning": "Muadz diperintahkan mengambil seekor tabi atau tabiah untuk setiap tiga puluh sapi dan seekor musinnah untuk setiap empat puluh sapi."
+    },
+    "b1483": {
+      "title": "Shahih al-Bukhari 1483",
+      "status": "Sahih",
+      "url": "https://sunnah.com/bukhari:1483",
+      "meaning": "Hasil yang diairi hujan atau sumber alami dikenai sepersepuluh; yang diairi dengan pengangkutan air dikenai setengahnya."
+    },
+    "b1405": {
+      "title": "Shahih al-Bukhari 1405",
+      "status": "Sahih",
+      "url": "https://sunnah.com/bukhari:1405",
+      "meaning": "Tidak ada zakat pada hasil kurang dari lima wasaq, perak kurang dari lima uqiyah, dan unta kurang dari lima ekor."
+    },
+    "b1499": {
+      "title": "Shahih al-Bukhari 1499",
+      "status": "Sahih",
+      "url": "https://sunnah.com/bukhari:1499",
+      "meaning": "Pada rikaz terdapat kewajiban seperlima (20%). Penentuan apakah temuan termasuk rikaz memerlukan pemeriksaan sifat harta."
+    },
+    "b1503": {
+      "title": "Shahih al-Bukhari 1503",
+      "status": "Sahih",
+      "url": "https://sunnah.com/bukhari:1503",
+      "meaning": "Rasulullah mewajibkan zakat fitrah satu sha kurma atau gandum atas kaum Muslim, kecil maupun besar, dan memerintahkannya sebelum salat Id."
+    },
+    "q2_184": {
+      "title": "Al-Baqarah 2:184",
+      "status": "Al-Qur'an",
+      "url": "https://quran.com/2/184",
+      "meaning": "Ayat menyebut fidyah berupa memberi makan orang miskin bagi kondisi yang diterangkan dalam ketentuan puasa."
+    },
+    "b4505": {
+      "title": "Shahih al-Bukhari 4505",
+      "status": "Sahih; penjelasan Ibnu Abbas",
+      "url": "https://sunnah.com/bukhari:4505",
+      "meaning": "Ibnu Abbas menjelaskan orang lanjut usia yang tidak mampu berpuasa memberi makan seorang miskin untuk setiap hari."
+    },
+    "q5_89": {
+      "title": "Al-Ma'idah 5:89",
+      "status": "Al-Qur'an",
+      "url": "https://quran.com/5/89",
+      "meaning": "Kafarat sumpah: memberi makan sepuluh orang miskin dengan makanan pertengahan keluarga, memberi pakaian, atau membebaskan budak. Orang yang tidak mampu berpuasa tiga hari."
+    },
+    "b1936": {
+      "title": "Shahih al-Bukhari 1936",
+      "status": "Sahih",
+      "url": "https://sunnah.com/bukhari:1936",
+      "meaning": "Dalam kasus hubungan suami istri pada siang Ramadan, Nabi menjelaskan urutan membebaskan budak, berpuasa dua bulan berturut-turut, lalu memberi makan enam puluh orang miskin ketika tidak mampu."
+    },
+    "q4_11": {
+      "title": "An-Nisa 4:11",
+      "status": "Al-Qur'an",
+      "url": "https://quran.com/4/11",
+      "meaning": "Bagian anak dan orang tua, dengan ketentuan penyelesaian wasiat dan utang sebelum pembagian."
+    },
+    "q4_12": {
+      "title": "An-Nisa 4:12",
+      "status": "Al-Qur'an",
+      "url": "https://quran.com/4/12",
+      "meaning": "Bagian suami, istri, dan saudara seibu, setelah wasiat dan utang diselesaikan."
+    },
+    "q4_176": {
+      "title": "An-Nisa 4:176",
+      "status": "Al-Qur'an",
+      "url": "https://quran.com/4/176",
+      "meaning": "Ketentuan kalalah dan bagian saudara pada kondisi yang memenuhi syarat."
+    },
+    "b6732": {
+      "title": "Shahih al-Bukhari 6732",
+      "status": "Sahih",
+      "url": "https://sunnah.com/bukhari:6732",
+      "meaning": "Berikan bagian yang ditentukan kepada pemiliknya; sisanya untuk kerabat laki-laki terdekat yang berhak."
+    },
+    "b6736": {
+      "title": "Shahih al-Bukhari 6736",
+      "status": "Sahih",
+      "url": "https://sunnah.com/bukhari:6736",
+      "meaning": "Dalam kasus anak perempuan, cucu perempuan dari anak laki-laki, dan saudara perempuan: anak perempuan mendapat setengah, cucu perempuan seperenam untuk melengkapi dua pertiga, dan saudara perempuan menerima sisa."
+    },
+    "d2870": {
+      "title": "Sunan Abu Dawud 2870",
+      "status": "Hasan sahih menurut al-Albani",
+      "url": "https://sunnah.com/abudawud:2870",
+      "meaning": "Allah telah memberikan hak kepada setiap pemilik hak; tidak ada wasiat untuk ahli waris. Penerapan wasiat khusus dengan persetujuan ahli waris merupakan ketentuan fikih tersendiri."
+    },
+    "b2742": {
+      "title": "Shahih al-Bukhari 2742",
+      "status": "Sahih",
+      "url": "https://sunnah.com/bukhari:2742",
+      "meaning": "Dalam pembicaraan dengan Saad, Nabi membolehkan wasiat sepertiga dan menyatakan sepertiga itu banyak."
+    }
+  },
+  "calculators": [
+    {
+      "id": "discount",
+      "title": "Diskon",
+      "category": "shopping",
+      "description": "Harga akhir dan jumlah penghematan.",
+      "fields": [
+        {
+          "key": "price",
+          "label": "Harga awal",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "discount",
+          "label": "Diskon (%)",
+          "kind": "percent",
+          "default": ""
+        }
+      ],
+      "notes": [
+        "Diskon diterapkan pada harga awal. Harga akhir dibulatkan ke Rupiah terdekat."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "stacked-discount",
+      "title": "Diskon bertingkat",
+      "category": "shopping",
+      "description": "Hitung diskon berurutan, misalnya 20% lalu 10%.",
+      "fields": [
+        {
+          "key": "price",
+          "label": "Harga awal",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "first",
+          "label": "Diskon pertama (%)",
+          "kind": "percent",
+          "default": ""
+        },
+        {
+          "key": "second",
+          "label": "Diskon kedua (%)",
+          "kind": "percent",
+          "default": ""
+        },
+        {
+          "key": "third",
+          "label": "Diskon ketiga (%)",
+          "kind": "percent",
+          "default": "0"
+        }
+      ],
+      "notes": [
+        "Persentase diskon tidak dijumlahkan. Setiap diskon diterapkan pada sisa harga sebelumnya."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "tax-tip",
+      "title": "Pajak, service, dan tip",
+      "category": "shopping",
+      "description": "Rincian tambahan biaya sampai total pembayaran.",
+      "fields": [
+        {
+          "key": "subtotal",
+          "label": "Subtotal",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "service",
+          "label": "Service (%)",
+          "kind": "percent",
+          "default": "0"
+        },
+        {
+          "key": "tax",
+          "label": "Pajak (%)",
+          "kind": "percent",
+          "default": "0"
+        },
+        {
+          "key": "taxBase",
+          "label": "Dasar pajak",
+          "kind": "choice",
+          "default": "subtotal",
+          "options": [
+            {
+              "value": "subtotal",
+              "label": "Subtotal"
+            },
+            {
+              "value": "with-service",
+              "label": "Subtotal + service"
+            }
+          ]
+        },
+        {
+          "key": "tip",
+          "label": "Tip (%)",
+          "kind": "percent",
+          "default": "0"
+        },
+        {
+          "key": "tipBase",
+          "label": "Dasar tip",
+          "kind": "choice",
+          "default": "subtotal",
+          "options": [
+            {
+              "value": "subtotal",
+              "label": "Subtotal"
+            },
+            {
+              "value": "total",
+              "label": "Total setelah service dan pajak"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Tarif pajak dan service diisi sesuai tagihan. Setiap komponen dibulatkan ke Rupiah."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "unit-price",
+      "title": "Harga per satuan",
+      "category": "shopping",
+      "description": "Bandingkan dua produk menggunakan satuan yang sama.",
+      "fields": [
+        {
+          "key": "priceA",
+          "label": "Harga produk A",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "quantityA",
+          "label": "Isi produk A",
+          "kind": "decimal",
+          "default": "",
+          "unit": "gram / ml / buah",
+          "min": "0.000001"
+        },
+        {
+          "key": "priceB",
+          "label": "Harga produk B",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "quantityB",
+          "label": "Isi produk B",
+          "kind": "decimal",
+          "default": "",
+          "unit": "gram / ml / buah",
+          "min": "0.000001"
+        }
+      ],
+      "notes": [
+        "Samakan satuan kedua produk sebelum membandingkan. Hasil harga satuan ditampilkan hingga enam desimal."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "promo",
+      "title": "Promo dan cashback",
+      "category": "shopping",
+      "description": "Bandingkan biaya efektif dua penawaran.",
+      "fields": [
+        {
+          "key": "priceA",
+          "label": "Total harga penawaran A",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "discountA",
+          "label": "Diskon A (%)",
+          "kind": "percent",
+          "default": "0"
+        },
+        {
+          "key": "deliveryA",
+          "label": "Ongkir / biaya A",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "cashbackA",
+          "label": "Cashback A (%)",
+          "kind": "percent",
+          "default": "0"
+        },
+        {
+          "key": "capA",
+          "label": "Batas cashback A (0 = tanpa batas)",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "priceB",
+          "label": "Total harga penawaran B",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "discountB",
+          "label": "Diskon B (%)",
+          "kind": "percent",
+          "default": "0"
+        },
+        {
+          "key": "deliveryB",
+          "label": "Ongkir / biaya B",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "cashbackB",
+          "label": "Cashback B (%)",
+          "kind": "percent",
+          "default": "0"
+        },
+        {
+          "key": "capB",
+          "label": "Batas cashback B (0 = tanpa batas)",
+          "kind": "money",
+          "default": "0"
+        }
+      ],
+      "notes": [
+        "Cashback dihitung dari harga setelah diskon, tanpa ongkir. Cashback dapat berupa saldo promo dengan syarat pemakaian; biaya efektif berbeda dari uang yang dibayar sekarang."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "subscriptions",
+      "title": "Biaya langganan",
+      "category": "daily",
+      "description": "Bandingkan paket bulanan dengan paket tahunan.",
+      "fields": [
+        {
+          "key": "monthly",
+          "label": "Biaya paket bulanan",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "annual",
+          "label": "Biaya paket tahunan",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "months",
+          "label": "Lama penggunaan (bulan)",
+          "kind": "integer",
+          "default": "12",
+          "min": "1",
+          "max": "120"
+        }
+      ],
+      "notes": [
+        "Paket tahunan dibeli untuk setiap periode 12 bulan yang dimulai. Pajak dan biaya tambahan harus sudah termasuk harga."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "travel",
+      "title": "Biaya perjalanan",
+      "category": "daily",
+      "description": "Total transportasi, penginapan, makan, dan aktivitas.",
+      "fields": [
+        {
+          "key": "people",
+          "label": "Jumlah pelancong",
+          "kind": "integer",
+          "default": "1",
+          "min": "1",
+          "max": "100"
+        },
+        {
+          "key": "days",
+          "label": "Jumlah hari",
+          "kind": "integer",
+          "default": "1",
+          "min": "1",
+          "max": "365"
+        },
+        {
+          "key": "nights",
+          "label": "Jumlah malam",
+          "kind": "integer",
+          "default": "0",
+          "max": "365"
+        },
+        {
+          "key": "rooms",
+          "label": "Jumlah kamar",
+          "kind": "integer",
+          "default": "1",
+          "min": "1",
+          "max": "100"
+        },
+        {
+          "key": "transport",
+          "label": "Transportasi per orang",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "hotel",
+          "label": "Harga kamar per malam",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "food",
+          "label": "Makan per orang per hari",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "activities",
+          "label": "Aktivitas per orang",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "other",
+          "label": "Biaya lain seluruh rombongan",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "reserve",
+          "label": "Cadangan biaya (%)",
+          "kind": "percent",
+          "default": "0"
+        }
+      ],
+      "notes": [
+        "Transportasi diisi total pulang-pergi. Kamar dihitung per malam; biaya lain berlaku untuk seluruh rombongan. Template haji/umrah memakai rincian ini."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "vehicle",
+      "title": "Biaya kendaraan",
+      "category": "daily",
+      "description": "Biaya perjalanan dan biaya per kilometer.",
+      "fields": [
+        {
+          "key": "distance",
+          "label": "Jarak perjalanan",
+          "kind": "decimal",
+          "default": "",
+          "unit": "km",
+          "min": "0.000001"
+        },
+        {
+          "key": "efficiency",
+          "label": "Efisiensi BBM",
+          "kind": "decimal",
+          "default": "",
+          "unit": "km/liter",
+          "min": "0.000001"
+        },
+        {
+          "key": "fuelPrice",
+          "label": "Harga BBM per liter",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "toll",
+          "label": "Tol",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "parking",
+          "label": "Parkir",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "maintenance",
+          "label": "Cadangan servis per kilometer",
+          "kind": "money",
+          "default": "0"
+        }
+      ],
+      "notes": [
+        "Jarak harus mencakup seluruh perjalanan. Estimasi konsumsi BBM dipengaruhi kendaraan, lalu lintas, dan kondisi jalan."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "electricity",
+      "title": "Biaya listrik",
+      "category": "daily",
+      "description": "Estimasi konsumsi dan biaya satu jenis perangkat.",
+      "fields": [
+        {
+          "key": "watts",
+          "label": "Daya perangkat",
+          "kind": "decimal",
+          "default": "",
+          "unit": "watt"
+        },
+        {
+          "key": "hours",
+          "label": "Pemakaian per hari",
+          "kind": "decimal",
+          "default": "",
+          "unit": "jam",
+          "max": "24"
+        },
+        {
+          "key": "devices",
+          "label": "Jumlah perangkat",
+          "kind": "integer",
+          "default": "1",
+          "min": "1",
+          "max": "1000"
+        },
+        {
+          "key": "days",
+          "label": "Jumlah hari",
+          "kind": "integer",
+          "default": "30",
+          "min": "1",
+          "max": "366"
+        },
+        {
+          "key": "tariff",
+          "label": "Tarif listrik",
+          "kind": "decimal",
+          "default": "",
+          "unit": "Rp/kWh",
+          "min": "0.000001"
+        },
+        {
+          "key": "fixed",
+          "label": "Biaya tetap / administrasi",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "tax",
+          "label": "Pajak / tambahan (%)",
+          "kind": "percent",
+          "default": "0"
+        }
+      ],
+      "notes": [
+        "Tarif diisi sesuai golongan listrik. Estimasi daya rata-rata dapat berbeda dari daya maksimum pada label perangkat."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "housing",
+      "title": "Kos atau kontrakan",
+      "category": "daily",
+      "description": "Bandingkan biaya tinggal selama periode yang sama.",
+      "fields": [
+        {
+          "key": "months",
+          "label": "Lama tinggal (bulan)",
+          "kind": "integer",
+          "default": "12",
+          "min": "1",
+          "max": "120"
+        },
+        {
+          "key": "rentA",
+          "label": "Sewa bulanan kos A",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "utilitiesA",
+          "label": "Utilitas bulanan A",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "commuteA",
+          "label": "Transportasi bulanan A",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "setupA",
+          "label": "Biaya awal yang tidak kembali A",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "depositA",
+          "label": "Deposit yang dapat kembali A",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "rentB",
+          "label": "Sewa bulanan kontrakan B",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "utilitiesB",
+          "label": "Utilitas bulanan B",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "commuteB",
+          "label": "Transportasi bulanan B",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "setupB",
+          "label": "Biaya awal yang tidak kembali B",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "depositB",
+          "label": "Deposit yang dapat kembali B",
+          "kind": "money",
+          "default": "0"
+        }
+      ],
+      "notes": [
+        "Deposit ditampilkan sebagai kebutuhan uang awal, terpisah dari biaya tinggal. Masukkan sewa tahunan sebagai ekuivalen bulanan."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "emergency",
+      "title": "Dana darurat",
+      "category": "personal",
+      "description": "Kebutuhan cadangan berdasarkan biaya hidup.",
+      "fields": [
+        {
+          "key": "monthly",
+          "label": "Pengeluaran wajib bulanan",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "months",
+          "label": "Bulan perlindungan",
+          "kind": "integer",
+          "default": "6",
+          "min": "1",
+          "max": "36"
+        },
+        {
+          "key": "available",
+          "label": "Dana darurat tersedia",
+          "kind": "money",
+          "default": "0"
+        }
+      ],
+      "notes": [
+        "Jumlah bulan dipilih berdasarkan tanggungan, kestabilan penghasilan, dan kebutuhan Anda. Target dapat diterapkan ke fitur Target yang sudah tersedia."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "wage",
+      "title": "Gaji per jam atau hari",
+      "category": "personal",
+      "description": "Nilai waktu kerja dari pendapatan bersih.",
+      "fields": [
+        {
+          "key": "salary",
+          "label": "Pendapatan bersih bulanan",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "days",
+          "label": "Hari kerja per bulan",
+          "kind": "integer",
+          "default": "22",
+          "min": "1",
+          "max": "31"
+        },
+        {
+          "key": "hours",
+          "label": "Jam kerja per hari",
+          "kind": "decimal",
+          "default": "8",
+          "min": "0.000001",
+          "max": "24"
+        }
+      ],
+      "notes": [
+        "Perhitungan ini tidak menentukan hak upah lembur atau kewajiban ketenagakerjaan."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "compound",
+      "title": "Bunga majemuk",
+      "category": "personal",
+      "description": "Simulasi pertumbuhan dengan setoran rutin.",
+      "fields": [
+        {
+          "key": "principal",
+          "label": "Simpanan awal",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "contribution",
+          "label": "Setoran bulanan",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "annualRate",
+          "label": "Imbal hasil nominal tahunan (%)",
+          "kind": "percent",
+          "default": "0",
+          "max": "100"
+        },
+        {
+          "key": "months",
+          "label": "Lama simpan (bulan)",
+          "kind": "integer",
+          "default": "12",
+          "min": "1",
+          "max": "600"
+        },
+        {
+          "key": "timing",
+          "label": "Waktu setoran",
+          "kind": "choice",
+          "default": "end",
+          "options": [
+            {
+              "value": "end",
+              "label": "Akhir bulan"
+            },
+            {
+              "value": "start",
+              "label": "Awal bulan"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Imbal hasil diasumsikan tetap dan dimajemukkan bulanan. Pajak, biaya, dan risiko investasi belum termasuk."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "inflation",
+      "title": "Dampak inflasi",
+      "category": "personal",
+      "description": "Perkiraan perubahan harga dan daya beli.",
+      "fields": [
+        {
+          "key": "price",
+          "label": "Harga / nilai uang saat ini",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "inflation",
+          "label": "Inflasi tahunan (%)",
+          "kind": "percent",
+          "default": "3",
+          "max": "100"
+        },
+        {
+          "key": "years",
+          "label": "Jangka waktu (tahun)",
+          "kind": "integer",
+          "default": "5",
+          "min": "1",
+          "max": "100"
+        }
+      ],
+      "notes": [
+        "Inflasi diasumsikan tetap. Hasil merupakan proyeksi, bukan prakiraan resmi."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "currency",
+      "title": "Konversi mata uang",
+      "category": "personal",
+      "description": "Konversi menggunakan kurs yang Anda tentukan.",
+      "fields": [
+        {
+          "key": "direction",
+          "label": "Arah konversi",
+          "kind": "choice",
+          "default": "to-idr",
+          "options": [
+            {
+              "value": "to-idr",
+              "label": "Valuta asing ke Rupiah"
+            },
+            {
+              "value": "from-idr",
+              "label": "Rupiah ke valuta asing"
+            }
+          ]
+        },
+        {
+          "key": "currency",
+          "label": "Mata uang",
+          "kind": "choice",
+          "default": "USD",
+          "options": [
+            {
+              "value": "USD",
+              "label": "USD"
+            },
+            {
+              "value": "SAR",
+              "label": "SAR"
+            },
+            {
+              "value": "MYR",
+              "label": "MYR"
+            },
+            {
+              "value": "SGD",
+              "label": "SGD"
+            },
+            {
+              "value": "EUR",
+              "label": "EUR"
+            },
+            {
+              "value": "JPY",
+              "label": "JPY"
+            }
+          ]
+        },
+        {
+          "key": "amount",
+          "label": "Nominal yang ditukar",
+          "kind": "decimal",
+          "default": "",
+          "min": "0.000001"
+        },
+        {
+          "key": "rate",
+          "label": "Kurs Rupiah per 1 unit valuta",
+          "kind": "decimal",
+          "default": "",
+          "min": "0.000001"
+        },
+        {
+          "key": "feeRate",
+          "label": "Biaya penukaran (%)",
+          "kind": "percent",
+          "default": "0"
+        },
+        {
+          "key": "fee",
+          "label": "Biaya tetap Rupiah",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "rateDate",
+          "label": "Tanggal kurs",
+          "kind": "date",
+          "default": "today"
+        }
+      ],
+      "notes": [
+        "Kurs diisi manual; bukan kurs langsung. Biaya persentase dihitung dari nilai Rupiah; biaya tetap selalu dalam Rupiah."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "loan",
+      "title": "Cicilan pinjaman",
+      "category": "debt",
+      "description": "Rincian angsuran dan total bunga.",
+      "fields": [
+        {
+          "key": "principal",
+          "label": "Pokok pinjaman",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "annualRate",
+          "label": "Bunga nominal tahunan (%)",
+          "kind": "percent",
+          "default": "0",
+          "max": "100"
+        },
+        {
+          "key": "months",
+          "label": "Tenor (bulan)",
+          "kind": "integer",
+          "default": "12",
+          "min": "1",
+          "max": "600"
+        },
+        {
+          "key": "fee",
+          "label": "Biaya administrasi di awal",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "method",
+          "label": "Metode bunga",
+          "kind": "choice",
+          "default": "annuity",
+          "options": [
+            {
+              "value": "annuity",
+              "label": "Anuitas / efektif"
+            },
+            {
+              "value": "flat",
+              "label": "Flat"
+            },
+            {
+              "value": "declining",
+              "label": "Pokok tetap, bunga menurun"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Bunga efektif dihitung dari sisa pokok. Bunga flat dihitung dari pokok awal. Angsuran terakhir menyesuaikan sisa; kontrak bank dapat memakai pembulatan berbeda."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "fixed-margin",
+      "title": "Cicilan margin tetap",
+      "category": "debt",
+      "description": "Angsuran berdasarkan harga dan margin yang disepakati.",
+      "fields": [
+        {
+          "key": "price",
+          "label": "Harga pokok barang",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "margin",
+          "label": "Total margin yang disepakati",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "downPayment",
+          "label": "Uang muka",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "fee",
+          "label": "Biaya lain di awal",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "months",
+          "label": "Tenor (bulan)",
+          "kind": "integer",
+          "default": "12",
+          "min": "1",
+          "max": "600"
+        }
+      ],
+      "notes": [
+        "Margin diisi nominal total dari akad, bukan persentase bunga tahunan. Biaya administrasi di awal dipisahkan. Hasil tidak menilai keabsahan akad."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "debt-payoff",
+      "title": "Pelunasan utang",
+      "category": "debt",
+      "description": "Durasi pelunasan dengan tambahan pembayaran.",
+      "fields": [
+        {
+          "key": "principal",
+          "label": "Sisa pokok utang",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "annualRate",
+          "label": "Bunga nominal tahunan (%)",
+          "kind": "percent",
+          "default": "0",
+          "max": "100"
+        },
+        {
+          "key": "payment",
+          "label": "Pembayaran bulanan",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "extra",
+          "label": "Tambahan pembayaran bulanan",
+          "kind": "money",
+          "default": "0"
+        }
+      ],
+      "notes": [
+        "Bunga diasumsikan efektif bulanan. Pembayaran harus melebihi bunga bulan pertama. Penalti dan biaya pelunasan belum termasuk; simulasi dibatasi 600 bulan."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "debt-ratio",
+      "title": "Rasio cicilan",
+      "category": "debt",
+      "description": "Porsi penghasilan yang dipakai membayar cicilan.",
+      "fields": [
+        {
+          "key": "income",
+          "label": "Penghasilan bersih bulanan",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "existing",
+          "label": "Total cicilan bulanan saat ini",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "newPayment",
+          "label": "Rencana cicilan baru",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "limit",
+          "label": "Batas pribadi (%)",
+          "kind": "percent",
+          "default": "30"
+        }
+      ],
+      "notes": [
+        "Batas rasio adalah pilihan perencanaan pribadi. Persetujuan kredit dan kemampuan bayar bergantung pada kondisi lengkap Anda."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "selling-price",
+      "title": "Modal dan harga jual",
+      "category": "business",
+      "description": "Harga jual berdasarkan biaya dan target keuntungan.",
+      "fields": [
+        {
+          "key": "cost",
+          "label": "Modal / biaya per unit",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "profit",
+          "label": "Target keuntungan (%)",
+          "kind": "percent",
+          "default": "20"
+        },
+        {
+          "key": "basis",
+          "label": "Metode keuntungan",
+          "kind": "choice",
+          "default": "markup",
+          "options": [
+            {
+              "value": "markup",
+              "label": "Markup dari modal"
+            },
+            {
+              "value": "margin",
+              "label": "Margin dari harga jual"
+            }
+          ]
+        },
+        {
+          "key": "fee",
+          "label": "Biaya platform dari harga jual (%)",
+          "kind": "percent",
+          "default": "0"
+        }
+      ],
+      "notes": [
+        "Biaya platform dimasukkan dalam harga. Target margin ditambah biaya platform harus kurang dari 100%."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "margin",
+      "title": "Margin dan markup",
+      "category": "business",
+      "description": "Laba per unit dan kedua ukuran persentasenya.",
+      "fields": [
+        {
+          "key": "cost",
+          "label": "Modal per unit",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "price",
+          "label": "Harga jual per unit",
+          "kind": "money",
+          "default": ""
+        }
+      ],
+      "notes": [
+        "Margin = laba dibagi harga jual. Markup = laba dibagi modal. Harga di bawah modal menghasilkan persentase negatif."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "break-even",
+      "title": "Titik impas usaha",
+      "category": "business",
+      "description": "Penjualan minimum untuk menutup biaya.",
+      "fields": [
+        {
+          "key": "fixed",
+          "label": "Biaya tetap per periode",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "variable",
+          "label": "Biaya variabel per unit",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "price",
+          "label": "Harga jual per unit",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "sales",
+          "label": "Rencana unit terjual",
+          "kind": "integer",
+          "default": "0",
+          "max": "1000000"
+        }
+      ],
+      "notes": [
+        "Harga jual harus lebih tinggi dari biaya variabel. Unit titik impas dibulatkan ke atas."
+      ],
+      "references": [],
+      "method": "Perhitungan estimasi berdasarkan angka yang Anda masukkan."
+    },
+    {
+      "id": "zakat-maal",
+      "title": "Zakat maal gabungan",
+      "category": "zakat",
+      "description": "Gabungkan harta wajib zakat tanpa menghitung aset dua kali.",
+      "fields": [
+        {
+          "key": "cash",
+          "label": "Uang tunai",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "savings",
+          "label": "Tabungan / simpanan",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "gold",
+          "label": "Nilai emas wajib zakat",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "silver",
+          "label": "Nilai perak wajib zakat",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "trade",
+          "label": "Nilai harta perdagangan",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "investment",
+          "label": "Nilai investasi wajib zakat",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "receivables",
+          "label": "Piutang yang dapat ditagih",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "deduction",
+          "label": "Metode pengurang",
+          "kind": "choice",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "Tanpa pengurangan kewajiban"
+            },
+            {
+              "value": "due",
+              "label": "Kurangi kewajiban yang memenuhi ketentuan"
+            }
+          ]
+        },
+        {
+          "key": "liabilities",
+          "label": "Kewajiban jatuh tempo yang boleh dikurangkan",
+          "kind": "money",
+          "default": "0",
+          "visible": {
+            "deduction": "due"
+          }
+        },
+        {
+          "key": "benchmark",
+          "label": "Standar nisab",
+          "kind": "choice",
+          "default": "gold",
+          "options": [
+            {
+              "value": "gold",
+              "label": "85 gram emas murni"
+            },
+            {
+              "value": "silver",
+              "label": "595 gram perak murni"
+            }
+          ]
+        },
+        {
+          "key": "metalPrice",
+          "label": "Harga per gram logam nisab",
+          "kind": "money",
+          "default": "",
+          "min": "1"
+        },
+        {
+          "key": "priceDate",
+          "label": "Tanggal harga logam",
+          "kind": "date",
+          "default": "today"
+        },
+        {
+          "key": "owned",
+          "label": "Harta dimiliki sempurna",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "haul",
+          "label": "Telah mencapai satu haul Hijriah",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Gunakan harga dan standar nisab dari rujukan yang Anda pilih. Nilai konversi 20 dinar / 200 dirham ke gram merupakan standar fikih, bukan angka gram dalam hadis.",
+        "Haul mengikuti tahun Hijriah. Pengurangan kewajiban berbeda antar pendapat; masukkan hanya kewajiban yang memang boleh dikurangkan.",
+        "Zakat dibulatkan ke atas ke Rupiah untuk menghindari kekurangan pembayaran.",
+        "Emas, saham, dan piutang yang sudah masuk nilai usaha tidak dimasukkan lagi. Hasil panen, ternak, dan rikaz dihitung dengan ketentuan masing-masing."
+      ],
+      "references": [
+        "q9_103",
+        "b1454",
+        "d1573"
+      ],
+      "method": "Simulasi zakat harta 2,5% untuk satu haul Hijriah; standar emas 85 gram atau perak 595 gram. Pilihan pengurang dinyatakan secara eksplisit."
+    },
+    {
+      "id": "zakat-income",
+      "title": "Zakat penghasilan",
+      "category": "zakat",
+      "description": "Perhitungan penghasilan bulanan atau tahunan.",
+      "fields": [
+        {
+          "key": "income",
+          "label": "Total penghasilan pada periode pilihan",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "period",
+          "label": "Periode penghasilan",
+          "kind": "choice",
+          "default": "annual",
+          "options": [
+            {
+              "value": "annual",
+              "label": "Tahunan"
+            },
+            {
+              "value": "monthly",
+              "label": "Bulanan"
+            }
+          ]
+        },
+        {
+          "key": "basis",
+          "label": "Dasar penghasilan",
+          "kind": "choice",
+          "default": "gross",
+          "options": [
+            {
+              "value": "gross",
+              "label": "Bruto"
+            },
+            {
+              "value": "net",
+              "label": "Net setelah pengurang yang diperbolehkan"
+            }
+          ]
+        },
+        {
+          "key": "expenses",
+          "label": "Pengurang yang diperbolehkan",
+          "kind": "money",
+          "default": "0",
+          "visible": {
+            "basis": "net"
+          }
+        },
+        {
+          "key": "goldPrice",
+          "label": "Harga emas murni per gram",
+          "kind": "money",
+          "default": "",
+          "min": "1"
+        },
+        {
+          "key": "priceDate",
+          "label": "Tanggal harga emas",
+          "kind": "date",
+          "default": "today"
+        },
+        {
+          "key": "owned",
+          "label": "Penghasilan telah diterima / dimiliki",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Metode Indonesia: nisab tahunan senilai 85 gram emas dan tarif 2,5%, merujuk Fatwa MUI Nomor 3 Tahun 2003.",
+        "Nisab bulanan merupakan pembagian nisab tahunan menjadi 12 untuk pembayaran berkala. Total tahunan tetap perlu direkonsiliasi.",
+        "Tidak ada hadis sahih yang menyebut gaji modern secara khusus. Penerapannya adalah ijtihad atas dalil umum; pilihan bruto/net harus mengikuti rujukan Anda."
+      ],
+      "references": [
+        "q9_103",
+        "q2_267",
+        "d1573"
+      ],
+      "method": "Metode zakat penghasilan Indonesia, Fatwa MUI Nomor 3 Tahun 2003; pembayaran bulanan adalah pembayaran berkala, bukan haul bulanan."
+    },
+    {
+      "id": "zakat-savings",
+      "title": "Zakat uang dan tabungan",
+      "category": "zakat",
+      "description": "Hitung simpanan yang memenuhi nisab dan haul.",
+      "fields": [
+        {
+          "key": "assets",
+          "label": "Total uang / tabungan wajib zakat",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "deduction",
+          "label": "Metode pengurang",
+          "kind": "choice",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "Tanpa pengurangan kewajiban"
+            },
+            {
+              "value": "due",
+              "label": "Kurangi kewajiban yang memenuhi ketentuan"
+            }
+          ]
+        },
+        {
+          "key": "liabilities",
+          "label": "Kewajiban jatuh tempo yang boleh dikurangkan",
+          "kind": "money",
+          "default": "0",
+          "visible": {
+            "deduction": "due"
+          }
+        },
+        {
+          "key": "benchmark",
+          "label": "Standar nisab",
+          "kind": "choice",
+          "default": "gold",
+          "options": [
+            {
+              "value": "gold",
+              "label": "85 gram emas murni"
+            },
+            {
+              "value": "silver",
+              "label": "595 gram perak murni"
+            }
+          ]
+        },
+        {
+          "key": "metalPrice",
+          "label": "Harga per gram logam nisab",
+          "kind": "money",
+          "default": "",
+          "min": "1"
+        },
+        {
+          "key": "priceDate",
+          "label": "Tanggal harga logam",
+          "kind": "date",
+          "default": "today"
+        },
+        {
+          "key": "owned",
+          "label": "Harta dimiliki sempurna",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "haul",
+          "label": "Telah mencapai satu haul Hijriah",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Gunakan harga dan standar nisab dari rujukan yang Anda pilih. Nilai konversi 20 dinar / 200 dirham ke gram merupakan standar fikih, bukan angka gram dalam hadis.",
+        "Haul mengikuti tahun Hijriah. Pengurangan kewajiban berbeda antar pendapat; masukkan hanya kewajiban yang memang boleh dikurangkan.",
+        "Zakat dibulatkan ke atas ke Rupiah untuk menghindari kekurangan pembayaran.",
+        "Penghasilan yang masih tersimpan dihitung sebagai aset saat penilaian haul; perhatikan zakat yang sudah dibayarkan agar tidak dihitung ganda."
+      ],
+      "references": [
+        "q9_103",
+        "b1454",
+        "d1573"
+      ],
+      "method": "Simulasi zakat harta 2,5% untuk satu haul Hijriah; standar emas 85 gram atau perak 595 gram. Pilihan pengurang dinyatakan secara eksplisit."
+    },
+    {
+      "id": "zakat-gold",
+      "title": "Zakat emas",
+      "category": "zakat",
+      "description": "Berat murni, nisab, dan nilai zakat.",
+      "fields": [
+        {
+          "key": "weight",
+          "label": "Berat total",
+          "kind": "decimal",
+          "default": "",
+          "unit": "gram"
+        },
+        {
+          "key": "purity",
+          "label": "Kadar kemurnian (%)",
+          "kind": "percent",
+          "default": "100"
+        },
+        {
+          "key": "price",
+          "label": "Harga logam murni per gram",
+          "kind": "money",
+          "default": "",
+          "min": "1"
+        },
+        {
+          "key": "priceDate",
+          "label": "Tanggal harga logam",
+          "kind": "date",
+          "default": "today"
+        },
+        {
+          "key": "jewelry",
+          "label": "Perlakuan perhiasan",
+          "kind": "choice",
+          "default": "include",
+          "options": [
+            {
+              "value": "include",
+              "label": "Termasuk perhiasan menurut pendapat yang dipilih"
+            },
+            {
+              "value": "exclude",
+              "label": "Kecualikan perhiasan pemakaian wajar"
+            }
+          ]
+        },
+        {
+          "key": "jewelryWeight",
+          "label": "Berat perhiasan yang dikecualikan",
+          "kind": "decimal",
+          "default": "0",
+          "unit": "gram",
+          "visible": {
+            "jewelry": "exclude"
+          }
+        },
+        {
+          "key": "owned",
+          "label": "Harta dimiliki sempurna",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "haul",
+          "label": "Telah mencapai satu haul Hijriah",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Gunakan harga dan standar nisab dari rujukan yang Anda pilih. Nilai konversi 20 dinar / 200 dirham ke gram merupakan standar fikih, bukan angka gram dalam hadis.",
+        "Haul mengikuti tahun Hijriah. Pengurangan kewajiban berbeda antar pendapat; masukkan hanya kewajiban yang memang boleh dikurangkan.",
+        "Zakat dibulatkan ke atas ke Rupiah untuk menghindari kekurangan pembayaran.",
+        "Nisab menggunakan 85 gram logam murni. Perhiasan pemakaian memiliki perbedaan pendapat; aplikasi menampilkan pilihan, tanpa menetapkan satu pendapat untuk semua pengguna."
+      ],
+      "references": [
+        "d1573",
+        "b1454"
+      ],
+      "method": "Tarif 2,5%; kadar logam dinormalisasi ke berat murni sebelum dibandingkan dengan nisab."
+    },
+    {
+      "id": "zakat-silver",
+      "title": "Zakat perak",
+      "category": "zakat",
+      "description": "Berat murni, nisab, dan nilai zakat.",
+      "fields": [
+        {
+          "key": "weight",
+          "label": "Berat total",
+          "kind": "decimal",
+          "default": "",
+          "unit": "gram"
+        },
+        {
+          "key": "purity",
+          "label": "Kadar kemurnian (%)",
+          "kind": "percent",
+          "default": "100"
+        },
+        {
+          "key": "price",
+          "label": "Harga logam murni per gram",
+          "kind": "money",
+          "default": "",
+          "min": "1"
+        },
+        {
+          "key": "priceDate",
+          "label": "Tanggal harga logam",
+          "kind": "date",
+          "default": "today"
+        },
+        {
+          "key": "jewelry",
+          "label": "Perlakuan perhiasan",
+          "kind": "choice",
+          "default": "include",
+          "options": [
+            {
+              "value": "include",
+              "label": "Termasuk perhiasan menurut pendapat yang dipilih"
+            },
+            {
+              "value": "exclude",
+              "label": "Kecualikan perhiasan pemakaian wajar"
+            }
+          ]
+        },
+        {
+          "key": "jewelryWeight",
+          "label": "Berat perhiasan yang dikecualikan",
+          "kind": "decimal",
+          "default": "0",
+          "unit": "gram",
+          "visible": {
+            "jewelry": "exclude"
+          }
+        },
+        {
+          "key": "owned",
+          "label": "Harta dimiliki sempurna",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "haul",
+          "label": "Telah mencapai satu haul Hijriah",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Gunakan harga dan standar nisab dari rujukan yang Anda pilih. Nilai konversi 20 dinar / 200 dirham ke gram merupakan standar fikih, bukan angka gram dalam hadis.",
+        "Haul mengikuti tahun Hijriah. Pengurangan kewajiban berbeda antar pendapat; masukkan hanya kewajiban yang memang boleh dikurangkan.",
+        "Zakat dibulatkan ke atas ke Rupiah untuk menghindari kekurangan pembayaran.",
+        "Nisab menggunakan 595 gram logam murni. Perhiasan pemakaian memiliki perbedaan pendapat; aplikasi menampilkan pilihan, tanpa menetapkan satu pendapat untuk semua pengguna."
+      ],
+      "references": [
+        "d1573",
+        "b1454"
+      ],
+      "method": "Tarif 2,5%; kadar logam dinormalisasi ke berat murni sebelum dibandingkan dengan nisab."
+    },
+    {
+      "id": "zakat-trade",
+      "title": "Zakat perdagangan",
+      "category": "zakat",
+      "description": "Harta usaha yang diperuntukkan untuk perdagangan.",
+      "fields": [
+        {
+          "key": "inventory",
+          "label": "Persediaan pada harga pasar",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "cash",
+          "label": "Kas usaha",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "receivables",
+          "label": "Piutang usaha yang dapat ditagih",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "deduction",
+          "label": "Metode pengurang",
+          "kind": "choice",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "Tanpa pengurangan kewajiban"
+            },
+            {
+              "value": "due",
+              "label": "Kurangi kewajiban yang memenuhi ketentuan"
+            }
+          ]
+        },
+        {
+          "key": "liabilities",
+          "label": "Kewajiban jatuh tempo yang boleh dikurangkan",
+          "kind": "money",
+          "default": "0",
+          "visible": {
+            "deduction": "due"
+          }
+        },
+        {
+          "key": "benchmark",
+          "label": "Standar nisab",
+          "kind": "choice",
+          "default": "gold",
+          "options": [
+            {
+              "value": "gold",
+              "label": "85 gram emas murni"
+            },
+            {
+              "value": "silver",
+              "label": "595 gram perak murni"
+            }
+          ]
+        },
+        {
+          "key": "metalPrice",
+          "label": "Harga per gram logam nisab",
+          "kind": "money",
+          "default": "",
+          "min": "1"
+        },
+        {
+          "key": "priceDate",
+          "label": "Tanggal harga logam",
+          "kind": "date",
+          "default": "today"
+        },
+        {
+          "key": "owned",
+          "label": "Harta dimiliki sempurna",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "haul",
+          "label": "Telah mencapai satu haul Hijriah",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Gunakan harga dan standar nisab dari rujukan yang Anda pilih. Nilai konversi 20 dinar / 200 dirham ke gram merupakan standar fikih, bukan angka gram dalam hadis.",
+        "Haul mengikuti tahun Hijriah. Pengurangan kewajiban berbeda antar pendapat; masukkan hanya kewajiban yang memang boleh dikurangkan.",
+        "Zakat dibulatkan ke atas ke Rupiah untuk menghindari kekurangan pembayaran.",
+        "Aset tetap operasional, seperti bangunan atau mesin yang tidak dijual, tidak dimasukkan sebagai persediaan.",
+        "Ketentuan perdagangan merupakan penerapan fikih atas dalil umum harta dan hasil usaha."
+      ],
+      "references": [
+        "q2_267",
+        "q9_103",
+        "b1454"
+      ],
+      "method": "Simulasi zakat harta 2,5% untuk satu haul Hijriah; standar emas 85 gram atau perak 595 gram. Pilihan pengurang dinyatakan secara eksplisit."
+    },
+    {
+      "id": "zakat-investment",
+      "title": "Zakat investasi",
+      "category": "zakat",
+      "description": "Dasar zakat mengikuti tujuan kepemilikan dan jenis aset.",
+      "fields": [
+        {
+          "key": "purpose",
+          "label": "Metode kepemilikan",
+          "kind": "choice",
+          "default": "trading",
+          "options": [
+            {
+              "value": "trading",
+              "label": "Diperdagangkan: nilai pasar + hasil tersimpan"
+            },
+            {
+              "value": "holding",
+              "label": "Dimiliki: bagian aset wajib zakat + hasil tersimpan"
+            }
+          ]
+        },
+        {
+          "key": "market",
+          "label": "Nilai pasar investasi",
+          "kind": "money",
+          "default": "0",
+          "visible": {
+            "purpose": "trading"
+          }
+        },
+        {
+          "key": "eligible",
+          "label": "Bagian aset wajib zakat menurut laporan / rujukan",
+          "kind": "money",
+          "default": "0",
+          "visible": {
+            "purpose": "holding"
+          }
+        },
+        {
+          "key": "returns",
+          "label": "Hasil investasi yang belum termasuk nilai di atas",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "paid",
+          "label": "Zakat yang sudah dibayarkan untuk aset / haul yang sama",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "deduction",
+          "label": "Metode pengurang",
+          "kind": "choice",
+          "default": "none",
+          "options": [
+            {
+              "value": "none",
+              "label": "Tanpa pengurangan kewajiban"
+            },
+            {
+              "value": "due",
+              "label": "Kurangi kewajiban yang memenuhi ketentuan"
+            }
+          ]
+        },
+        {
+          "key": "liabilities",
+          "label": "Kewajiban jatuh tempo yang boleh dikurangkan",
+          "kind": "money",
+          "default": "0",
+          "visible": {
+            "deduction": "due"
+          }
+        },
+        {
+          "key": "benchmark",
+          "label": "Standar nisab",
+          "kind": "choice",
+          "default": "gold",
+          "options": [
+            {
+              "value": "gold",
+              "label": "85 gram emas murni"
+            },
+            {
+              "value": "silver",
+              "label": "595 gram perak murni"
+            }
+          ]
+        },
+        {
+          "key": "metalPrice",
+          "label": "Harga per gram logam nisab",
+          "kind": "money",
+          "default": "",
+          "min": "1"
+        },
+        {
+          "key": "priceDate",
+          "label": "Tanggal harga logam",
+          "kind": "date",
+          "default": "today"
+        },
+        {
+          "key": "owned",
+          "label": "Harta dimiliki sempurna",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "haul",
+          "label": "Telah mencapai satu haul Hijriah",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Gunakan harga dan standar nisab dari rujukan yang Anda pilih. Nilai konversi 20 dinar / 200 dirham ke gram merupakan standar fikih, bukan angka gram dalam hadis.",
+        "Haul mengikuti tahun Hijriah. Pengurangan kewajiban berbeda antar pendapat; masukkan hanya kewajiban yang memang boleh dikurangkan.",
+        "Zakat dibulatkan ke atas ke Rupiah untuk menghindari kekurangan pembayaran.",
+        "Tidak seluruh nilai aset investasi jangka panjang otomatis menjadi dasar zakat. Gunakan data aset wajib zakat dari penerbit atau rujukan yang sesuai.",
+        "Ketentuan saham dan instrumen modern adalah ijtihad; dalil yang ditampilkan adalah dasar umum zakat harta."
+      ],
+      "references": [
+        "q9_103",
+        "q2_267",
+        "b1454"
+      ],
+      "method": "Pilih metode perdagangan atau bagian aset wajib zakat untuk kepemilikan jangka panjang. Pembayaran sebelumnya hanya dikurangkan untuk aset dan haul yang sama."
+    },
+    {
+      "id": "zakat-crops",
+      "title": "Zakat pertanian",
+      "category": "zakat",
+      "description": "Zakat hasil panen berdasarkan nisab dan pengairan.",
+      "fields": [
+        {
+          "key": "harvest",
+          "label": "Berat panen yang memenuhi jenis hasil wajib zakat",
+          "kind": "decimal",
+          "default": "",
+          "unit": "kg"
+        },
+        {
+          "key": "nisabKg",
+          "label": "Konversi lima wasaq menurut komoditas / rujukan",
+          "kind": "decimal",
+          "default": "",
+          "unit": "kg",
+          "min": "0.000001"
+        },
+        {
+          "key": "price",
+          "label": "Harga hasil panen per kg",
+          "kind": "decimal",
+          "default": "",
+          "unit": "Rp/kg",
+          "min": "0.000001"
+        },
+        {
+          "key": "irrigation",
+          "label": "Pengairan",
+          "kind": "choice",
+          "default": "natural",
+          "options": [
+            {
+              "value": "natural",
+              "label": "Alami: 10%"
+            },
+            {
+              "value": "paid",
+              "label": "Dengan usaha / biaya: 5%"
+            },
+            {
+              "value": "mixed",
+              "label": "Campuran setara: 7,5%"
+            }
+          ]
+        },
+        {
+          "key": "eligible",
+          "label": "Jenis hasil panen memenuhi ketentuan rujukan",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Nisab asal adalah lima wasaq, ukuran volume. Konversi ke kilogram berbeda menurut komoditas; masukkan angka dari lembaga zakat yang dipilih.",
+        "Tarif 10% dan 5% disebut dalam hadis. Tarif 7,5% adalah pendekatan fikih untuk pengairan campuran setara; campuran tidak setara perlu pemeriksaan metode.",
+        "Dihitung ketika panen dan tidak menunggu haul. Hasil kg ditampilkan terlebih dahulu; pembayaran uang mengikuti ketentuan rujukan."
+      ],
+      "references": [
+        "q2_267",
+        "b1483",
+        "b1405"
+      ],
+      "method": "Nisab lima wasaq; tarif 10%, 5%, atau metode campuran setara 7,5%."
+    },
+    {
+      "id": "zakat-livestock",
+      "title": "Zakat peternakan",
+      "category": "zakat",
+      "description": "Jumlah hewan zakat sesuai jenis dan jumlah ternak.",
+      "fields": [
+        {
+          "key": "animal",
+          "label": "Jenis ternak",
+          "kind": "choice",
+          "default": "sheep",
+          "options": [
+            {
+              "value": "sheep",
+              "label": "Kambing / domba"
+            },
+            {
+              "value": "cattle",
+              "label": "Sapi / kerbau"
+            },
+            {
+              "value": "camel",
+              "label": "Unta"
+            }
+          ]
+        },
+        {
+          "key": "count",
+          "label": "Jumlah ternak",
+          "kind": "integer",
+          "default": "",
+          "min": "1",
+          "max": "10000"
+        },
+        {
+          "key": "owned",
+          "label": "Ternak dimiliki sempurna",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "haul",
+          "label": "Telah mencapai satu haul Hijriah",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "grazing",
+          "label": "Ternak digembalakan dan bukan hewan kerja",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Hasil berupa jenis dan jumlah hewan, bukan persentase nilai uang. Umur hewan pembayaran harus memenuhi syarat.",
+        "Kalkulator memakai tabel zakat ternak gembalaan. Ternak untuk diperjualbelikan memakai Zakat perdagangan; perbedaan ketentuan pemeliharaan mengikuti rujukan.",
+        "Untuk jumlah besar, hasil memilih kombinasi ambang yang mencakup jumlah ternak tanpa melampauinya; pilihan hewan yang setara perlu dibicarakan dengan amil."
+      ],
+      "references": [
+        "b1454",
+        "d1576"
+      ],
+      "method": "Tabel kambing dan unta dari riwayat Abu Bakar; sapi berdasarkan ketentuan 30/40 dalam riwayat Muadz."
+    },
+    {
+      "id": "zakat-rikaz",
+      "title": "Zakat rikaz",
+      "category": "zakat",
+      "description": "Seperlima dari harta yang benar-benar termasuk rikaz.",
+      "fields": [
+        {
+          "key": "value",
+          "label": "Nilai harta rikaz",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "eligible",
+          "label": "Kategori rikaz telah dipastikan oleh pihak berwenang / rujukan",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Tarif 20%; tanpa menunggu haul pada metode jumhur. Barang hilang (luqathah), hadiah, dan hasil tambang tidak otomatis termasuk rikaz.",
+        "Kepemilikan dan kewajiban hukum atas temuan harus diselesaikan sebelum menggunakan hasil."
+      ],
+      "references": [
+        "b1499"
+      ],
+      "method": "Seperlima (20%) untuk kategori rikaz yang telah dipastikan."
+    },
+    {
+      "id": "zakat-fitrah",
+      "title": "Zakat fitrah",
+      "category": "zakat",
+      "description": "Kebutuhan bahan makanan pokok atau pembayaran uang.",
+      "fields": [
+        {
+          "key": "people",
+          "label": "Jumlah orang",
+          "kind": "integer",
+          "default": "1",
+          "min": "1",
+          "max": "1000"
+        },
+        {
+          "key": "kg",
+          "label": "Konversi satu sha menurut ketentuan daerah",
+          "kind": "decimal",
+          "default": "",
+          "unit": "kg/orang",
+          "min": "0.000001"
+        },
+        {
+          "key": "payment",
+          "label": "Metode pembayaran",
+          "kind": "choice",
+          "default": "food",
+          "options": [
+            {
+              "value": "food",
+              "label": "Bahan makanan pokok"
+            },
+            {
+              "value": "money",
+              "label": "Uang sesuai ketentuan daerah"
+            }
+          ]
+        },
+        {
+          "key": "perPerson",
+          "label": "Ketetapan uang per orang",
+          "kind": "money",
+          "default": "",
+          "visible": {
+            "payment": "money"
+          }
+        }
+      ],
+      "notes": [
+        "Hadis menyebut satu sha, bukan satu angka kilogram universal. Gunakan ketentuan makanan pokok dan konversi daerah Anda.",
+        "Pembayaran uang merupakan pilihan fikih / ketentuan lembaga; jumlah uang diisi dari ketetapan daerah.",
+        "Waktu pembayaran mengikuti ketentuan zakat fitrah dan dilakukan sebelum salat Id."
+      ],
+      "references": [
+        "b1503"
+      ],
+      "method": "Satu sha per orang; pilihan uang mengikuti pendapat dan ketentuan daerah yang dipilih."
+    },
+    {
+      "id": "fidyah",
+      "title": "Fidyah puasa",
+      "category": "obligations",
+      "description": "Jumlah porsi atau nilai pembayaran untuk hari yang wajib fidyah.",
+      "fields": [
+        {
+          "key": "days",
+          "label": "Jumlah hari",
+          "kind": "integer",
+          "default": "",
+          "min": "1",
+          "max": "10000"
+        },
+        {
+          "key": "condition",
+          "label": "Dasar kewajiban",
+          "kind": "choice",
+          "default": "chronic",
+          "options": [
+            {
+              "value": "chronic",
+              "label": "Usia lanjut / sakit menetap, tidak mampu berpuasa"
+            },
+            {
+              "value": "other",
+              "label": "Kondisi lain sudah dikonfirmasi sesuai rujukan"
+            }
+          ]
+        },
+        {
+          "key": "payment",
+          "label": "Metode pembayaran",
+          "kind": "choice",
+          "default": "food",
+          "options": [
+            {
+              "value": "food",
+              "label": "Porsi makanan"
+            },
+            {
+              "value": "money",
+              "label": "Uang menurut pendapat / ketentuan yang dipilih"
+            }
+          ]
+        },
+        {
+          "key": "perDay",
+          "label": "Nilai makanan / fidyah per hari",
+          "kind": "money",
+          "default": "",
+          "min": "1"
+        },
+        {
+          "key": "confirmed",
+          "label": "Kewajiban fidyah untuk kondisi ini sudah dipastikan",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Sakit sementara dan perjalanan umumnya berkaitan dengan qadha; tidak otomatis diganti fidyah.",
+        "Kehamilan, menyusui, dan keterlambatan qadha memiliki perbedaan pendapat. Gunakan pilihan kondisi lain setelah dasar kewajibannya dipastikan.",
+        "Jenis, ukuran makanan, dan kebolehan uang mengikuti rujukan. Aplikasi menghitung jumlah, tanpa menentukan diagnosis atau kewajiban dari kondisi medis."
+      ],
+      "references": [
+        "q2_184",
+        "b4505"
+      ],
+      "method": "Satu penerima / porsi yang memenuhi ketentuan per hari; nilai per hari berasal dari rujukan yang dipilih."
+    },
+    {
+      "id": "kaffarah-oath",
+      "title": "Kafarat sumpah",
+      "category": "obligations",
+      "description": "Kewajiban sepuluh penerima atau puasa bagi yang tidak mampu.",
+      "fields": [
+        {
+          "key": "count",
+          "label": "Jumlah kafarat yang telah dipastikan",
+          "kind": "integer",
+          "default": "1",
+          "min": "1",
+          "max": "1000"
+        },
+        {
+          "key": "method",
+          "label": "Kemampuan dan bentuk kafarat",
+          "kind": "choice",
+          "default": "food",
+          "options": [
+            {
+              "value": "food",
+              "label": "Mampu: memberi makan sepuluh orang miskin"
+            },
+            {
+              "value": "clothing",
+              "label": "Mampu: memberi pakaian sepuluh orang miskin"
+            },
+            {
+              "value": "fast",
+              "label": "Tidak mampu: puasa tiga hari"
+            }
+          ]
+        },
+        {
+          "key": "perPerson",
+          "label": "Biaya makanan / pakaian per penerima",
+          "kind": "money",
+          "default": "",
+          "min": "1",
+          "visible": {
+            "method": [
+              "food",
+              "clothing"
+            ]
+          }
+        },
+        {
+          "key": "confirmed",
+          "label": "Sumpah dan jumlah kewajiban kafarat sudah dipastikan",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Puasa berlaku jika tidak mampu menunaikan bentuk kafarat harta yang disebut dalam ayat; bukan pilihan bebas karena lebih murah.",
+        "Biaya hanya membantu perencanaan pemberian makanan / pakaian. Bentuk pembayaran dan ketentuan puasa mengikuti rujukan.",
+        "Jumlah sumpah yang menghasilkan satu atau beberapa kafarat perlu dipastikan terlebih dahulu."
+      ],
+      "references": [
+        "q5_89"
+      ],
+      "method": "Al-Maidah 5:89: sepuluh orang miskin; bila tidak mampu, puasa tiga hari."
+    },
+    {
+      "id": "kaffarah-ramadan",
+      "title": "Kafarat puasa Ramadan",
+      "category": "obligations",
+      "description": "Urutan kewajiban untuk kasus yang memenuhi ketentuan.",
+      "fields": [
+        {
+          "key": "count",
+          "label": "Jumlah kafarat yang telah dipastikan",
+          "kind": "integer",
+          "default": "1",
+          "min": "1",
+          "max": "1000"
+        },
+        {
+          "key": "stage",
+          "label": "Tahap kewajiban yang berlaku",
+          "kind": "choice",
+          "default": "fast",
+          "options": [
+            {
+              "value": "fast",
+              "label": "Tidak dapat membebaskan budak; mampu puasa dua bulan berturut-turut"
+            },
+            {
+              "value": "food",
+              "label": "Tidak mampu tahap sebelumnya; memberi makan 60 orang miskin"
+            }
+          ]
+        },
+        {
+          "key": "perPerson",
+          "label": "Biaya makanan per penerima",
+          "kind": "money",
+          "default": "",
+          "min": "1",
+          "visible": {
+            "stage": "food"
+          }
+        },
+        {
+          "key": "confirmed",
+          "label": "Jenis pelanggaran dan urutan kewajiban sudah dipastikan",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Hadis yang ditampilkan berkaitan dengan hubungan suami istri pada siang Ramadan. Makan/minum sengaja dan kasus lain memiliki perbedaan ketentuan fikih.",
+        "Puasa dua bulan mengikuti dua bulan berturut-turut menurut rujukan, tidak selalu tepat 60 hari kalender. Pengulangan pelanggaran tidak otomatis berarti kafarat dikalikan jumlah hari.",
+        "Kalkulator tidak mengalihkan kewajiban puasa menjadi uang berdasarkan pilihan kenyamanan."
+      ],
+      "references": [
+        "b1936"
+      ],
+      "method": "Urutan dalam hadis: membebaskan budak; jika tidak mampu, puasa dua bulan berturut-turut; jika tidak mampu, memberi makan 60 orang miskin."
+    },
+    {
+      "id": "wasiyyah",
+      "title": "Wasiat dan harta warisan bersih",
+      "category": "inheritance",
+      "description": "Selesaikan kewajiban sebelum pembagian warisan.",
+      "fields": [
+        {
+          "key": "estate",
+          "label": "Total harta milik pewaris",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "funeral",
+          "label": "Biaya pengurusan jenazah yang wajar",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "debts",
+          "label": "Utang dan kewajiban pewaris",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "bequest",
+          "label": "Wasiat yang diminta",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "beneficiaryHeir",
+          "label": "Penerima wasiat termasuk ahli waris",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "consent",
+          "label": "Semua ahli waris yang berhak sudah dewasa, cakap, dan menyetujui secara sukarela setelah pewaris wafat",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Masukkan hanya harta milik pewaris; pisahkan kepemilikan pasangan / pihak lain terlebih dahulu.",
+        "Batas umum wasiat adalah sepertiga dari sisa setelah pengurusan jenazah dan utang. Wasiat kepada ahli waris dan kelebihan sepertiga memerlukan persetujuan ahli waris yang berhak.",
+        "Persetujuan wasiat khusus diberikan setelah pewaris wafat oleh ahli waris yang dewasa dan cakap, tanpa paksaan. Persetujuan sebagian ahli waris hanya berlaku atas hak mereka; kasus ini atau adanya ahli waris anak memerlukan perhitungan khusus."
+      ],
+      "references": [
+        "q4_11",
+        "q4_12",
+        "b2742",
+        "d2870"
+      ],
+      "method": "Sisa harta setelah pengurusan jenazah, utang, dan wasiat yang sah; batas sepertiga pada kondisi umum."
+    },
+    {
+      "id": "faraid",
+      "title": "Warisan Islam (faraid)",
+      "category": "inheritance",
+      "description": "Bagian tetap, asabah, aul, dan radd dengan rincian per ahli waris.",
+      "fields": [
+        {
+          "key": "estate",
+          "label": "Total harta milik pewaris",
+          "kind": "money",
+          "default": ""
+        },
+        {
+          "key": "funeral",
+          "label": "Biaya pengurusan jenazah yang wajar",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "debts",
+          "label": "Utang dan kewajiban pewaris",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "bequest",
+          "label": "Wasiat yang diminta",
+          "kind": "money",
+          "default": "0"
+        },
+        {
+          "key": "beneficiaryHeir",
+          "label": "Penerima wasiat termasuk ahli waris",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "consent",
+          "label": "Semua ahli waris yang berhak sudah dewasa, cakap, dan menyetujui secara sukarela setelah pewaris wafat",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "sex",
+          "label": "Jenis kelamin pewaris",
+          "kind": "choice",
+          "default": "male",
+          "options": [
+            {
+              "value": "male",
+              "label": "Laki-laki"
+            },
+            {
+              "value": "female",
+              "label": "Perempuan"
+            }
+          ]
+        },
+        {
+          "key": "wives",
+          "label": "Istri yang berhak",
+          "kind": "integer",
+          "default": "0",
+          "max": "4",
+          "visible": {
+            "sex": "male"
+          }
+        },
+        {
+          "key": "husband",
+          "label": "Suami yang berhak",
+          "kind": "toggle",
+          "default": "false",
+          "visible": {
+            "sex": "female"
+          }
+        },
+        {
+          "key": "father",
+          "label": "Ayah hidup",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "mother",
+          "label": "Ibu hidup",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "grandfather",
+          "label": "Kakek dari garis ayah hidup",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "paternalGrandmother",
+          "label": "Nenek dari ayah hidup",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "maternalGrandmother",
+          "label": "Nenek dari ibu hidup",
+          "kind": "toggle",
+          "default": "false"
+        },
+        {
+          "key": "sons",
+          "label": "Anak laki-laki",
+          "kind": "integer",
+          "default": "0",
+          "max": "100"
+        },
+        {
+          "key": "daughters",
+          "label": "Anak perempuan",
+          "kind": "integer",
+          "default": "0",
+          "max": "100"
+        },
+        {
+          "key": "grandsons",
+          "label": "Cucu laki-laki dari anak laki-laki",
+          "kind": "integer",
+          "default": "0",
+          "max": "100"
+        },
+        {
+          "key": "granddaughters",
+          "label": "Cucu perempuan dari anak laki-laki",
+          "kind": "integer",
+          "default": "0",
+          "max": "100"
+        },
+        {
+          "key": "brothers",
+          "label": "Saudara laki-laki kandung",
+          "kind": "integer",
+          "default": "0",
+          "max": "100"
+        },
+        {
+          "key": "sisters",
+          "label": "Saudara perempuan kandung",
+          "kind": "integer",
+          "default": "0",
+          "max": "100"
+        },
+        {
+          "key": "paternalBrothers",
+          "label": "Saudara laki-laki seayah",
+          "kind": "integer",
+          "default": "0",
+          "max": "100"
+        },
+        {
+          "key": "paternalSisters",
+          "label": "Saudara perempuan seayah",
+          "kind": "integer",
+          "default": "0",
+          "max": "100"
+        },
+        {
+          "key": "maternalBrothers",
+          "label": "Saudara laki-laki seibu",
+          "kind": "integer",
+          "default": "0",
+          "max": "100"
+        },
+        {
+          "key": "maternalSisters",
+          "label": "Saudara perempuan seibu",
+          "kind": "integer",
+          "default": "0",
+          "max": "100"
+        },
+        {
+          "key": "scope",
+          "label": "Semua ahli waris sudah dicatat; tidak ada ahli waris lain, kehamilan, orang hilang, beda agama, pembunuhan, atau sengketa kepemilikan",
+          "kind": "toggle",
+          "default": "false"
+        }
+      ],
+      "notes": [
+        "Metode simulasi: faraid Sunni Hanafi. Kakek dari ayah menghalangi saudara; radd berlaku kepada pemilik bagian selain pasangan. Kasus hanya pasangan menampilkan sisa untuk penetapan lebih lanjut.",
+        "Cucu pada form hanya satu tingkat dari anak laki-laki. Keponakan, paman, sepupu, ahli waris lebih jauh, kehamilan, orang hilang, dan kasus penghalang pribadi memerlukan perhitungan khusus; jangan menandai konfirmasi lingkup jika kondisi ini ada.",
+        "Kasus ibu dengan ayah dan pasangan memakai sepertiga sisa (umariyyatain). Bagian istri dibagi antar istri yang berhak.",
+        "Hasil merupakan simulasi pembagian menurut metode tersebut. Persetujuan wasiat khusus tidak mewakili ahli waris anak atau yang tidak cakap. Persetujuan sebagian ahli waris memerlukan perhitungan khusus. Pembagian nyata harus memastikan ahli waris dan hak pihak lain melalui pihak yang berwenang."
+      ],
+      "references": [
+        "q4_11",
+        "q4_12",
+        "q4_176",
+        "b6732",
+        "b6736",
+        "b2742",
+        "d2870"
+      ],
+      "method": "Faraid Sunni Hanafi untuk ahli waris pada form; perbedaan mazhab dan kondisi khusus dinyatakan pada lingkup perhitungan."
+    }
+  ]
+}

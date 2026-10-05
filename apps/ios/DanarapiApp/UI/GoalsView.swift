@@ -12,7 +12,7 @@ struct GoalsView: View {
                     GoalCard(goal: goal, onProgress: { progressGoal = goal }, onEdit: { editing = goal })
                     NavigationLink("Lihat rincian", destination: GoalDetailView(goalID: goal.id)).font(.subheadline).frame(maxWidth: .infinity, alignment: .trailing)
                 }
-                if (app.snapshot.goals ?? []).isEmpty { EmptyRow(icon: "target", text: "Apa yang ingin Anda capai atau beli?") }
+                if (app.snapshot.goals ?? []).isEmpty { EmptyRow(icon: AppSymbol.goal.rawValue, text: "Apa yang ingin Anda capai atau beli?") }
                 Button("Tambah target", systemImage: "plus") { adding = true }.buttonStyle(PrimaryButtonStyle())
             }.padding(DesignTokens.gutter)
         }
@@ -25,6 +25,7 @@ struct GoalsView: View {
 
 struct GoalDetailView: View {
     @Environment(AppModel.self) private var app
+    @Environment(\.dismiss) private var dismiss
     let goalID: String
     @State private var editing = false
     @State private var progress = false
@@ -35,11 +36,12 @@ struct GoalDetailView: View {
                 if let goal {
                     GoalCard(goal: goal, onProgress: { progress = true }, onEdit: { editing = true })
                     PlanningHistoryView(request: PlanningHistoryRequest(goalID: goalID))
-                } else { ContentUnavailableView("Target tidak tersedia", systemImage: "target") }
+                } else { ContentUnavailableView("Target tidak tersedia", systemImage: AppSymbol.goal.rawValue) }
             }.padding(DesignTokens.gutter)
         }.background(Color.danarapiCanvas).navigationTitle(goal?.name ?? "Target").navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $editing) { if let goal { GoalEditorView(goal: goal) } }
         .sheet(isPresented: $progress) { if let goal { NavigationStack { TransactionFormView(kind: .expense, initialGoal: goal) } } }
+        .onChange(of: goal == nil) { _, missing in if missing { dismiss() } }
     }
 }
 
@@ -86,25 +88,43 @@ struct PlanningHistoryView: View {
 }
 
 struct GoalCard: View {
+    @Environment(AppModel.self) private var app
+    @State private var deleteConfirmation = false
     let goal: SavingsGoal
     var onProgress: (() -> Void)? = nil
     var onEdit: (() -> Void)? = nil
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 16) {
             HStack {
-                Image(systemName: goal.progress >= 1 ? "checkmark.seal.fill" : "target").foregroundStyle(Color.danarapiPrimary).padding(10).background(Color.danarapiSky, in: RoundedRectangle(cornerRadius: 14))
+                SymbolBadge(symbol: goal.progress >= 1 ? "checkmark.seal.fill" : AppSymbol.goal.rawValue, size: 52)
                 Text(goal.name).font(.headline).foregroundStyle(Color.danarapiInk)
                 Spacer()
-                Text("\(Int(goal.progress * 100))%").font(.subheadline.bold()).foregroundStyle(Color.danarapiPrimary)
+                Text("\(Int(goal.progress * 100))%").font(.subheadline.bold())
+                    .foregroundStyle(Color.danarapiPeachInk)
+                    .padding(.horizontal, 12).padding(.vertical, 6).background(Color.danarapiPeach, in: Capsule())
             }
             ProgressView(value: goal.progress).tint(Color.danarapiPrimary)
-            HStack { MoneyText(amount: goal.savedAmount, style: .subheadline.bold()); Text("dari").foregroundStyle(Color.danarapiMuted); MoneyText(amount: goal.targetAmount, style: .subheadline, color: .danarapiMuted) }
+            HStack { MoneyText(amount: goal.savedAmount, style: .subheadline.bold(), color: .danarapiPrimary); Text("/").foregroundStyle(Color.danarapiMuted); MoneyText(amount: goal.targetAmount, style: .subheadline, color: .danarapiMuted) }
             TimelineView(.periodic(from: .now, by: 60)) { context in
                 HStack { Text(goal.countdown(asOf: context.date)).font(.caption.bold()).foregroundStyle(goal.progress >= 1 ? Color.danarapiPrimary : Color.danarapiMuted); Spacer(); if let date = goal.targetDate { Text(MonthPeriod.display(date)).font(.caption).foregroundStyle(Color.danarapiMuted) } }
             }
-            HStack { if let onProgress { Button("Tambah progres", systemImage: "plus", action: onProgress).buttonStyle(.bordered).accessibilityIdentifier("goal.progress.\(goal.id)") }; Spacer(); if let onEdit { Button("Ubah target", action: onEdit).font(.subheadline) } }
+            Divider()
+            HStack(spacing: 8) {
+                if let onProgress { Button("Tambah progres", systemImage: "plus", action: onProgress)
+                    .font(.caption.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.85)
+                    .buttonStyle(.borderedProminent).buttonBorderShape(.capsule)
+                    .layoutPriority(1)
+                    .frame(minHeight: DesignTokens.minimumTouch).accessibilityIdentifier("goal.progress.\(goal.id)") }
+                Spacer(minLength: 8)
+                Button { deleteConfirmation = true } label: { Image(systemName: "trash").frame(minWidth: 44, minHeight: 44) }
+                    .foregroundStyle(Color.danarapiExpense).disabled(app.isLoading).accessibilityLabel("Hapus target \(goal.name)")
+                if let onEdit { Button("Ubah target", action: onEdit).font(.caption).lineLimit(1).minimumScaleFactor(0.85).frame(minHeight: DesignTokens.minimumTouch) }
+            }
         }.danarapiCard()
         .accessibilityElement(children: .contain)
+        .confirmationDialog("Hapus target ini?", isPresented: $deleteConfirmation, titleVisibility: .visible) {
+            Button("Hapus target", role: .destructive) { Task { _ = await app.deleteGoal(goal) } }
+        } message: { Text("Target dihapus. Riwayat transaksi kontribusi dan saldo tetap tersimpan.") }
     }
 }
 

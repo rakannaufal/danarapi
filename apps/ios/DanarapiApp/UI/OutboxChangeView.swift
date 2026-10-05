@@ -64,6 +64,7 @@ struct OutboxChangeView: View {
                     .font(.footnote).foregroundStyle(Color.danarapiMuted)
             }
         }
+        .danarapiListSurface()
         .navigationTitle("Tinjau perubahan")
         .task {
             do { server = try await app.serverSnapshotForOutbox(change) }

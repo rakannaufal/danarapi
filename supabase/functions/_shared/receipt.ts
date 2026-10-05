@@ -9,7 +9,7 @@ export function storeReceipt(data: ReceiptData): StoredReceipt {
 export type ReceiptIssue = { cek: number; pesan: string; selisih?: number; baris?: number };
 export type ReceiptValidation = { lolos: boolean; masalah: ReceiptIssue[]; peringatan: string[]; baris_bermasalah: number[] };
 export type ScanStatus = 'ok' | 'quota_exceeded' | 'service_error' | 'config_error' | 'no_result' | 'not_a_receipt' | 'busy' | 'invalid_image';
-export type ScanResult = { status: ScanStatus; data?: ReceiptData; validasi?: ReceiptValidation; cached?: boolean };
+export type ScanResult = { status: ScanStatus; data?: ReceiptData; validasi?: ReceiptValidation; cached?: boolean; proof?: import('./bank-proof.ts').BankProof };
 export const scanMessages: Record<ScanStatus, string> = { ok: 'Struk terbaca. Periksa semua angka sebelum melanjutkan.', quota_exceeded: 'Kuota scan habis. Coba besok atau isi manual.', service_error: 'Layanan pembaca struk sedang bermasalah. Isi manual tetap tersedia.', config_error: 'Scan belum dikonfigurasi. Isi manual atau hubungi pengelola.', no_result: 'Struk belum dapat dibaca. Foto ulang dengan cahaya cukup atau isi manual.', not_a_receipt: 'Menu tidak ditemukan. Pilih foto struk yang lengkap atau isi manual.', busy: 'Scan sedang diproses. Tunggu sebentar, lalu coba lagi.', invalid_image: 'Pilih maksimal tiga gambar JPEG, PNG atau WebP, total maksimal 4 MB.' };
 
 function object(value: unknown): Record<string, unknown> { return typeof value === 'object' && value !== null && !Array.isArray(value) ? value as Record<string, unknown> : {}; }

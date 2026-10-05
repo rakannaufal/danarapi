@@ -6,7 +6,9 @@ import UIKit
 @MainActor
 @Observable
 final class AppModel {
-    private(set) var mode: AppMode = .signedOut
+    private(set) var mode: AppMode = .signedOut {
+        didSet { synchronizeSharedInboxAccount() }
+    }
     private(set) var snapshot = DashboardSnapshot(accounts: [], categories: [], transactions: [], transfers: [], splitBills: [], reviewItems: [], merchantRules: [], budgets: [], overview: .zero, nextTransactionCursor: nil, syncedAt: nil)
     private(set) var isLoading = false
     private(set) var isStarting = true
@@ -22,12 +24,16 @@ final class AppModel {
     private(set) var requiresReauthentication = false
     private(set) var isAuthenticating = false
     private(set) var lastRejectedReview: ReviewItem?
-    private(set) var session: AuthSession?
+    private(set) var session: AuthSession? {
+        didSet { synchronizeSharedInboxAccount() }
+    }
     var errorMessage: String?
     var toastMessage: String?
     var isLocked = false
     var privacyCoverVisible = false
     var productPage: ProductRoute?
+    private(set) var sharedProofCount = 0
+    let sharedInbox: SharedInbox?
     private(set) var aiConsent: AIConsentState?
     var timezone: String { snapshot.timezone ?? defaults.string(forKey: "financeTimezone") ?? "Asia/Jakarta" }
 
@@ -84,11 +90,13 @@ final class AppModel {
     init(
         defaults: UserDefaults = .standard,
         sessionStore: KeychainSessionStore = KeychainSessionStore(),
-        offlineStore: OfflineStore
+        offlineStore: OfflineStore,
+        sharedInbox: SharedInbox? = try? SharedInbox.live()
     ) {
         self.defaults = defaults
         self.sessionStore = sessionStore
         self.offlineStore = offlineStore
+        self.sharedInbox = sharedInbox
         theme = ThemePreference(rawValue: defaults.string(forKey: "theme") ?? "system") ?? .system
         hideAmounts = defaults.bool(forKey: "hideAmounts")
         appLockEnabled = defaults.bool(forKey: "appLockEnabled")
@@ -125,7 +133,7 @@ final class AppModel {
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("--ui-testing-startup") { return }
         #endif
-        defer { isStarting = false }
+        defer { isStarting = false; synchronizeSharedInboxAccount() }
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("--ui-testing-auth") {
             mode = .signedOut
@@ -407,6 +415,36 @@ final class AppModel {
         guard requestedOwner == ownerID, mode == .authenticated else { throw AppError.validation("Akun berubah. Coba kembali.") }
         return try await repository.scanReceipt(images: images)
     }
+    func readSharedProofWithAI(_ record: SharedInboxRecord, retry: Bool = false) async throws -> BankProof {
+        guard mode == .authenticated, !isLocked,
+              configuration != nil, network.isOnline, let inbox = sharedInbox else {
+            throw AppError.validation("Masuk akun dan hubungkan internet untuk membaca bukti dengan AI. Isi manual tetap tersedia.")
+        }
+        let requestedOwner = ownerID
+        let requestedRepository = repository
+        let data = try inbox.data(for: record.id, ownerID: requestedOwner)
+        var request = try SharedReceiptReader.aiRequest(record, data: data)
+        if retry { request.retryID = UUID().uuidString.lowercased() }
+        let consent = try await refreshAIConsent()
+        try Task.checkCancellation()
+        guard requestedOwner == ownerID, mode == .authenticated, !isLocked else { throw SharedInboxError.wrongOwner }
+        if !(consent.granted && consent.policyVersion == ProductCatalog.policyVersion) {
+            try await requestedRepository.setSharedProofAIConsent(ownerID: requestedOwner, policyVersion: ProductCatalog.policyVersion)
+            guard requestedOwner == ownerID, mode == .authenticated, !isLocked else { throw SharedInboxError.wrongOwner }
+            aiConsent = AIConsentState(granted: true, policyVersion: ProductCatalog.policyVersion, updatedAt: .now)
+        }
+        try Task.checkCancellation()
+        guard requestedOwner == ownerID, mode == .authenticated, !isLocked else { throw SharedInboxError.wrongOwner }
+        _ = try inbox.bind(record.id, to: requestedOwner)
+        refreshSharedInboxCount()
+        let response = try await requestedRepository.scanBankProof(request, ownerID: requestedOwner)
+        try Task.checkCancellation()
+        guard requestedOwner == ownerID, mode == .authenticated, !isLocked else { throw SharedInboxError.wrongOwner }
+        guard response.status == "ok", let proof = response.proof else { throw AppError.validation(response.message ?? "AI belum dapat membaca bukti. Isi manual tetap tersedia.") }
+        try inbox.rememberAIProof(record.id, ownerID: requestedOwner, proof: JSONEncoder().encode(proof))
+        return proof
+    }
+
     func refreshAIConsent() async throws -> AIConsentState {
         let requestedOwner = ownerID
         let result = try await repository.aiConsentState()
@@ -450,6 +488,11 @@ final class AppModel {
     }
     var cloudReceiptScanConfigured: Bool { configuration != nil }
     @discardableResult func updateAccount(_ account: FinancialAccount) async -> Bool { await mutate { try await repository.updateAccount(account) } }
+    func editAccount(_ account: FinancialAccount, expectedBalance: Int64, reason: String) async -> Bool { await onlineMutation { try await repository.editAccount(account, expectedBalance: expectedBalance, reason: reason) } }
+    func deleteAccount(_ account: FinancialAccount) async -> Bool { await onlineMutation { try await repository.deleteAccount(id: account.id, expectedVersion: account.version) } }
+    func deleteCategory(_ category: Category) async -> Bool { await onlineMutation { try await repository.deleteCategory(id: category.id, expectedVersion: category.version) } }
+    func deleteReview(_ item: ReviewItem) async -> Bool { await onlineMutation { try await repository.deleteReviewItem(id: item.id) } }
+    func deleteBudget(_ budget: Budget) async -> Bool { await onlineMutation { try await repository.deleteBudget(id: budget.id, expectedLimit: budget.limitAmount) } }
     @discardableResult func archiveAccount(_ account: FinancialAccount) async -> Bool { await mutate { try await repository.archiveAccount(id: account.id, expectedVersion: account.version) } }
     @discardableResult func createCategory(name: String, kind: TransactionKind) async -> Bool { await mutate { try await repository.createCategory(name: name, kind: kind) } }
     @discardableResult func updateCategory(_ category: Category) async -> Bool { await mutate { try await repository.updateCategory(category) } }
@@ -607,6 +650,44 @@ final class AppModel {
         return await persistReview(value) { try await requestedRepository.addReviewItem(value, attachment: attachment) }
     }
 
+    private func synchronizeSharedInboxAccount() {
+        do { try sharedInbox?.setActiveAccount(mode == .authenticated ? session?.userID : nil) }
+        catch { errorMessage = error.localizedDescription }
+        refreshSharedInboxCount()
+    }
+
+    func refreshSharedInboxCount() {
+        guard !isLocked, mode == .authenticated, session != nil else { sharedProofCount = 0; return }
+        do {
+            try sharedInbox?.setActiveAccount(session?.userID)
+            sharedProofCount = try sharedInbox?.records(ownerID: ownerID).filter { !$0.imported }.count ?? 0
+        } catch { sharedProofCount = 0 }
+    }
+
+    func importSharedProof(_ record: SharedInboxRecord, review: ReviewItem) async -> Bool {
+        guard mode == .authenticated, !requiresReauthentication, !isLocked, hasLoadedDashboard,
+              network.isOnline, !isLoading, let sharedInbox else {
+            errorMessage = "Masuk ke akun Danarapi dan hubungkan internet untuk menyimpan draft. Bukti lokal tetap tersedia."
+            return false
+        }
+        let owner = ownerID
+        let requestedRepository = repository
+        do {
+            let bound = try sharedInbox.bind(record.id, to: owner)
+            guard !bound.imported, review.id == record.id, review.status == .pending else { throw SharedInboxError.invalid }
+            let data = try sharedInbox.data(for: record.id, ownerID: owner)
+            let attachment = record.mime == "text/plain" ? nil : ReviewAttachment(name: record.name, mimeType: record.mime, data: data)
+            var value = review
+            value.duplicateCandidateID = ImportService.duplicateCandidate(for: value, transactions: snapshot.transactions)
+            let saved = await persistReview(value) { try await requestedRepository.addSharedReviewItem(value, attachment: attachment, ownerID: owner) }
+            guard saved, ownerID == owner, mode == .authenticated else { return false }
+            try sharedInbox.markImported(record.id, ownerID: owner)
+            refreshSharedInboxCount()
+            toastMessage = "Draft Share tersimpan. Periksa sebelum mencatat transaksi."
+            return true
+        } catch { errorMessage = error.localizedDescription; return false }
+    }
+
     func rejectReview(_ item: ReviewItem) async {
         if await mutate(success: "Item ditolak. Urungkan tersedia 10 detik.", operation: { try await repository.rejectReviewItem(id: item.id) }) { lastRejectedReview = item }
     }
@@ -619,7 +700,37 @@ final class AppModel {
         let requestedRepository = repository
         return await persistReview(item) { try await requestedRepository.updateReviewItem(item) }
     }
-    func confirmReview(_ item: ReviewItem, transaction: TransactionDraft) async -> Bool { await mutate { try await repository.confirmReviewItem(id: item.id, transaction: transaction) } }
+    func confirmReview(_ item: ReviewItem, transaction: TransactionDraft) async -> Bool {
+        let shared = item.rawReference?.hasPrefix("Bukti dari Share") == true
+        if shared && (mode != .authenticated || isLocked || requiresReauthentication || !network.isOnline) {
+            errorMessage = "Masuk dengan akun tujuan dan hubungkan internet untuk mencatat draft Share."
+            return false
+        }
+        let owner = ownerID
+        let requestedMode = mode
+        let requestedRepository = repository
+        return await mutate {
+            if shared { try await requestedRepository.confirmSharedReviewItem(id: item.id, transaction: transaction, ownerID: owner) }
+            else { try await requestedRepository.confirmReviewItem(id: item.id, transaction: transaction) }
+            guard ownerID == owner, mode == requestedMode else { throw AppError.validation("Sesi akun berubah.") }
+        }
+    }
+    func confirmSharedReviewTransfer(_ item: ReviewItem, transfer: TransferDraft) async -> Bool {
+        guard mode == .authenticated, !isLocked, network.isOnline, !requiresReauthentication, item.status == .pending,
+              transfer.amount > 0, transfer.amount <= Money.maximum, transfer.fromAccountID != transfer.toAccountID,
+              activeAccounts.contains(where: { $0.id == transfer.fromAccountID }), activeAccounts.contains(where: { $0.id == transfer.toAccountID }) else {
+            errorMessage = "Pilih dua akun berbeda milik Anda dan nominal valid. Transfer memerlukan koneksi."
+            return false
+        }
+        let owner = ownerID
+        let requestedRepository = repository
+        return await mutate {
+            guard let sharedInbox else { throw SharedInboxError.unavailable }
+            try sharedInbox.rememberTransfer(item.id, ownerID: owner, draft: JSONEncoder.danarapi.encode(transfer))
+            try await requestedRepository.confirmSharedReviewTransfer(id: item.id, transfer: transfer, ownerID: owner)
+            guard ownerID == owner, mode == .authenticated else { throw AppError.validation("Sesi akun berubah.") }
+        }
+    }
     func mergeReview(_ item: ReviewItem, into transactionID: String) async -> Bool { await mutate { try await repository.mergeReviewItem(id: item.id, into: transactionID) } }
     func clearReviewDuplicate(_ item: ReviewItem) async -> Bool { await mutate(success: "Ditandai bukan duplikat.") { try await repository.clearReviewDuplicate(id: item.id) } }
     func completeReview(_ item: ReviewItem) async { _ = await mutate { try await repository.completeReviewItem(id: item.id) } }

@@ -8,11 +8,21 @@ import { normalize, money } from '../domain.ts';
 import { parseMoney } from '../contracts.ts';
 import { budgetPresets, progressPercent, budgetStatus } from '../planning.ts';
 import Money from './Money.vue';
+import Icon from './Icon.vue';
+import type { Budget } from '../domain.ts';
 const props = defineProps<{ compact?: boolean; initialMonth?: string }>();
 const emit = defineEmits<{ saved: []; dirty: [value: boolean]; entry: [entry: PlanningEntry] }>();
 const month = ref(props.initialMonth ?? today().slice(0,7)), category = ref(''), newCategory = ref(''), limit = ref(''), error = ref('');
 const editing = ref(false);
 const expanded = ref('');
+async function removeBudget(budget: Budget) {
+  if (!window.confirm('Hapus anggaran bulan ini? Hanya limit ini yang dihapus. Transaksi, kategori, dan anggaran bulan lain tetap tersimpan.')) return;
+  if (await mutate('delete_budget', { id: budget.id, expected_limit: budget.limitAmount }, 'Anggaran dihapus')) {
+    if (expanded.value === budget.id) expanded.value = '';
+    if (category.value === budget.categoryID) { editing.value = false; limit.value = ''; category.value = ''; }
+    emit('dirty', false); emit('saved');
+  }
+}
 async function copyNextMonth() {
   const next = new Date(`${month.value}-01T00:00:00Z`); next.setUTCMonth(next.getUTCMonth() + 1);
   const destination = next.toISOString().slice(0,7);
@@ -63,7 +73,7 @@ async function save() {
 <template>
   <div class="budget-page">
     <div v-if="!compact && !editing" class="planning-toolbar"><label>Periode anggaran<input v-model="month" type="month" required></label><button class="primary" @click="beginEdit()">Tambah anggaran</button></div>
-    <div v-if="!compact && !editing" class="planning-summary"><article class="card"><span class="muted">Total anggaran</span><strong><Money :amount="String(totals.limit)" /></strong></article><article class="card"><span class="muted">Terpakai</span><strong><Money :amount="String(totals.spent)" /></strong></article><article class="card"><span class="muted">{{ totals.spent > totals.limit ? 'Melebihi batas' : 'Sisa anggaran' }}</span><strong :class="{ 'danger-text': totals.spent > totals.limit }"><Money :amount="String(totals.spent > totals.limit ? totals.spent - totals.limit : totals.limit - totals.spent)" /></strong></article></div>
+    <div v-if="!compact && !editing" class="planning-summary"><article class="card"><span class="muted">Total anggaran</span><strong><Money :amount="String(totals.limit)" /></strong></article><article class="card"><span class="muted">Terpakai</span><strong><Money :amount="String(totals.spent)" /></strong><span class="budget-percent" aria-label="Persentase total anggaran terpakai">{{ progressPercent(String(totals.spent), String(totals.limit)).toLocaleString('id-ID') }}% terpakai</span></article><article class="card"><span class="muted">{{ totals.spent > totals.limit ? 'Melebihi batas' : 'Sisa anggaran' }}</span><strong :class="{ 'danger-text': totals.spent > totals.limit }"><Money :amount="String(totals.spent > totals.limit ? totals.spent - totals.limit : totals.limit - totals.spent)" /></strong></article></div>
     <form v-if="compact || editing" ref="editor" class="entry-form planning-form" :class="{ card: !compact }" @submit.prevent="save">
       <div v-if="!compact" class="section-heading"><h2>Atur anggaran</h2><button type="button" class="text-button" @click="cancelEdit">Batal</button></div>
       <label>Bulan anggaran<input v-model="month" type="month" required></label>
@@ -80,8 +90,8 @@ async function save() {
       <p v-if="!budgets.length" class="muted">Belum ada anggaran pada bulan ini.</p>
       <div class="budget-list">
 <article v-for="budget in budgets" :key="budget.id" class="card budget-card" :class="budgetStatus(budget.spentAmount, budget.limitAmount)">
-        <div class="section-heading"><h3>{{ state.data.categories.find(row => row.id === budget.categoryID)?.name }}</h3><button class="text-button" @click="beginEdit(budget.categoryID)">Ubah limit</button></div>
-        <div class="section-heading"><span><Money :amount="budget.spentAmount" /> / <Money :amount="budget.limitAmount" /></span><strong>{{ progressPercent(budget.spentAmount, budget.limitAmount) }}%</strong></div>
+        <div class="section-heading"><h3>{{ state.data.categories.find(row => row.id === budget.categoryID)?.name }}</h3><div class="button-row"><button class="text-button" @click="beginEdit(budget.categoryID)">Ubah limit</button><button class="icon-button danger-text" :aria-label="`Hapus anggaran ${state.data.categories.find(row => row.id === budget.categoryID)?.name}`" :disabled="state.saving" @click="removeBudget(budget)"><Icon name="trash" :size="18" /></button></div></div>
+        <div class="section-heading"><span><Money :amount="budget.spentAmount" /> / <Money :amount="budget.limitAmount" /></span><strong class="budget-percent">{{ progressPercent(budget.spentAmount, budget.limitAmount).toLocaleString('id-ID') }}%</strong></div>
         <progress :value="Number(budget.spentAmount)" :max="Number(budget.limitAmount)" :aria-label="`Anggaran ${state.data.categories.find(row => row.id === budget.categoryID)?.name}`"></progress>
         <button class="text-button" :aria-expanded="expanded === budget.id" @click="expanded = expanded === budget.id ? '' : budget.id">{{ expanded === budget.id ? 'Tutup rincian' : 'Lihat rincian' }}</button>
         <PlanningHistory v-if="expanded === budget.id" :category-i-d="budget.categoryID" :month="month" @entry="$emit('entry',$event)" />

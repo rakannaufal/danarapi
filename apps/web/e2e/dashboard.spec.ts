@@ -16,15 +16,15 @@ for (const width of [390, 1440]) for (const theme of ['light', 'dark']) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
     await page.screenshot({ path: `/tmp/danarapi-dashboard-qa/${info.project.name}-home-${width}-${theme}.png`, fullPage: true });
     await page.goto('/#reports');
-    await expect(page.getByRole('img', { name: 'Grafik perbandingan pemasukan dan pengeluaran tiga bulan', exact: true })).toBeVisible();
-    await expect(page.getByRole('img', { name: 'Diagram Alokasi pengeluaran', exact: true })).toBeVisible();
+    await expect(page.getByRole('group', { name: 'Grafik perbandingan pemasukan dan pengeluaran tiga bulan', exact: true })).toBeVisible();
+    await expect(page.getByRole('group', { name: 'Diagram Alokasi pengeluaran', exact: true })).toBeVisible();
     expect(await page.locator('.report-metric h2 .money').evaluateAll(elements => elements.every(element => {
       const bounds = element.getBoundingClientRect();
       const parent = element.closest('.report-metric')!.getBoundingClientRect();
       return bounds.left >= parent.left - 1 && bounds.right <= parent.right + 1 && element.scrollWidth <= element.clientWidth + 1;
     }))).toBe(true);
     const flow = page.locator('.donut-card').filter({ has: page.getByRole('heading', { name: 'Pemasukan & pengeluaran', exact: true }) });
-    await expect(flow.locator('circle[stroke="var(--chart-income)"]')).toHaveCount(0);
+    await expect(flow.locator('circle[stroke="var(--chart-income)"]')).toHaveCount(1);
     await expect(flow.locator('circle[stroke="var(--chart-expense)"]')).toHaveCount(1);
     await expect(flow.getByRole('button').filter({ hasText: 'Pemasukan' }).locator('.chart-dot')).toHaveAttribute('style', /var\(--chart-income\)/);
     await flow.getByRole('button').filter({ hasText: 'Pengeluaran' }).click();

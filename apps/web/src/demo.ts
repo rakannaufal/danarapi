@@ -1,10 +1,12 @@
 import seed from '../../../tests/fixtures/demo-seed-v1.json' with { type: 'json' };
-import { derive, emptySnapshot, id, normalize, remaining, obligations, validateDate } from './domain.ts';
+import { derive, emptySnapshot, id, normalize, remaining, obligations, validateDate, localDay } from './domain.ts';
 import { parseMoney as parseMoneyPlaceholder } from './contracts.ts';
+import { parseSignedMoney, MAX_IDR } from './contracts.ts';
 import { splitItems } from './item-split.ts';
 import type { Snapshot, Member, Review } from './domain.ts';
 
-export function demoSeed(): Snapshot {
+export function demoSeed(now?: Date): Snapshot {
+  if (now) return showcaseSeed(now);
   const data = emptySnapshot();
   data.accounts = seed.accounts.map(row => ({ id: row.id, name: row.name, kind: row.kind, openingBalance: row.opening_balance, balance: row.opening_balance, openedAt: seed.period.from, archived: false, version: 1 }));
   data.categories = seed.categories.map((row, index) => ({ id: row.id, name: row.name, kind: row.kind as 'income' | 'expense', archived: false, sortOrder: index, version: 1 }));
@@ -21,13 +23,52 @@ export function demoSeed(): Snapshot {
   return derive(data);
 }
 
+function showcaseSeed(now: Date): Snapshot {
+  const plan = seed.showcase;
+  const data = emptySnapshot();
+  const today = localDay(now.toISOString());
+  const [year, month, day] = today.split('-').map(Number);
+  const date = (offset: number, dateDay: number) => new Date(Date.UTC(year, month - 1 + offset, dateDay, -7)).toISOString();
+  const eligible = (offset: number, dateDay: number) => offset < 0 || dateDay <= day;
+  data.accounts = plan.accounts.map(row => ({ ...row, balance: row.openingBalance, openedAt: date(-2, 1), archived: false, version: 1 }));
+  data.categories = plan.categories.map((row, sortOrder) => ({ ...row, kind: row.kind as 'income' | 'expense', archived: false, sortOrder, version: 1 }));
+  for (const systemKey of ['goal', 'qris']) data.categories.push({ id: `feature-${systemKey}`, name: systemKey === 'goal' ? 'Target' : 'QRIS', systemKey, kind: 'expense', archived: false, sortOrder: data.categories.length, version: 1 });
+  data.goals = plan.goals.map(row => ({ id: row.id, name: row.name, targetAmount: row.targetAmount, openingAmount: '0', savedAmount: '0', targetDate: localDay(date(row.monthsUntil, 1)), version: 1 }));
+  for (const offset of [-2, -1, 0]) {
+    plan.recurring.forEach((row, index) => {
+      if (!eligible(offset, row.day)) return;
+      data.transactions.push({ ...row, id: `showcase-tx-${offset + 2}-${index}`, kind: row.kind as 'income' | 'expense', occurredAt: date(offset, row.day), source: 'demo', deleted: false, version: 1 });
+    });
+    plan.transfers.forEach((row, index) => {
+      if (!eligible(offset, row.day)) return;
+      data.transfers.push({ ...row, id: `showcase-transfer-${offset + 2}-${index}`, occurredAt: date(offset, row.day), deleted: false, version: 1 });
+    });
+    plan.budgets.forEach(row => data.budgets.push({ ...row, id: `showcase-budget-${offset + 2}-${row.categoryID}`, month: localDay(date(offset, 1)).slice(0, 7), spentAmount: '0' }));
+  }
+  data.splitBills = plan.splitBills.map(row => {
+    const members = ['Saya', 'Ani', 'Budi'].map((displayName, sortOrder) => ({ id: `${row.id}-${sortOrder}`, displayName, isSelf: sortOrder === 0, shareAmount: row.shareAmount, settledAmount: '0', resolvedAmount: '0', sortOrder }));
+    return { id: row.id, title: row.title, total: row.total, categoryID: row.categoryID, payer: row.selfPaid ? { selfPaid: { accountID: row.accountID } } : { other: { memberID: members[1].id } }, occurredAt: date(row.monthOffset, row.day), note: row.selfPaid ? 'Dibayar lebih dahulu, masing-masing menanggung bagiannya.' : 'Ani membayar lebih dahulu. Bagian saya belum dilunasi.', members, settlements: row.settlements.map((event, index) => ({ id: `${row.id}-settlement-${index}`, memberID: members[event.memberIndex].id, direction: row.selfPaid ? 'in' as const : 'out' as const, accountID: row.accountID, amount: event.amount, occurredAt: date(row.monthOffset, event.day), note: 'Pembayaran bagian peserta', reversed: false, version: 1 })), resolutions: [], deleted: false, version: 1 };
+  });
+  data.reviewItems = plan.reviews.map(row => {
+    const occurredAt = new Date(Date.parse(date(0, day)) - row.daysAgo * 86400000).toISOString();
+    const reviewDate = localDay(occurredAt);
+    const amount = ('amount' in row ? row.amount : null) ?? null;
+    const field = (value: string | null, evidenceSpan = value) => ({ value, confidence: value ? 'medium' as const : 'low' as const, evidenceSpan, sourceType: row.source });
+    return { id: row.id, source: row.source, status: 'pending', amount: field(amount, amount ?? row.note), merchant: field(row.merchant), date: field(row.source === 'qris' ? null : reviewDate), rawReference: `${row.merchant}\n${reviewDate}\n${row.note}`, createdAt: occurredAt };
+  });
+  data.merchantRules = plan.merchantRules.map(row => ({ ...row, version: 1 }));
+  return derive(data);
+}
+
 type Payload = Record<string, any>;
 export class DemoRepository {
-  data = demoSeed();
+  data: Snapshot;
+  private referenceDate?: Date;
+  constructor(referenceDate?: Date) { this.referenceDate = referenceDate; this.data = demoSeed(referenceDate); }
   timezone = 'Asia/Jakarta';
   private replays = new Map<string, string>();
   async snapshot() { return structuredClone(derive(this.data, this.timezone)); }
-  reset() { this.data = demoSeed(); this.replays.clear(); }
+  reset() { this.data = demoSeed(this.referenceDate ? new Date() : undefined); this.replays.clear(); }
   async mutate(operation: string, payload: Payload) {
     const key = payload.p_client_mutation_id as string | undefined;
     const canonical = JSON.stringify({ operation, payload });
@@ -72,7 +113,43 @@ export class DemoRepository {
     const category = (value: string, kind = 'expense') => { const row = data.categories.find(item => item.id === value && !item.archived && item.kind === kind); if (!row) throw new Error('Kategori tidak sesuai jenis transaksi.'); return row; };
     const versioned = <T extends { id: string; version: number }>(rows: T[], value: string, version?: number) => { const row = rows.find(item => item.id === value); if (!row) throw new Error('Data tidak ditemukan.'); if (version !== undefined && row.version !== version) throw new Error('VERSION_CONFLICT: Muat ulang data sebelum mengubah.'); return row; };
     const unique = (rows: { id: string; name: string; archived: boolean }[], name: string, ownID?: string) => { if (!name?.trim() || rows.some(row => !row.archived && row.id !== ownID && normalize(row.name) === normalize(name))) throw new Error('Nama kosong atau sudah dipakai.'); };
-    if (operation === 'create_account') { unique(data.accounts, payload.p_name); parseMoneyPlaceholder(payload.p_opening_balance, true); data.accounts.push({ id: id(), name: payload.p_name.trim(), kind: payload.p_kind, openingBalance: payload.p_opening_balance, balance: payload.p_opening_balance, openedAt: validateDate(payload.p_opened_at), archived: false, version: 1 }); return; }
+    if (operation === 'edit_financial_account') {
+      derive(data);
+      const row = versioned(data.accounts, payload.p_account_id, payload.p_expected_version);
+      if (row.archived || row.balance !== payload.p_expected_balance) throw new Error('CONFLICT_VERSION: Saldo berubah. Buka ulang akun.');
+      unique(data.accounts, payload.p_name, row.id);
+      if (!['cash', 'bank', 'ewallet', 'other'].includes(payload.p_kind) || !payload.p_reason?.trim() || payload.p_reason.length > 500) throw new Error('Jenis akun atau alasan tidak valid.');
+      const delta = parseSignedMoney(payload.p_balance) - BigInt(row.balance);
+      if (delta < -MAX_IDR || delta > MAX_IDR) throw new Error('Selisih penyesuaian saldo melebihi batas nominal.');
+      row.name = payload.p_name.trim(); row.kind = payload.p_kind; row.version++;
+      if (delta) (data.adjustments ??= []).push({ id: id(), accountID: row.id, signedAmount: String(delta), reason: payload.p_reason.trim(), occurredAt: new Date(Math.max(Date.now(), Date.parse(row.openedAt))).toISOString() });
+      return;
+    }
+    if (operation === 'delete_financial_record') {
+      if (payload.p_entity === 'account') {
+        const row = versioned(data.accounts, payload.p_id, payload.p_expected_version);
+        if (!row.archived && data.accounts.filter(item => !item.archived).length <= 1) throw new Error('Akun aktif terakhir tidak dapat dihapus. Tambahkan akun lain terlebih dahulu.');
+        const referenced = data.transactions.some(item => item.accountID === row.id) || data.transfers.some(item => item.fromAccountID === row.id || item.toAccountID === row.id) || data.adjustments?.some(item => item.accountID === row.id) || data.splitBills.some(item => item.payer.selfPaid?.accountID === row.id || item.settlements.some(event => event.accountID === row.id));
+        if (referenced) { row.archived = true; row.version++; } else data.accounts = data.accounts.filter(item => item.id !== row.id);
+      } else if (payload.p_entity === 'category') {
+        const row = versioned(data.categories, payload.p_id, payload.p_expected_version);
+        if (row.systemKey) throw new Error('Kategori bawaan sistem tidak dapat dihapus.');
+        const referenced = data.transactions.some(item => item.categoryID === row.id) || data.splitBills.some(item => item.categoryID === row.id) || data.budgets.some(item => item.categoryID === row.id) || data.merchantRules.some(item => item.categoryID === row.id);
+        if (referenced) { row.archived = true; row.version++; } else data.categories = data.categories.filter(item => item.id !== row.id);
+      } else throw new Error('Jenis data tidak valid.');
+      return;
+    }
+    if (operation === 'delete_budget') {
+      const row = data.budgets.find(item => item.id === payload.id && item.limitAmount === payload.expected_limit);
+      if (!row) throw new Error('CONFLICT_VERSION: Anggaran berubah. Muat ulang.');
+      data.budgets = data.budgets.filter(item => item.id !== row.id); return;
+    }
+    if (operation === 'delete_review_item') {
+      const row = data.reviewItems.find(item => item.id === payload.id && ['pending', 'rejected'].includes(item.status));
+      if (!row) throw new Error('Draft sudah diproses.');
+      data.reviewItems = data.reviewItems.filter(item => item.id !== row.id); return;
+    }
+    if (operation === 'create_account') { unique(data.accounts, payload.p_name); parseSignedMoney(payload.p_opening_balance); data.accounts.push({ id: id(), name: payload.p_name.trim(), kind: payload.p_kind, openingBalance: payload.p_opening_balance, balance: payload.p_opening_balance, openedAt: validateDate(payload.p_opened_at), archived: false, version: 1 }); return; }
     if (operation === 'update_account') { const row = versioned(data.accounts, payload.id, payload.version); unique(data.accounts, payload.name, row.id); parseMoneyPlaceholder(payload.openingBalance, true); Object.assign(row, payload, { version: row.version + 1 }); return; }
     if (operation === 'archive_account') { if (data.accounts.filter(row => !row.archived).length <= 1) throw new Error('Akun aktif terakhir tidak dapat diarsip.'); versioned(data.accounts, payload.id, payload.expected_version).archived = true; return; }
     if (operation === 'create_category') { unique(data.categories.filter(row => row.kind === payload.p_kind), payload.p_name); data.categories.push({ id: id(), name: payload.p_name.trim(), kind: payload.p_kind, archived: false, sortOrder: payload.p_sort_order, version: 1 }); return; }

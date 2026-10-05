@@ -10,6 +10,7 @@ export const state = reactive({ mode: 'signedOut', recovery: false, loading: fal
 export const client = authClient();
 let repository: DemoRepository | RemoteRepository = new DemoRepository();
 let authenticatedOwner: string | undefined;
+export function calculatorOwnerID(): string { return state.mode === 'authenticated' ? authenticatedOwner ?? 'signed-out' : state.mode; }
 export const attachments = new Map<string, File>();
 export const report = ref<Report>({ personalIncome: '0', personalExpense: '0', categories: [] });
 let reportRevision = 0;
@@ -107,7 +108,7 @@ export async function load() {
   } catch (error) { if (repository === requestedRepository && state.mode === requestedMode) state.loadError = message(error); return false; }
   finally { if (repository === requestedRepository && state.mode === requestedMode) state.loading = false; }
 }
-export async function startDemo() { resolveAIConsent(false); aiConsent.value = undefined; if (client) { await client.auth.stopAutoRefresh(); sessionStorage.removeItem('danarapi.auth'); } repository = new DemoRepository(); authenticatedOwner = undefined; state.mode = 'demo'; onboardingPending.value = true; state.email = ''; state.data = emptySnapshot(); state.loaded = false; state.loading = false; state.loadError = ''; attachments.clear(); await load(); }
+export async function startDemo() { resolveAIConsent(false); aiConsent.value = undefined; if (client) { await client.auth.stopAutoRefresh(); sessionStorage.removeItem('danarapi.auth'); } repository = new DemoRepository(new Date()); authenticatedOwner = undefined; state.mode = 'demo'; onboardingPending.value = true; state.email = ''; state.data = emptySnapshot(); state.loaded = false; state.loading = false; state.loadError = ''; attachments.clear(); await load(); }
 export async function resetDemo() { if (repository instanceof DemoRepository) { repository.reset(); attachments.clear(); await load(); state.notice = 'Demo kembali ke data awal.'; } }
 export async function logout() {
   resolveAIConsent(false); aiConsent.value = undefined;
@@ -252,7 +253,7 @@ export async function initialize() {
     await load();
   }
 }
-export const today = () => localDay(demo.value ? '2026-09-30T05:00:00Z' : new Date().toISOString(), state.timezone);
+export const today = () => localDay(new Date().toISOString(), state.timezone);
 export function preferences() {
   localStorage.setItem('danarapi.hide', String(state.hideAmounts)); localStorage.setItem('danarapi.timezone', state.timezone);
   if (repository instanceof DemoRepository) { repository.timezone = state.timezone; state.data = derive(state.data, state.timezone); }

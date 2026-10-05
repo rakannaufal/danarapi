@@ -12,7 +12,7 @@ async function enterDemo(page: Page) {
 }
 
 for (const theme of ['light', 'dark']) {
-  test(`desktop cards have equal dimensions and aligned amounts ${theme}`, async ({ page }, info) => {
+  test(`desktop balance leads four aligned metric cards ${theme}`, async ({ page }, info) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await enterDemo(page);
     await page.evaluate(value => { document.documentElement.dataset.theme = value; }, theme);
@@ -21,17 +21,22 @@ for (const theme of ['light', 'dark']) {
       return { top: bounds.top, width: bounds.width, height: bounds.height, valueTop: element.querySelector('strong')!.getBoundingClientRect().top };
     }));
     expect(metrics).toHaveLength(4);
-    for (const metric of metrics) {
+    for (const [index, metric] of metrics.entries()) {
       expect(Math.abs(metric.width - metrics[0].width)).toBeLessThan(1);
       expect(Math.abs(metric.height - metrics[0].height)).toBeLessThan(1);
-      expect(Math.abs(metric.top - metrics[0].top)).toBeLessThan(1);
-      expect(Math.abs(metric.valueTop - metrics[0].valueTop)).toBeLessThan(1);
+      const rowStart = metrics[index < 2 ? 0 : 2];
+      expect(Math.abs(metric.top - rowStart.top)).toBeLessThan(1);
+      expect(Math.abs(metric.valueTop - rowStart.valueTop)).toBeLessThan(1);
     }
+    expect(metrics[2].top).toBeGreaterThan(metrics[0].top + metrics[0].height);
+    const balance = await page.locator('.home-balance').boundingBox();
+    expect(balance!.height).toBeGreaterThan(metrics[0].height);
+    await expect(page.getByRole('button', { name: 'Tambah saldo', exact: true })).toBeVisible();
     for (const selector of ['.home-page .planning-grid > .card', '.home-detail-grid > .card']) {
       const cards = await page.locator(selector).evaluateAll(elements => elements.map(element => ({ width: element.getBoundingClientRect().width, height: element.getBoundingClientRect().height })));
       expect(cards).toHaveLength(2);
       expect(Math.abs(cards[0].width - cards[1].width)).toBeLessThan(1);
-      expect(Math.abs(cards[0].height - cards[1].height)).toBeLessThan(1);
+      if (selector === '.home-detail-grid > .card') expect(Math.abs(cards[0].height - cards[1].height)).toBeLessThan(1);
     }
     expect((await new AxeBuilder({ page }).include('#main-content').include('.sidebar').analyze()).violations).toEqual([]);
     await page.screenshot({ path: `/tmp/danarapi-workspace-redesign/${info.project.name}-home-desktop-${theme}.png`, fullPage: true });

@@ -15,6 +15,8 @@ struct ReportsView: View {
     @State private var loadError: String?
     @State private var reportExport: URL?
     @State private var exportError: String?
+    @State private var selectedCategory: String?
+    @State private var selectedTrend: String?
 
     private var startDate: Date { yearly ? MonthPeriod.calendar.date(from: DateComponents(year: year, month: 1, day: 1))! : MonthPeriod.start(month) }
     private var endDate: Date { yearly ? MonthPeriod.calendar.date(byAdding: .year, value: 1, to: startDate)! : MonthPeriod.end(startDate) }
@@ -81,11 +83,10 @@ struct ReportsView: View {
                 .padding(DesignTokens.gutter)
             }
             .background(Color.danarapiCanvas)
-            .navigationTitle("Laporan")
-            .navigationBarTitleDisplayMode(.inline)
+            .danarapiMainHeader()
             .refreshable { await app.refresh(); await loadReport() }
             .task(id: reportKey) { await loadReport() }
-            .onChange(of: reportKey) { _, _ in reportExport = nil; exportError = nil }
+            .onChange(of: reportKey) { _, _ in reportExport = nil; exportError = nil; selectedCategory = nil; selectedTrend = nil }
             .sheet(item: $editingBudget) { BudgetEditorView(budget: $0) }
             .sheet(isPresented: $newBudget) { BudgetEditorView(budget: nil, initialMonth: month) }
         }
@@ -117,24 +118,40 @@ struct ReportsView: View {
         VStack(alignment: .leading, spacing: 14) {
             Text("Pengeluaran per kategori").font(.title3.bold())
             if categoryRows.isEmpty {
-                EmptyRow(icon: "chart.bar", text: "Belum ada pengeluaran pada periode ini.")
+                EmptyRow(icon: AppSymbol.reports.rawValue, text: "Belum ada pengeluaran pada periode ini.")
             } else {
                 Chart(categoryRows.prefix(7)) { row in
                     BarMark(x: .value("Nominal", row.amount), y: .value("Kategori", row.name))
                         .foregroundStyle(Color.danarapiPrimary)
+                        .opacity(selectedCategory == nil || selectedCategory == row.name ? 1 : 0.3)
                         .cornerRadius(5)
-                        .annotation(position: .trailing) { Text(row.amount.idr).font(.caption2).foregroundStyle(Color.danarapiMuted) }
+                        .annotation(position: .trailing) { Text(categoryPercentage(row.amount)).font(.caption2).monospacedDigit().foregroundStyle(Color.danarapiMuted) }
                 }
                 .frame(height: CGFloat(max(190, categoryRows.prefix(7).count * 46)))
                 .chartXAxis(.hidden)
+                .chartYSelection(value: $selectedCategory)
+                .chartGesture { proxy in SpatialTapGesture().onEnded { proxy.selectYValue(at: $0.location.y) } }
                 .accessibilityLabel("Grafik pengeluaran per kategori")
+                if let row = categoryRows.first(where: { $0.name == selectedCategory }) {
+                    ReportChartDetail(name: row.name, amount: row.amount, color: .danarapiPrimary, percentage: report.personalExpense > 0 ? Double(row.amount) / Double(report.personalExpense) * 100 : 0)
+                }
                 ForEach(categoryRows) { row in
-                    HStack { Text(row.name); Spacer(); MoneyText(amount: row.amount, style: .subheadline.bold(), color: .danarapiExpense) }
+                    HStack {
+                        Text(row.name)
+                        Spacer()
+                        MoneyText(amount: row.amount, style: .subheadline.weight(.semibold), color: .danarapiExpense)
+                        Text(categoryPercentage(row.amount)).font(.subheadline.bold()).monospacedDigit()
+                    }
                         .font(.subheadline)
                 }
             }
         }
         .danarapiCard()
+    }
+
+    private func categoryPercentage(_ amount: Int64) -> String {
+        let value = report.personalExpense > 0 ? Double(amount) / Double(report.personalExpense) * 100 : 0
+        return "\(value.formatted(.number.precision(.fractionLength(0...1)).locale(Locale(identifier: "id_ID"))))%"
     }
 
     private var comparisonChart: some View {
@@ -147,7 +164,15 @@ struct ReportsView: View {
                     .foregroundStyle(by: .value("Jenis", "Pengeluaran")).position(by: .value("Jenis", "Pengeluaran"))
             }.chartForegroundStyleScale(["Pemasukan": Color.danarapiChartIncome, "Pengeluaran": Color.danarapiChartExpense])
                 .chartYAxis(.hidden).frame(height: 190).accessibilityLabel(yearly ? "Perbandingan pemasukan dan pengeluaran tiga tahun" : "Perbandingan pemasukan dan pengeluaran tiga bulan")
+                .chartXSelection(value: $selectedTrend)
+                .chartGesture { proxy in SpatialTapGesture().onEnded { proxy.selectXValue(at: $0.location.x) } }
                 .accessibilityHidden(app.hideAmounts)
+            if let row = trends.first(where: { $0.name == selectedTrend }) {
+                VStack(spacing: 8) {
+                    ReportChartDetail(name: "Pemasukan · \(row.name)", amount: row.income, color: .danarapiChartIncome)
+                    ReportChartDetail(name: "Pengeluaran · \(row.name)", amount: row.expense, color: .danarapiChartExpense)
+                }.accessibilityIdentifier("report.trend.selection")
+            }
             ForEach(trends) { row in
                 HStack { Text(row.name).font(.caption); Spacer(); MoneyText(amount: row.income, style: .caption, color: .danarapiIncome); MoneyText(amount: row.expense, style: .caption, color: .danarapiExpense) }
             }
@@ -164,15 +189,25 @@ struct ReportsView: View {
             Text("Arus kas per akun").font(.title3.bold())
             if let rows = report.cashAccounts, !rows.isEmpty {
                 ForEach(rows) { account in
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(app.snapshot.accounts.first(where: { $0.id == account.accountID })?.name ?? "Akun").font(.headline)
-                        LabeledContent("Masuk") { MoneyText(amount: account.incoming, color: .danarapiIncome) }
-                        LabeledContent("Keluar") { MoneyText(amount: account.outgoing, color: .danarapiExpense) }
-                        LabeledContent("Arus bersih") { MoneyText(amount: account.net) }
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(app.snapshot.accounts.first(where: { $0.id == account.accountID })?.name ?? "Akun").font(.subheadline.weight(.semibold))
+                        cashMetric("Masuk", amount: account.incoming, color: .danarapiIncome)
+                        cashMetric("Keluar", amount: account.outgoing, color: .danarapiExpense)
+                        Divider()
+                        cashMetric("Arus bersih", amount: account.net, color: .danarapiInk, emphasized: true)
                     }
+                    .padding(16).background(Color.danarapiCanvas, in: RoundedRectangle(cornerRadius: 18))
                 }
             } else { EmptyRow(icon: "wallet.bifold", text: "Belum ada arus kas pada periode ini.") }
         }.danarapiCard()
+    }
+
+    private func cashMetric(_ name: String, amount: Int64, color: Color, emphasized: Bool = false) -> some View {
+        (dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 5)) : AnyLayout(HStackLayout())) {
+            Text(name).font(.subheadline.weight(emphasized ? .medium : .regular)).foregroundStyle(Color.danarapiMuted)
+            if !dynamicTypeSize.isAccessibilitySize { Spacer() }
+            MoneyText(amount: amount, style: .subheadline.weight(emphasized ? .semibold : .medium), color: color)
+        }
     }
 
     private var budgetSection: some View {
@@ -237,10 +272,25 @@ private struct MonthlyReportTrend: Identifiable {
 
 private struct ReportDonut: View {
     @Environment(AppModel.self) private var app
+    @State private var selectedAmount: Int64?
     let title: String
     let rows: [ReportAllocation]
     private var visible: [ReportAllocation] { rows.filter { $0.amount > 0 } }
     private let colors = Color.danarapiChartColors
+    private var total: Int64 { visible.reduce(0) { $0 + $1.amount } }
+    private var selected: ReportAllocation? {
+        guard let selectedAmount else { return nil }
+        var cumulative: Int64 = 0
+        return visible.first { row in
+            cumulative += row.amount
+            return selectedAmount >= cumulative - row.amount && selectedAmount < cumulative
+        }
+    }
+    private func select(_ row: ReportAllocation) {
+        if selected?.id == row.id { selectedAmount = nil; return }
+        let start = visible.prefix { $0.id != row.id }.reduce(Int64(0)) { $0 + $1.amount }
+        selectedAmount = start + row.amount / 2
+    }
     private func color(for row: ReportAllocation, index: Int) -> Color {
         if row.id == "income" { return .danarapiChartIncome }
         if row.id == "expense" { return .danarapiChartExpense }
@@ -249,20 +299,56 @@ private struct ReportDonut: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(title).font(.title3.bold())
-            if visible.isEmpty { EmptyRow(icon: "chart.pie", text: "Belum ada transaksi pada periode ini.") }
+            if visible.isEmpty { EmptyRow(icon: AppSymbol.budget.rawValue, text: "Belum ada transaksi pada periode ini.") }
             else {
                 Chart(visible) { row in
                     SectorMark(angle: .value("Nominal", row.amount), innerRadius: .ratio(0.7), angularInset: 1)
                         .foregroundStyle(by: .value("Alokasi", row.id))
+                        .opacity(selected == nil || selected?.id == row.id ? 1 : 0.3)
                 }.chartForegroundStyleScale(domain: visible.map(\.id), range: visible.enumerated().map { color(for: $0.element, index: $0.offset) })
                     .chartLegend(.hidden).frame(height: 220)
+                    .chartAngleSelection(value: $selectedAmount)
+                    .chartGesture { proxy in SpatialTapGesture().onEnded { proxy.selectAngleValue(at: proxy.angle(at: $0.location)) } }
                     .accessibilityLabel("Diagram \(title)").accessibilityHidden(app.hideAmounts)
-                    .chartBackground { _ in VStack(spacing: 4) { Text("Total").font(.caption).foregroundStyle(Color.danarapiMuted); MoneyText(amount: visible.reduce(0) { $0 + $1.amount }, style: .subheadline.bold()) } }
+                    .accessibilityIdentifier("report.donut.\(title)")
+                    .chartBackground { _ in VStack(spacing: 4) { Text(selected?.name ?? "Total").font(.caption).foregroundStyle(Color.danarapiMuted).multilineTextAlignment(.center).lineLimit(2); MoneyText(amount: selected?.amount ?? total, style: .subheadline.weight(.semibold)) }.frame(maxWidth: 130).allowsHitTesting(false) }
+                if let selected, let index = visible.firstIndex(where: { $0.id == selected.id }) {
+                    ReportChartDetail(name: selected.name, amount: selected.amount, color: color(for: selected, index: index), percentage: Double(selected.amount) / Double(total) * 100)
+                        .accessibilityIdentifier("report.selection.\(title)")
+                }
                 ForEach(Array(visible.enumerated()), id: \.element.id) { index, row in
-                    HStack(spacing: 10) { Circle().fill(color(for: row, index: index)).frame(width: 8, height: 8); Text(row.name).font(.subheadline); Spacer(); MoneyText(amount: row.amount, style: .subheadline.weight(.medium)) }
+                    Button { select(row) } label: {
+                        HStack(spacing: 10) { Circle().fill(color(for: row, index: index)).frame(width: 8, height: 8); Text(row.name).font(.subheadline); Spacer(); MoneyText(amount: row.amount, style: .subheadline.weight(.medium)) }
+                            .foregroundStyle(Color.danarapiInk).padding(8)
+                            .background(selected?.id == row.id ? Color.danarapiMint : .clear, in: RoundedRectangle(cornerRadius: 12))
+                    }.buttonStyle(.plain).accessibilityAddTraits(selected?.id == row.id ? .isSelected : [])
                 }
             }
         }.danarapiCard()
+        .onChange(of: rows.map { "\($0.id):\($0.amount)" }) { _, _ in selectedAmount = nil }
+    }
+}
+
+private struct ReportChartDetail: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    let name: String
+    let amount: Int64
+    let color: Color
+    var percentage: Double? = nil
+    var body: some View {
+        (dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8)) : AnyLayout(HStackLayout(spacing: 12))) {
+            HStack(spacing: 10) {
+                Circle().fill(color).frame(width: 8, height: 8)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(name).font(.subheadline.weight(.semibold))
+                    if let percentage { Text("\(percentage.formatted(.number.precision(.fractionLength(0...1))))% dari total").font(.caption).foregroundStyle(Color.danarapiMuted) }
+                }
+            }
+            if !dynamicTypeSize.isAccessibilitySize { Spacer() }
+            MoneyText(amount: amount, style: .subheadline.weight(.semibold))
+        }
+        .padding(14).background(Color.danarapiCanvas, in: RoundedRectangle(cornerRadius: 16))
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -283,6 +369,7 @@ struct BudgetEditorView: View {
     @State private var month = Date.now
     @State private var newCategory = ""
     @State private var saving = false
+    @State private var deleteConfirmation = false
     @FocusState private var focusedField: String?
 
     var body: some View {
@@ -326,8 +413,15 @@ struct BudgetEditorView: View {
                     .disabled(saving || (app.mode == .authenticated && !app.network.isOnline) || (categoryID.isEmpty && newCategory.nilIfBlank == nil) || (Int64(limit) ?? 0) <= 0 || (Int64(limit) ?? Int64.max) > Money.maximum)
                     .listRowInsets(EdgeInsets()).listRowBackground(Color.clear)
                 }
+                if budget != nil {
+                    Section { Button("Hapus anggaran", systemImage: "trash", role: .destructive) { deleteConfirmation = true }.disabled(saving || app.isLoading) }
+                }
             }
+            .danarapiListSurface()
             .navigationTitle(budget == nil ? "Tambah anggaran" : "Ubah anggaran")
+            .confirmationDialog("Hapus anggaran bulan ini?", isPresented: $deleteConfirmation, titleVisibility: .visible) {
+                Button("Hapus anggaran", role: .destructive) { Task { if let budget, await app.deleteBudget(budget) { onSaved(); dismiss() } } }
+            } message: { Text("Hanya limit anggaran ini yang dihapus. Transaksi, kategori, dan anggaran bulan lain tetap tersimpan.") }
             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Batal") { dismiss() } } }
             .onAppear {
                 categoryID = budget?.categoryID ?? app.expenseCategories.first?.id ?? ""
@@ -367,21 +461,36 @@ struct BudgetListView: View {
     @State private var adding = false
     @State private var confirmCopy = false
     private var rows: [Budget] { app.snapshot.budgets.filter { MonthPeriod.calendar.isDate($0.month, equalTo: month, toGranularity: .month) } }
+    private var totalLimit: Int64 { rows.reduce(0) { $0 + $1.limitAmount } }
+    private var totalSpent: Int64 { rows.reduce(0) { $0 + $1.spentAmount } }
     var body: some View {
         ScrollView {
             VStack(spacing: 18) {
                 MonthPicker(month: $month)
-                VStack(alignment: .leading, spacing: 8) { Text("Total anggaran").font(.subheadline); MoneyText(amount: rows.reduce(0) { $0 + $1.limitAmount }, style: .title.bold()); Text("Limit per kategori, bukan uang yang dipindahkan.").font(.caption).foregroundStyle(Color.danarapiMuted) }.frame(maxWidth: .infinity, alignment: .leading).danarapiCard(.danarapiSky)
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Total anggaran").font(.subheadline)
+                    MoneyText(amount: totalLimit, style: .title.weight(.semibold))
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) { Text("Terpakai").font(.caption).foregroundStyle(Color.danarapiMuted); MoneyText(amount: totalSpent, style: .subheadline.weight(.medium)) }
+                        Spacer()
+                        Text("\(totalLimit > 0 ? Int(Double(totalSpent) / Double(totalLimit) * 100) : 0)% terpakai").font(.subheadline.weight(.semibold)).monospacedDigit()
+                    }
+                    Text("Limit per kategori, bukan uang yang dipindahkan.").font(.caption).foregroundStyle(Color.danarapiMuted)
+                }.frame(maxWidth: .infinity, alignment: .leading).danarapiCard(.danarapiSky)
                 ForEach(rows) { budget in
                     NavigationLink { BudgetDetailView(budgetID: budget.id) } label: {
                         VStack(alignment: .leading, spacing: 10) {
-                            Text(app.snapshot.categories.first(where: { $0.id == budget.categoryID })?.name ?? "Kategori").font(.headline)
+                            HStack {
+                                Text(app.snapshot.categories.first(where: { $0.id == budget.categoryID })?.name ?? "Kategori").font(.headline)
+                                Spacer()
+                                BudgetUsageBadge(budget: budget)
+                            }
                             ProgressView(value: min(budget.ratio, 1)).tint(budget.progressColor)
                             HStack { MoneyText(amount: budget.spentAmount, style: .subheadline); Text("dari"); MoneyText(amount: budget.limitAmount, style: .subheadline) }
                         }.foregroundStyle(Color.danarapiInk).frame(maxWidth: .infinity, alignment: .leading).danarapiCard()
-                    }.buttonStyle(.plain)
+                    }.buttonStyle(.plain).accessibilityIdentifier("budget.row.\(budget.id)")
                 }
-                if rows.isEmpty { EmptyRow(icon: "chart.pie", text: "Belum ada anggaran bulan ini.") }
+                if rows.isEmpty { EmptyRow(icon: AppSymbol.budget.rawValue, text: "Belum ada anggaran bulan ini.") }
                 if !rows.isEmpty { Button("Salin ke bulan berikutnya") { confirmCopy = true }.buttonStyle(.bordered) }
                 Button("Tambah anggaran", systemImage: "plus") { adding = true }.buttonStyle(PrimaryButtonStyle())
             }.padding(DesignTokens.gutter)
@@ -394,8 +503,10 @@ struct BudgetListView: View {
 
 struct BudgetDetailView: View {
     @Environment(AppModel.self) private var app
+    @Environment(\.dismiss) private var dismiss
     let budgetID: String
     @State private var editing = false
+    @State private var deleteConfirmation = false
     private var budget: Budget? { app.snapshot.budgets.first { $0.id == budgetID } }
     var body: some View {
         ScrollView {
@@ -405,13 +516,35 @@ struct BudgetDetailView: View {
                         Text(MonthPeriod.display(budget.month, template: "MMMM yyyy")).font(.subheadline).foregroundStyle(.secondary)
                         HStack { MoneyText(amount: budget.spentAmount, style: .title2.bold()); Text("dari").foregroundStyle(.secondary); MoneyText(amount: budget.limitAmount, style: .subheadline) }
                         ProgressView(value: min(budget.ratio, 1)).tint(budget.progressColor)
-                        Text(budget.status == "over" ? "Melebihi batas" : budget.status == "warning" ? "Hampir penuh" : "Aman").font(.subheadline.bold())
+                        HStack {
+                            Text(budget.status == "over" ? "Melebihi batas" : budget.status == "warning" ? "Hampir penuh" : "Aman").font(.subheadline.weight(.semibold))
+                            Spacer()
+                            BudgetUsageBadge(budget: budget)
+                        }
                         Button("Ubah limit") { editing = true }.buttonStyle(.bordered)
+                        Button("Hapus anggaran", systemImage: "trash", role: .destructive) { deleteConfirmation = true }.disabled(app.isLoading)
                     }.frame(maxWidth: .infinity, alignment: .leading).danarapiCard()
                     PlanningHistoryView(request: PlanningHistoryRequest(categoryID: budget.categoryID, startDate: MonthPeriod.start(budget.month), endDate: MonthPeriod.end(budget.month)))
-                } else { ContentUnavailableView("Anggaran tidak tersedia", systemImage: "chart.pie") }
+                } else { ContentUnavailableView("Anggaran tidak tersedia", systemImage: AppSymbol.budget.rawValue) }
             }.padding(DesignTokens.gutter)
         }.background(Color.danarapiCanvas).navigationTitle(budget.flatMap { value in app.snapshot.categories.first { $0.id == value.categoryID }?.name } ?? "Anggaran").navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $editing) { if let budget { BudgetEditorView(budget: budget) } }
+        .onChange(of: budget == nil) { _, missing in if missing { dismiss() } }
+        .confirmationDialog("Hapus anggaran bulan ini?", isPresented: $deleteConfirmation, titleVisibility: .visible) {
+            Button("Hapus anggaran", role: .destructive) { Task { if let budget, await app.deleteBudget(budget) { dismiss() } } }
+        } message: { Text("Hanya limit anggaran ini yang dihapus. Transaksi, kategori, dan anggaran bulan lain tetap tersimpan.") }
+    }
+}
+
+private struct BudgetUsageBadge: View {
+    let budget: Budget
+    var body: some View {
+        Text("\(Int(budget.ratio * 100))%")
+            .font(.subheadline.weight(.semibold)).monospacedDigit()
+            .foregroundStyle(Color.danarapiInk)
+            .padding(.horizontal, 10).padding(.vertical, 5)
+            .background(budget.progressColor.opacity(0.15), in: Capsule())
+            .accessibilityLabel("\(Int(budget.ratio * 100))% anggaran terpakai")
+            .accessibilityIdentifier("budget.percent.\(budget.id)")
     }
 }

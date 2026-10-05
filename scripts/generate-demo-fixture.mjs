@@ -1,5 +1,6 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { showcase } from "./demo-showcase.mjs";
 
 let state = 0x0d4a4a91;
 function random() {
@@ -41,6 +42,7 @@ const fixture = {
   schema_version: "1.0.0",
   seed: "danarapi-demo-v1",
   synthetic: true,
+  showcase,
   timezone: "Asia/Jakarta",
   period: { from: "2026-07-01T00:00:00.000Z", to: "2026-09-30T23:59:59.999Z" },
   accounts,
@@ -59,4 +61,3 @@ const fixture = {
 const output = resolve(process.cwd(), "tests/fixtures/demo-seed-v1.json");
 mkdirSync(dirname(output), { recursive: true });
 writeFileSync(output, `${JSON.stringify(fixture, null, 2)}\n`);
-

@@ -44,7 +44,7 @@ struct ReceiptScanReviewSheet: View {
                     }
                     Button(validation.passed ? "Lanjut pilih pemesan" : "Lanjut, saya sudah memeriksa") { if validation.passed { onApply(receipt) } else { confirm = true } }.buttonStyle(PrimaryButtonStyle())
                 }
-            }.navigationTitle("Periksa struk").navigationBarTitleDisplayMode(.inline)
+            }.danarapiListSurface().navigationTitle("Periksa struk").navigationBarTitleDisplayMode(.inline)
                 .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Isi manual") { dismiss() } } }
                 .confirmationDialog("Data struk belum cocok. Lanjut dengan angka yang sudah Anda periksa?", isPresented: $confirm, titleVisibility: .visible) { Button("Lanjut dengan koreksi") { onApply(receipt) }; Button("Periksa lagi", role: .cancel) {} }
         }
@@ -350,7 +350,7 @@ struct ItemSplitFormView: View {
 
     private var importSection: some View {
         Section("Bantu isi dari struk") {
-            PhotosPicker(selection: $scanPhotos, maxSelectionCount: 3, matching: .images) { Label("Pilih dari galeri (maks. 3)", systemImage: "photo") }.disabled(processing)
+            PhotosPicker(selection: $scanPhotos, maxSelectionCount: 3, matching: .images) { Label("Pilih dari galeri (maks. 3)", systemImage: AppSymbol.gallery.rawValue) }.disabled(processing)
             Button("Scan struk dengan kamera", systemImage: "camera") { Task { await openCamera() } }.disabled(processing)
             if processing { HStack { ProgressView(); Text("Membaca struk…"); Spacer(); Button("Batal", action: cancelScan) } }
             Button("Isi manual") { cancelScan(); scanPreviews = []; scannedReceipt = nil }

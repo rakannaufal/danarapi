@@ -9,7 +9,7 @@ import Security
 enum ImportService {
     static func recoverLocalReview(_ item: ReviewItem) -> ReviewItem? {
         guard item.source == .image || item.source == .pdfText, item.amount.confidence == .low,
-              let text = item.rawReference, !text.hasPrefix("Data hasil ekstraksi otomatis"),
+              let text = item.rawReference, !text.hasPrefix("Data hasil ekstraksi otomatis"), !text.hasPrefix("Bukti dari Share"),
               item.receipt?.items.isEmpty != false else { return nil }
         let recovered = ReceiptTextParser.parse(text)
         guard !recovered.items.isEmpty else { return nil }

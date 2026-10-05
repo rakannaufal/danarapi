@@ -103,7 +103,7 @@ struct TransactionsView: View {
                         ForEach(filteredBills) { bill in
                             NavigationLink { SplitBillDetailView(billID: bill.id) } label: {
                                 HStack(spacing: 12) {
-                                    Image(systemName: "person.3.fill").frame(width: 40, height: 40).background(Color.danarapiPeach, in: Circle())
+                                    SymbolBadge(symbol: AppSymbol.split.rawValue, background: .danarapiPeach)
                                     VStack(alignment: .leading, spacing: 3) {
                                         Text(bill.title).font(.headline)
                                         Text("Bagian saya \(bill.selfShare.idr) · \(bill.status.title)").font(.caption).foregroundStyle(Color.danarapiMuted)
@@ -124,9 +124,12 @@ struct TransactionsView: View {
                 }
             }
             .listStyle(.insetGrouped)
+            .listSectionSpacing(16)
+            .scrollContentBackground(.hidden).background(Color.danarapiCanvas)
             .navigationTitle(kind == .income ? "Pemasukan" : kind == .expense ? "Pengeluaran" : "Transaksi")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Transfer", systemImage: "arrow.left.arrow.right") { showTransfer = true } } }
+            .danarapiMainHeader(enabled: !embedded)
+            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button("Transfer", systemImage: AppSymbol.transactions.rawValue) { showTransfer = true }.labelStyle(.iconOnly) } }
             .sheet(isPresented: $showTransfer) { NavigationStack { TransferFormView { showTransfer = false } } }
             .searchable(text: $query, prompt: "Cari merchant atau catatan")
             .refreshable { await app.refresh() }
@@ -158,7 +161,7 @@ private struct TransferRow: View {
     let item: TransferRecord
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: "arrow.left.arrow.right").frame(width: 40, height: 40).background(Color.danarapiSky, in: Circle())
+            SymbolBadge(symbol: AppSymbol.transactions.rawValue, background: .danarapiSky)
             VStack(alignment: .leading, spacing: 3) {
                 Text("\(account(item.fromAccountID)) ke \(account(item.toAccountID))").font(.headline)
                 HStack { Text(MonthPeriod.display(item.occurredAt)); if item.pendingSync { Text("Belum tersinkron") } }.font(.caption).foregroundStyle(Color.danarapiMuted)
@@ -182,9 +185,10 @@ private struct TransferDetailView: View {
                     Section { LabeledContent("Catatan", value: item.note ?? "—") }
                     Section { Button("Ubah transfer") { edit = true }; Button("Hapus transfer", role: .destructive) { Task { _ = await app.deleteTransfer(item) } } }
                 }
+                .danarapiListSurface()
                 .navigationTitle("Detail transfer")
                 .sheet(isPresented: $edit) { NavigationStack { TransferFormView(editing: item) { edit = false } } }
-            } else { ContentUnavailableView("Transfer tidak tersedia", systemImage: "arrow.left.arrow.right") }
+            } else { ContentUnavailableView("Transfer tidak tersedia", systemImage: AppSymbol.transactions.rawValue) }
         }
     }
     private func account(_ id: String) -> String { app.snapshot.accounts.first(where: { $0.id == id })?.name ?? "Akun" }
@@ -195,8 +199,9 @@ struct TransactionRow: View {
     let item: FinanceTransaction
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: item.kind == .income ? "arrow.down.left" : "arrow.up.right")
-                .frame(width: 40, height: 40).background(item.kind == .income ? Color.danarapiMint : Color.danarapiPeach, in: Circle())
+            SymbolBadge(symbol: item.kind == .income ? AppSymbol.income.rawValue : AppSymbol.expense.rawValue,
+                color: item.kind == .income ? .danarapiPrimary : .danarapiChartExpense,
+                background: item.kind == .income ? .danarapiMint : .danarapiPeach, size: 44)
             VStack(alignment: .leading, spacing: 3) {
                 Text(item.goalID.flatMap { identifier in app.snapshot.goals?.first { $0.id == identifier }?.name } ?? item.merchant ?? app.snapshot.categories.first(where: { $0.id == item.categoryID })?.name ?? item.kind.title).font(.headline).lineLimit(1)
                 HStack { Text(MonthPeriod.display(item.occurredAt)); if item.pendingSync { Label("Belum tersinkron", systemImage: "clock.arrow.circlepath") } }.font(.caption).foregroundStyle(Color.danarapiMuted)
@@ -233,6 +238,7 @@ struct TransactionDetailView: View {
                         Button("Hapus transaksi", role: .destructive) { Task { deletedItem = item; _ = await app.deleteTransaction(item) } }
                     }
                 }
+                .danarapiListSurface()
                 .navigationTitle("Detail transaksi")
                 .sheet(isPresented: $edit) { TransactionFormView(kind: item.kind, editing: item) { edit = false } }
                 .sheet(isPresented: $convertToSplit) { NavigationStack { SplitBillFormView(convertingTransaction: item) { convertToSplit = false } } }

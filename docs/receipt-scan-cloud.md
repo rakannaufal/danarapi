@@ -2,6 +2,8 @@
 
 ## Konfigurasi produksi
 
+Pembaruan 5 Oktober 2026: endpoint menerima `purpose: "bank_proof"` untuk bukti Share iOS, dengan gambar JPEG/PNG/WebP (maksimal tiga, total 4 MB) atau teks maksimal 64 KB. Respons `proof` terpisah dari `data` struk menu. Cache memakai namespace berbeda; autentikasi, persetujuan, kuota, batas dua panggilan model, dan key server tetap digunakan. Fungsi `receipt-scan` versi ini telah dideploy pada proyek workspace; penegakan consent versi `2026-10-02` kini aktif. Hasil bank tidak memanggil ledger.
+
 1. Siapkan proyek Supabase produksi. Jalankan seluruh migrasi di `supabase/migrations` pada proyek tersebut; fungsi scan memerlukan tabel cache, kuota, dan RPC pada migrasi `202610010012_receipt_scan_cache.sql`.
 2. Atur secret server `GEMINI_API_KEY`, `GEMINI_MODEL`, `ALLOWED_ORIGIN`, `SCAN_DAILY_LIMIT`, dan `SCAN_INTERVAL_MS`. Pertahankan model yang sudah digunakan backend; jangan memindahkan key penyedia ke iOS/web. Nilai service-role hanya boleh berada di server.
 3. Deploy fungsi `receipt-scan` beserta backend akun yang dipakai aplikasi. Endpoint memverifikasi sesi akun melalui Supabase Auth, membatasi kuota, memakai cache per pengguna, dan membatasi panggilan model. Jangan menonaktifkan pemeriksaan sesi untuk Demo.
@@ -10,7 +12,7 @@
 
 ## Kondisi workspace
 
-Proyek `zoccosfjulasqxczhvfm` memiliki Google aktif, callback iOS, 20 migrations, lima fungsi backend dan secret scan server. Migrasi 18–20 serta pembaruan `ios-data`, `export-data`, dan `product-info` diterapkan pada 2 Oktober 2026. CORS Vercel/localhost diperiksa. Uji cloud terautentikasi pada struk sintetis menghasilkan total Rp 23.000 dan qty 2. Penegakan persetujuan AI pada sumber `receipt-scan` belum di-rollout: tunggu klien web dan iOS yang kompatibel. Rincian deployment dan perbaikan ada di `docs/cloud-login-repair.md`; status rilis terbaru ada di `docs/production-readiness.md`. Login Google akun pengguna, foto struk nyata dan jaringan seluler tetap memerlukan pemeriksaan perangkat.
+Proyek `zoccosfjulasqxczhvfm` memiliki Google aktif, callback iOS, 20 migrations, lima fungsi backend dan secret scan server. Migrasi 18–20 serta pembaruan `ios-data`, `export-data`, dan `product-info` diterapkan pada 2 Oktober 2026. CORS Vercel/localhost diperiksa. Uji cloud terautentikasi pada struk sintetis menghasilkan total Rp 23.000 dan qty 2. Pada 5 Oktober 2026, `receipt-scan` dengan pembacaan bukti bank dan penegakan consent versi `2026-10-02` sudah diterapkan. Uji AI nyata pada gambar BSI/GoPay sintetis beserta cache dan akun sementara lulus; rincian ada di `docs/ios-share-receipts.md`. Login Google akun pengguna, foto bukti nyata dan jaringan seluler tetap memerlukan pemeriksaan perangkat.
 
 ## Verifikasi pembaruan
 

@@ -2,18 +2,24 @@
 
 Aplikasi native SwiftUI untuk iOS 17. PostgreSQL/RPC tetap sumber kebenaran finansial. Mode Demo berjalan lokal dari fixture sintetis tanpa Supabase.
 
+Kalkulator: 38 jenis dalam delapan kategori, termasuk tombol dalil/metode pada
+setiap kalkulator Islam. Tab Pengaturan menjadi Kalkulator; gear kanan atas
+membuka pengaturan. Kontrak, rujukan, penyimpanan, dan batas kasus:
+`docs/calculators.md`.
+
 ## Goals, anggaran dan split per menu
 
 - Beranda menampilkan goals terkumpul dan total anggaran bulan sekarang, menggantikan kartu utang/piutang. Saldo tetap berasal dari ledger; kewajiban tetap tersedia dalam detail tagihan.
-- Goals: tambah tujuan pembelian/pencapaian, target tabungan, progres manual, deadline opsional, ubah dan hapus. Progres tidak memindahkan uang atau mengubah saldo/pengeluaran.
+- Goals: tambah tujuan pembelian/pencapaian, target tabungan, deadline opsional, ubah dan hapus. Progres dicatat sebagai pengeluaran berkategori Target; saldo dan laporan mengikuti transaksi tersebut.
 - Anggaran: pilih kategori pengeluaran aktif atau buat kategori baru langsung dari editor. Pilih bulan dan limit; dashboard tidak mencampur anggaran berbagai bulan.
 - Laporan: navigasi bulan sebelumnya/berikutnya, rentang kalender Asia/Jakarta dengan akhir eksklusif. Grafik kategori dan selisih pemasukan–pengeluaran bukan saldo penutupan rekening.
 - Split bill: menu, jumlah, harga satuan, jumlah yang dimakan tiap orang; foto/kamera/teks struk membantu mengisi draft. Semua kuantitas harus dibagikan tepat sekali, kemudian tombol Hitung menampilkan porsi per orang.
 - Foto/galeri/PDF struk memakai ekstraksi AI melalui Supabase cloud setelah login. Periksa nama, jumlah, harga, total dan penyesuaian; hasil bukan transaksi otomatis. Bridge Mac hanya untuk pengujian development eksplisit. Panduan produksi: `docs/supabase-cloud-setup.md`.
 - Pajak/layanan/diskon dibagi proporsional subtotal menu dengan largest remainder. Aturan yang sama diuji di PostgreSQL, Swift dan TypeScript melalui `item-split-v1.json`. Akun nyata memerlukan internet; server memvalidasi porsi sebelum posting.
-- Putih–biru, permukaan ringan, kartu continuous-rounded, header compact dan angka responsif. Dark mode tetap tersedia.
+- Palet teal, mint dan peach, kartu continuous-rounded, tombol berbentuk kapsul dan angka responsif. Beranda memakai kartu saldo gradasi, empat ringkasan, target dan transaksi terbaru. Dark mode tetap tersedia.
+- Navbar bawah tetap tersedia pada halaman detail dan Scan. Menekan tab membuka halaman utamanya tanpa perlu tombol Back; navigasi tetap aktif saat data dimuat.
 
-Rincian keputusan produk: `docs/product-update-planning.md`. Data transaksi Demo menggunakan periode sintetis Juli–September 2026; pilih September untuk melihat laporan fixture bila bulan perangkat sudah berubah. Goal contoh tersedia lokal, bukan saldo tambahan.
+Rincian keputusan produk: `docs/product-update-planning.md`. Demo memakai skenario bersama dengan web: tiga akun, tiga target, tujuh anggaran per bulan, transaksi/transfer tiga bulan, tiga split bill (belum/sebagian/lunas), tiga draft tinjauan, dan enam aturan merchant. Tanggal mengikuti bulan berjalan dan tidak memasukkan transaksi masa depan. Saldo, laporan, anggaran, dan progres target berasal dari ledger; draft tinjauan belum memengaruhi saldo. Fixture Juli–September 2026 tetap dipertahankan khusus tes regresi. Regenerasi data: `node scripts/generate-demo-fixture.mjs`.
 
 ## Menjalankan di Xcode
 
@@ -25,10 +31,10 @@ Rincian keputusan produk: `docs/product-update-planning.md`. Data transaksi Demo
    xcrun simctl list devices available
    ```
 
-   Xcode 27.0 (`27A266a`) tersedia. Run penuh terbaru: XCTest aplikasi 31/31 dan UI test 7/7 lulus pada `Danarapi-R1-Verification` (iPhone 17 Pro Simulator, iOS 26.5). Runtime iOS 16.2 lama tercatat unavailable dan tidak memenuhi target minimum. Bukti terbaru ada di `docs/ios-r1-testing.md`.
+   Xcode 27.0 (`27A266a`) tersedia. Verifikasi terbaru pada iPhone 13 "Rakan", iOS 27.0: XCTest aplikasi 69/69 dan tiga UI test lulus setelah pembaruan data Demo. Bukti: `docs/ios-r1-testing.md`.
 2. Konfigurasi proyek cloud sudah tersedia di `Configuration/Base.xcconfig`. Salin `Configuration/Local.xcconfig.example` menjadi `Configuration/Local.xcconfig` hanya untuk override proyek.
 3. Gunakan publishable/anon key publik, bukan service-role key. Login nyata memerlukan provider Google aktif, callback iOS dan backend terdeploy sesuai `docs/supabase-cloud-setup.md`.
-4. Buka `Danarapi.xcodeproj`, pilih scheme `Danarapi`, lalu pilih `Danarapi-R1-Verification` atau iPhone Simulator iOS 17+ lainnya.
+4. Buka `Danarapi.xcodeproj`, pilih scheme `Danarapi`, lalu pilih iPhone fisik yang terhubung. Perangkat pengujian terbaru: iPhone 13 "Rakan".
 5. Tekan Run. Pilih **Coba Demo** untuk alur tanpa backend.
 
 ### Runner tes bukan aplikasi
@@ -42,6 +48,10 @@ Regenerasi proyek setelah menambah berkas Swift:
 ```sh
 ruby apps/ios/scripts/generate_project.rb
 ```
+
+## Bukti dari Share iOS
+
+Bagikan bukti transaksi dari aplikasi bank, Foto, atau Files ke **Danarapi > Simpan draft**. Teks, JPEG/PNG/HEIC, dan PDF masuk kotak draft lokal terlebih dahulu. Buka **Beranda > Tinjauan > Bukti dari Share**, periksa bukti, lalu konfirmasi akun tujuan sebelum unggah. Saldo berubah setelah draft dikonfirmasi sebagai transaksi atau transfer antar akun sendiri. Panduan batas, pembacaan nominal bank, keamanan akun dan retry: `docs/ios-share-receipts.md`.
 
 ## Backend akun nyata
 
@@ -119,4 +129,4 @@ Jika store terlindungi gagal dibuka, aplikasi menampilkan keterbatasan dan tidak
 - Aturan merchant hanya memberi saran kategori dan tidak menyimpan transaksi otomatis.
 - OCR gambar tersedia untuk draft sejak pembaruan produk ini. Format struk ambigu, harga pecahan atau gambar tidak terbaca tetap dapat diisi manual. PDF scan tanpa lapisan teks belum memakai OCR PDF.
 - Face ID/Touch ID hanya mengunci tampilan lokal, bukan MFA server.
-- Token desain dibaca dari resource `contracts/design-tokens.json`; typography tetap native Apple, rounded untuk judul/nominal, layout ringkasan beradaptasi dengan Dynamic Type besar. QA visual/manual belum boleh dianggap lulus dari kode.
+- Token desain dibaca dari resource `contracts/design-tokens.json`; typography menggunakan font sistem Apple, layout ringkasan beradaptasi dengan Dynamic Type besar. QA visual/manual belum boleh dianggap lulus dari kode.

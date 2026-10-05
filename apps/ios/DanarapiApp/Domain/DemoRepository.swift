@@ -2,6 +2,7 @@ import Foundation
 
 actor DemoRepository: FinanceRepository {
     nonisolated let isDemo = true
+    private let usesShowcase: Bool
 
     private var accounts: [FinancialAccount] = []
     private var categories: [Category] = []
@@ -11,9 +12,11 @@ actor DemoRepository: FinanceRepository {
     private var reviewItems: [ReviewItem] = []
     private var merchantRules: [MerchantRule] = []
     private var budgets: [Budget] = []
+    private var adjustments: [BalanceAdjustment] = []
     private var goals: [SavingsGoal] = [SavingsGoal(id: "demo-goal", name: "Laptop impian", targetAmount: 15_000_000, savedAmount: 4_500_000, targetDate: nil, version: 1)]
 
-    init() {
+    init(showcaseDate: Date? = nil) {
+        usesShowcase = showcaseDate != nil
         accounts = Self.makeAccounts()
         categories = Self.makeCategories()
         transactions = Self.makeTransactions()
@@ -21,6 +24,17 @@ actor DemoRepository: FinanceRepository {
         reviewItems = Self.makeReviewItems()
         merchantRules = Self.makeMerchantRules()
         budgets = Self.makeBudgets()
+        if let date = showcaseDate, let content = Self.makeShowcase(asOf: date) {
+            accounts = content.accounts
+            categories = content.categories
+            transactions = content.transactions
+            transfers = content.transfers
+            splitBills = content.splitBills
+            reviewItems = content.reviews
+            merchantRules = content.rules
+            budgets = content.budgets
+            goals = content.goals
+        }
     }
 
     func dashboard() async throws -> DashboardSnapshot {
@@ -43,7 +57,8 @@ actor DemoRepository: FinanceRepository {
                 var result = goal
                 result.savedAmount += transactions.filter { !$0.deleted && $0.kind == .expense && $0.goalID == goal.id }.reduce(0) { $0 + $1.amount }
                 return result
-            }
+            },
+            adjustments: adjustments
         )
     }
 
@@ -93,6 +108,7 @@ actor DemoRepository: FinanceRepository {
         }
         for transaction in transactions where !transaction.deleted { addCash(transaction.accountID, transaction.kind == .income ? transaction.amount : -transaction.amount, transaction.occurredAt) }
         for transfer in transfers where !transfer.deleted { addCash(transfer.fromAccountID, -transfer.amount, transfer.occurredAt); addCash(transfer.toAccountID, transfer.amount, transfer.occurredAt) }
+        for adjustment in adjustments { addCash(adjustment.accountID, adjustment.signedAmount, adjustment.occurredAt) }
         for bill in splitBills where !bill.deleted {
             if case let .selfPaid(accountID) = bill.payer { addCash(accountID, -bill.total, bill.occurredAt) }
             for event in bill.settlements where !event.reversed { addCash(event.accountID, event.direction == .incoming ? event.amount : -event.amount, event.occurredAt) }
@@ -126,6 +142,52 @@ actor DemoRepository: FinanceRepository {
         var value = account
         value.version += 1
         accounts[index] = value
+    }
+
+    func editAccount(_ account: FinancialAccount, expectedBalance: Int64, reason: String) async throws {
+        guard let index = accounts.firstIndex(where: { $0.id == account.id }), accounts[index].version == account.version,
+              !accounts[index].archived, balance(for: account.id) == expectedBalance else { throw conflict() }
+        guard !account.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              !accounts.contains(where: { $0.id != account.id && !$0.archived && normalize($0.name) == normalize(account.name) }),
+              (-Money.maximum...Money.maximum).contains(account.balance),
+              reason.nilIfBlank != nil, reason.count <= 500 else { throw AppError.validation("Nama, saldo, atau alasan tidak valid.") }
+        let delta = account.balance - expectedBalance
+        guard (-Money.maximum...Money.maximum).contains(delta) else { throw AppError.validation("Selisih penyesuaian saldo melebihi batas nominal.") }
+        accounts[index].name = account.name
+        accounts[index].kind = account.kind
+        accounts[index].version += 1
+        if delta != 0 { adjustments.append(BalanceAdjustment(id: UUID().uuidString, accountID: account.id, signedAmount: delta, reason: reason, occurredAt: max(.now, accounts[index].openedAt))) }
+    }
+
+    func deleteAccount(id: String, expectedVersion: Int) async throws {
+        guard let index = accounts.firstIndex(where: { $0.id == id }), accounts[index].version == expectedVersion else { throw conflict() }
+        guard accounts[index].archived || accounts.filter({ !$0.archived }).count > 1 else { throw AppError.validation("Akun aktif terakhir tidak dapat dihapus. Tambahkan akun lain terlebih dahulu.") }
+        let referenced = transactions.contains { $0.accountID == id } || transfers.contains { $0.fromAccountID == id || $0.toAccountID == id }
+            || adjustments.contains { $0.accountID == id } || splitBills.contains { bill in
+                if case let .selfPaid(accountID) = bill.payer, accountID == id { return true }
+                return bill.settlements.contains { $0.accountID == id }
+            }
+        if referenced { accounts[index].archived = true; accounts[index].version += 1 }
+        else { accounts.remove(at: index) }
+    }
+
+    func deleteCategory(id: String, expectedVersion: Int) async throws {
+        guard let index = categories.firstIndex(where: { $0.id == id }), categories[index].version == expectedVersion else { throw conflict() }
+        guard categories[index].systemKey == nil else { throw AppError.validation("Kategori bawaan sistem tidak dapat dihapus.") }
+        let referenced = transactions.contains { $0.categoryID == id } || splitBills.contains { $0.categoryID == id }
+            || budgets.contains { $0.categoryID == id } || merchantRules.contains { $0.categoryID == id }
+        if referenced { categories[index].archived = true; categories[index].version += 1 }
+        else { categories.remove(at: index) }
+    }
+
+    func deleteReviewItem(id: String) async throws {
+        guard let index = reviewItems.firstIndex(where: { $0.id == id && ($0.status == .pending || $0.status == .rejected) }) else { throw conflict() }
+        reviewItems.remove(at: index)
+    }
+
+    func deleteBudget(id: String, expectedLimit: Int64) async throws {
+        guard let index = budgets.firstIndex(where: { $0.id == id && $0.limitAmount == expectedLimit }) else { throw conflict() }
+        budgets.remove(at: index)
     }
 
     func archiveAccount(id: String, expectedVersion: Int) async throws {
@@ -484,6 +546,7 @@ actor DemoRepository: FinanceRepository {
     func replayOutbox(operation: String, mutationID: String, payload: Data) async throws {}
 
     private func loadSeed() {
+        adjustments = []
         accounts = Self.makeAccounts()
         categories = Self.makeCategories()
         transactions = Self.makeTransactions()
@@ -493,6 +556,17 @@ actor DemoRepository: FinanceRepository {
         merchantRules = Self.makeMerchantRules()
         budgets = Self.makeBudgets()
         goals = [SavingsGoal(id: "demo-goal", name: "Laptop impian", targetAmount: 15_000_000, savedAmount: 4_500_000, targetDate: nil, version: 1)]
+        if usesShowcase, let content = Self.makeShowcase(asOf: .now) {
+            accounts = content.accounts
+            categories = content.categories
+            transactions = content.transactions
+            transfers = content.transfers
+            splitBills = content.splitBills
+            reviewItems = content.reviews
+            merchantRules = content.rules
+            budgets = content.budgets
+            goals = content.goals
+        }
         refreshDerivedValues()
     }
 
@@ -624,6 +698,89 @@ actor DemoRepository: FinanceRepository {
         return formatter
     }
 
+    private struct ShowcasePlan: Decodable {
+        struct Account: Decodable { let id, name: String; let kind: AccountKind; let openingBalance: String }
+        struct CategoryRow: Decodable { let id, name: String; let kind: TransactionKind }
+        struct Transaction: Decodable {
+            let day: Int; let kind: TransactionKind; let amount, accountID, categoryID, merchant, note: String; let goalID: String?
+        }
+        struct Transfer: Decodable { let day: Int; let fromAccountID, toAccountID, amount, note: String }
+        struct BudgetRow: Decodable { let categoryID, limitAmount: String }
+        struct Goal: Decodable { let id, name, targetAmount: String; let monthsUntil: Int }
+        struct Bill: Decodable {
+            struct Event: Decodable { let memberIndex, day: Int; let amount: String }
+            let id, title, total, categoryID, accountID, shareAmount: String
+            let monthOffset, day: Int; let selfPaid: Bool; let settlements: [Event]
+        }
+        struct Review: Decodable { let id, merchant, note: String; let source: ReviewSource; let amount: String?; let daysAgo: Int }
+        struct Rule: Decodable { let id, normalizedPattern, categoryID: String; let matchType: MerchantMatchType; let priority: Int }
+        let accounts: [Account]; let categories: [CategoryRow]; let recurring: [Transaction]
+        let transfers: [Transfer]; let budgets: [BudgetRow]; let goals: [Goal]
+        let splitBills: [Bill]; let reviews: [Review]; let merchantRules: [Rule]
+    }
+
+    private struct ShowcaseContent {
+        var accounts: [FinancialAccount] = []
+        var categories: [Category] = []
+        var transactions: [FinanceTransaction] = []
+        var transfers: [TransferRecord] = []
+        var budgets: [Budget] = []
+        var goals: [SavingsGoal] = []
+        var splitBills: [SplitBill] = []
+        var reviews: [ReviewItem] = []
+        var rules: [MerchantRule] = []
+    }
+
+    private static func makeShowcase(asOf now: Date) -> ShowcaseContent? {
+        guard let object = fixtureObject()?["showcase"],
+              let json = try? JSONSerialization.data(withJSONObject: object),
+              let plan = try? JSONDecoder().decode(ShowcasePlan.self, from: json) else { return nil }
+        let calendar = MonthPeriod.calendar
+        let start = MonthPeriod.start(now)
+        let today = calendar.component(.day, from: now)
+        func date(_ offset: Int, _ day: Int) -> Date {
+            let month = calendar.date(byAdding: .month, value: offset, to: start)!
+            return calendar.date(byAdding: .day, value: day - 1, to: month)!
+        }
+        var content = ShowcaseContent()
+        content.accounts = plan.accounts.map { FinancialAccount(id: $0.id, name: $0.name, kind: $0.kind, openingBalance: Int64($0.openingBalance)!, balance: Int64($0.openingBalance)!, openedAt: date(-2, 1), archived: false, version: 1) }
+        content.categories = plan.categories.enumerated().map { index, row in Category(id: row.id, name: row.name, kind: row.kind, systemKey: nil, archived: false, sortOrder: index, version: 1) }
+        for (key, name) in [("goal", "Target"), ("qris", "QRIS")] {
+            content.categories.append(Category(id: "feature-\(key)", name: name, kind: .expense, systemKey: key, archived: false, sortOrder: content.categories.count, version: 1))
+        }
+        content.goals = plan.goals.map { SavingsGoal(id: $0.id, name: $0.name, targetAmount: Int64($0.targetAmount)!, savedAmount: 0, targetDate: date($0.monthsUntil, 1), version: 1) }
+        // Only elapsed days enter the ledger; previous months provide report history.
+        for offset in -2...0 {
+            for (index, row) in plan.recurring.enumerated() where offset < 0 || row.day <= today {
+                content.transactions.append(FinanceTransaction(id: "showcase-tx-\(offset + 2)-\(index)", kind: row.kind, amount: Int64(row.amount)!, accountID: row.accountID, categoryID: row.categoryID, occurredAt: date(offset, row.day), merchant: row.merchant, note: row.note, source: "demo", pendingSync: false, deleted: false, version: 1, goalID: row.goalID))
+            }
+            for (index, row) in plan.transfers.enumerated() where offset < 0 || row.day <= today {
+                content.transfers.append(TransferRecord(id: "showcase-transfer-\(offset + 2)-\(index)", fromAccountID: row.fromAccountID, toAccountID: row.toAccountID, amount: Int64(row.amount)!, occurredAt: date(offset, row.day), note: row.note, pendingSync: false, deleted: false, version: 1))
+            }
+            content.budgets += plan.budgets.map { Budget(id: "showcase-budget-\(offset + 2)-\($0.categoryID)", categoryID: $0.categoryID, month: date(offset, 1), limitAmount: Int64($0.limitAmount)!, spentAmount: 0) }
+        }
+        content.splitBills = plan.splitBills.map { row in
+            var members = ["Saya", "Ani", "Budi"].enumerated().map { index, name in SplitMember(id: "\(row.id)-\(index)", displayName: name, isSelf: index == 0, shareAmount: Int64(row.shareAmount)!, settledAmount: 0, resolvedAmount: 0, sortOrder: index) }
+            let events = row.settlements.enumerated().map { index, event in SplitSettlement(id: "\(row.id)-settlement-\(index)", memberID: members[event.memberIndex].id, direction: row.selfPaid ? .incoming : .outgoing, accountID: row.accountID, amount: Int64(event.amount)!, occurredAt: date(row.monthOffset, event.day), note: "Pembayaran bagian peserta", reversed: false, version: 1) }
+            for index in members.indices {
+                members[index].settledAmount = events.filter { $0.memberID == members[index].id }.reduce(0) { $0 + $1.amount }
+            }
+            return SplitBill(id: row.id, title: row.title, total: Int64(row.total)!, categoryID: row.categoryID, payer: row.selfPaid ? .selfPaid(accountID: row.accountID) : .other(memberID: members[1].id), occurredAt: date(row.monthOffset, row.day), note: row.selfPaid ? "Dibayar lebih dahulu, masing-masing menanggung bagiannya." : "Ani membayar lebih dahulu. Bagian saya belum dilunasi.", members: members, settlements: events, resolutions: [], deleted: false, version: 1)
+        }
+        let dayFormatter = DateFormatter()
+        dayFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dayFormatter.timeZone = calendar.timeZone
+        dayFormatter.dateFormat = "yyyy-MM-dd"
+        content.reviews = plan.reviews.map { row in
+            let occurredAt = calendar.date(byAdding: .day, value: -row.daysAgo, to: calendar.startOfDay(for: now))!
+            let day = dayFormatter.string(from: occurredAt)
+            func field(_ value: String?, evidence: String? = nil) -> ExtractedField { ExtractedField(value: value, confidence: value == nil ? .low : .medium, evidenceSpan: evidence ?? value, sourceType: row.source) }
+            return ReviewItem(id: row.id, source: row.source, status: .pending, amount: field(row.amount, evidence: row.amount ?? row.note), merchant: field(row.merchant), date: field(row.source == .qris ? nil : day), rawReference: "\(row.merchant)\n\(day)\n\(row.note)", duplicateCandidateID: nil, attachmentName: nil, createdAt: occurredAt)
+        }
+        content.rules = plan.merchantRules.map { MerchantRule(id: $0.id, matchType: $0.matchType, normalizedPattern: $0.normalizedPattern, categoryID: $0.categoryID, priority: $0.priority, version: 1) }
+        return content
+    }
+
     private static let monthFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -692,7 +849,7 @@ actor DemoRepository: FinanceRepository {
             }
             return value
         }
-        return opening + transactionCash + transferCash + splitCash
+        return opening + transactionCash + transferCash + splitCash + adjustments.filter { $0.accountID == accountID }.reduce(0) { $0 + $1.signedAmount }
     }
 
     private func overview() -> FinancialOverview {

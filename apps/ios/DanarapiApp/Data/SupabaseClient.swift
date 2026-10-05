@@ -163,16 +163,18 @@ actor SupabaseHTTPClient {
         body: Data? = nil,
         authenticated: Bool = true,
         contentType: String = "application/json",
-        headers: [String: String] = [:]
+        headers: [String: String] = [:],
+        expectedUserID: String? = nil,
+        timeout: TimeInterval = 60
     ) async throws -> Data {
         var request = URLRequest(url: try configuration.endpoint(path))
         request.httpMethod = method
-        request.timeoutInterval = 60
+        request.timeoutInterval = timeout
         request.setValue(configuration.anonKey, forHTTPHeaderField: "apikey")
         request.setValue(contentType, forHTTPHeaderField: "Content-Type")
         for (name, value) in headers { request.setValue(value, forHTTPHeaderField: name) }
         if authenticated {
-            let token = try await accessToken()
+            let token = try await accessToken(expectedUserID: expectedUserID)
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         request.httpBody = body
@@ -183,10 +185,17 @@ actor SupabaseHTTPClient {
         return data
     }
 
-    private func accessToken() async throws -> String {
+    private func accessToken(expectedUserID: String? = nil) async throws -> String {
         guard let current = try sessionStore.load() else { throw AppError(code: "UNAUTHORIZED", message: "Sesi telah berakhir.", requestID: nil, details: [:]) }
+        if let expectedUserID, current.userID != expectedUserID { throw AppError.validation("Sesi akun berubah. Bukti tetap tersimpan untuk akun sebelumnya.") }
         guard current.expiresAt <= Date().addingTimeInterval(60) else { return current.accessToken }
-        if let refreshTask { return try await refreshTask.value.accessToken }
+        if let refreshTask {
+            let refreshed = try await refreshTask.value
+            if let expectedUserID {
+                guard refreshed.userID == expectedUserID, try sessionStore.load()?.userID == expectedUserID else { throw AppError.validation("Sesi akun berubah.") }
+            }
+            return refreshed.accessToken
+        }
         let task = Task { [configuration, sessionStore, session] in
             var request = URLRequest(url: try configuration.endpoint("/auth/v1/token?grant_type=refresh_token"))
             request.httpMethod = "POST"
@@ -210,7 +219,11 @@ actor SupabaseHTTPClient {
         }
         refreshTask = task
         defer { refreshTask = nil }
-        return try await task.value.accessToken
+        let refreshed = try await task.value
+        if let expectedUserID {
+            guard refreshed.userID == expectedUserID, try sessionStore.load()?.userID == expectedUserID else { throw AppError.validation("Sesi akun berubah.") }
+        }
+        return refreshed.accessToken
     }
 
     private func decodeError(data: Data, status: Int) -> AppError {

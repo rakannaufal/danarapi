@@ -84,7 +84,7 @@ enum AIConsentPresenter {
             await withCheckedContinuation { continuation in
                 guard !Task.isCancelled else { continuation.resume(returning: false); return }
                 pending = continuation
-                let prompt = UIAlertController(title: "Izinkan pengiriman struk?", message: "Foto atau halaman PDF dikirim ke penyedia AI untuk membaca struk. Pemrosesan mengikuti ketentuan paket penyedia. Periksa hasil sebelum menyimpan. Kebijakan lengkap tersedia di Pengaturan → Kebijakan privasi.", preferredStyle: .alert)
+                let prompt = UIAlertController(title: "Izinkan pembacaan AI?", message: "Foto, halaman PDF, atau teks bukti dikirim ke penyedia AI untuk membaca nominal, merchant, tanggal, dan rincian transaksi. Bukti dapat berisi data rekening pribadi. Pemrosesan mengikuti ketentuan paket penyedia. Hasil tetap perlu diperiksa. Kebijakan lengkap tersedia di Pengaturan → Kebijakan privasi.", preferredStyle: .alert)
                 prompt.addAction(UIAlertAction(title: "Isi manual", style: .cancel) { _ in finish(false) })
                 prompt.addAction(UIAlertAction(title: "Setuju dan lanjutkan", style: .default) { _ in finish(true) })
                 alert = prompt
@@ -137,7 +137,7 @@ struct ProductPageView: View {
     private var faqTopics: [String] { Array(Set((ProductCatalog.bundled?.faq ?? []).map(\.topic))).sorted() }
     private var help: ProductCatalog.Help? { ProductCatalog.bundled?.help }
     private func featureSymbol(_ identifier: String) -> String {
-        ["wallet": "wallet.pass", "transactions": "arrow.left.arrow.right", "budget": "chart.pie", "target": "target", "review": "viewfinder", "split": "person.2", "reports": "chart.bar.xaxis", "reset": "arrow.triangle.2.circlepath"][identifier] ?? "info.circle"
+        ["wallet": AppSymbol.wallet.rawValue, "transactions": AppSymbol.transactions.rawValue, "budget": AppSymbol.budget.rawValue, "target": AppSymbol.goal.rawValue, "review": AppSymbol.scan.rawValue, "split": AppSymbol.split.rawValue, "reports": AppSymbol.reports.rawValue, "reset": "arrow.triangle.2.circlepath"][identifier] ?? "info.circle"
     }
     var body: some View {
         Form {

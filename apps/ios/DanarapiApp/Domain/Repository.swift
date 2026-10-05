@@ -13,10 +13,13 @@ protocol FinanceRepository: Sendable {
 
     func createAccount(_ draft: AccountDraft) async throws
     func updateAccount(_ account: FinancialAccount) async throws
+    func editAccount(_ account: FinancialAccount, expectedBalance: Int64, reason: String) async throws
+    func deleteAccount(id: String, expectedVersion: Int) async throws
     func archiveAccount(id: String, expectedVersion: Int) async throws
     func createCategory(name: String, kind: TransactionKind) async throws
     func updateCategory(_ category: Category) async throws
     func archiveCategory(id: String, expectedVersion: Int) async throws
+    func deleteCategory(id: String, expectedVersion: Int) async throws
 
     func saveTransaction(_ draft: TransactionDraft) async throws
     func deleteTransaction(id: String, expectedVersion: Int) async throws
@@ -28,6 +31,8 @@ protocol FinanceRepository: Sendable {
     func calculatePercentageSplit(total: Int64, participants: [PercentageParticipant]) async throws -> [String: Int64]
     func calculateItemSplit(_ draft: ItemSplit, memberIDs: [String]) async throws -> ItemSplitResult
     func scanReceipt(images: [ReceiptScanImage]) async throws -> ReceiptScanResponse
+    func scanBankProof(_ request: BankProofRequest, ownerID: String) async throws -> BankProofResponse
+    func setSharedProofAIConsent(ownerID: String, policyVersion: String) async throws
     func createSplitBill(_ draft: SplitBillDraft) async throws
     func createSplitBillFromReview(reviewItemID: String, draft: SplitBillDraft) async throws
     func convertTransactionToSplitBill(transactionID: String, expectedVersion: Int, draft: SplitBillDraft) async throws
@@ -40,10 +45,14 @@ protocol FinanceRepository: Sendable {
     func reverseResolution(id: String, expectedVersion: Int, reason: String) async throws
 
     func addReviewItem(_ item: ReviewItem, attachment: ReviewAttachment?) async throws
+    func addSharedReviewItem(_ item: ReviewItem, attachment: ReviewAttachment?, ownerID: String) async throws
     func updateReviewItem(_ item: ReviewItem) async throws
     func rejectReviewItem(id: String) async throws
+    func deleteReviewItem(id: String) async throws
     func restoreReviewItem(id: String) async throws
     func confirmReviewItem(id: String, transaction: TransactionDraft) async throws
+    func confirmSharedReviewItem(id: String, transaction: TransactionDraft, ownerID: String) async throws
+    func confirmSharedReviewTransfer(id: String, transfer: TransferDraft, ownerID: String) async throws
     func mergeReviewItem(id: String, into transactionID: String) async throws
     func clearReviewDuplicate(id: String) async throws
     func completeReviewItem(id: String) async throws
@@ -52,6 +61,7 @@ protocol FinanceRepository: Sendable {
     func deleteMerchantRule(id: String, expectedVersion: Int) async throws
 
     func upsertBudget(categoryID: String, month: Date, limit: Int64) async throws
+    func deleteBudget(id: String, expectedLimit: Int64) async throws
     func saveGoal(_ goal: SavingsGoal) async throws
     func deleteGoal(id: String, expectedVersion: Int) async throws
     func exportArchive() async throws -> URL
@@ -66,6 +76,21 @@ protocol FinanceRepository: Sendable {
 }
 
 extension FinanceRepository {
+    func editAccount(_ account: FinancialAccount, expectedBalance: Int64, reason: String) async throws { throw AppError.validation("Penyesuaian saldo tidak tersedia.") }
+    func deleteAccount(id: String, expectedVersion: Int) async throws { throw AppError.validation("Penghapusan akun tidak tersedia.") }
+    func deleteCategory(id: String, expectedVersion: Int) async throws { throw AppError.validation("Penghapusan kategori tidak tersedia.") }
+    func deleteReviewItem(id: String) async throws { throw AppError.validation("Penghapusan draft tidak tersedia.") }
+    func deleteBudget(id: String, expectedLimit: Int64) async throws { throw AppError.validation("Penghapusan anggaran tidak tersedia.") }
+    func confirmSharedReviewItem(id: String, transaction: TransactionDraft, ownerID: String) async throws {
+        try await confirmReviewItem(id: id, transaction: transaction)
+    }
+    func confirmSharedReviewTransfer(id: String, transfer: TransferDraft, ownerID: String) async throws {
+        throw AppError.validation("Transfer bukti Share memerlukan akun nyata.")
+    }
+    func addSharedReviewItem(_ item: ReviewItem, attachment: ReviewAttachment?, ownerID: String = "demo") async throws {
+        if try await dashboard().reviewItems.contains(where: { $0.matchesID(item.id) }) { return }
+        try await addReviewItem(item, attachment: attachment)
+    }
     func transaction(id: String) async throws -> FinanceTransaction {
         guard let value = try await dashboard().transactions.first(where: { $0.id == id }) else { throw AppError.validation("Transaksi tidak tersedia.") }
         return value
@@ -94,12 +119,14 @@ extension FinanceRepository {
     func supportTickets() async throws -> [SupportTicket] { [] }
     func sendSupportTicket(id: String, topic: String, description: String, requestID: String?) async throws { throw AppError.validation("Masuk untuk mengirim laporan privat.") }
     func scanReceipt(images: [ReceiptScanImage]) async throws -> ReceiptScanResponse { ReceiptScanResponse(status: "config_error", data: nil) }
+    func scanBankProof(_ request: BankProofRequest, ownerID: String) async throws -> BankProofResponse { throw AppError.validation("Masuk akun untuk membaca bukti dengan AI.") }
+    func setSharedProofAIConsent(ownerID: String, policyVersion: String) async throws { throw AppError.validation("Persetujuan AI memerlukan akun nyata.") }
     func report(since startDate: Date) async throws -> ReportSummary { try await report(since: startDate, until: nil) }
 }
 
 enum RepositoryFactory {
     static func demo() -> any FinanceRepository {
-        DemoRepository()
+        DemoRepository(showcaseDate: .now)
     }
 
     static func remote(configuration: SupabaseConfiguration, sessionStore: KeychainSessionStore) -> any FinanceRepository {

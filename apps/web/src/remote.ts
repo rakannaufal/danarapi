@@ -10,7 +10,7 @@ export function authClient(): SupabaseClient | null {
   const { url, key } = cloudConfiguration;
   return createClient(url, key, { auth: { storage: sessionStorage, storageKey: 'danarapi.auth', persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, flowType: 'pkce' } });
 }
-export const dataOperations = new Set(['copy_budgets', 'set_ai_consent', 'set_timezone', 'create_support_ticket', 'update_account', 'archive_account', 'update_category', 'archive_category', 'add_review_item', 'update_review_item', 'reject_review_item', 'restore_review_item', 'merge_review_item', 'clear_review_duplicate', 'confirm_review_item', 'upsert_budget', 'request_account_deletion', 'save_merchant_rule', 'delete_merchant_rule']);
+export const dataOperations = new Set(['copy_budgets', 'set_ai_consent', 'set_timezone', 'create_support_ticket', 'update_account', 'archive_account', 'update_category', 'archive_category', 'add_review_item', 'update_review_item', 'reject_review_item', 'restore_review_item', 'merge_review_item', 'clear_review_duplicate', 'confirm_review_item', 'upsert_budget', 'delete_budget', 'delete_review_item', 'request_account_deletion', 'save_merchant_rule', 'delete_merchant_rule']);
 export class RemoteRepository {
   private mutations = new Map<string, string>();
   constructor(readonly client: SupabaseClient) {}
